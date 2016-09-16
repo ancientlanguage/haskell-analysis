@@ -14,7 +14,10 @@ cabal-version:       >=1.10
 executable prepare
   hs-source-dirs: src
   main-is: Main.hs
+  other-modules:
+    Sblgnt
   default-language: Haskell2010
   build-depends:
     base >= 4.9,
+    text >=1.2,
     xml-conduit >=1.3
