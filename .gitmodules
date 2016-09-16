@@ -1,3 +1,6 @@
 [submodule "data/xml-sblgnt"]
 	path = data/xml-sblgnt
 	url = https://github.com/ancientlanguage/xml-sblgnt.git
+[submodule "data/xml-perseus-greek"]
+	path = data/xml-perseus-greek
+	url = https://github.com/ancientlanguage/xml-perseus-greek.git
