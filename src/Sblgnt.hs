@@ -7,6 +7,7 @@ module Sblgnt where
 import Prelude hiding (Word)
 import Control.Applicative
 import Control.Monad
+import qualified Data.Char as Char
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import Data.List.NonEmpty (NonEmpty (..))
@@ -15,6 +16,7 @@ import qualified Data.Map as Map
 import Data.Set (Set)
 import qualified Data.Set as Set
 import Data.Text (Text)
+import qualified Data.Text as Text
 import Text.XML
 import Text.Megaparsec.Combinator
 import Text.Megaparsec.Error
@@ -78,25 +80,34 @@ tokenN f = token g Nothing
         )
       Right x -> Right x
 
-elementNode :: (MonadParsec e s m, Token s ~ Node) => m Element
-elementNode = tokenN elementNodeT
+contentNode :: Node -> Either XmlError Text
+contentNode (NodeContent t) = Right t
+contentNode _ = Left XmlError
 
-elementNodeT :: Node -> Either XmlError Element
-elementNodeT (NodeElement e) = Right e
-elementNodeT _ = Left XmlError
+whitespace :: (MonadParsec e s m, Token s ~ Node) => m ()
+whitespace = skipMany . tokenN $ contentNode >=> test
+  where
+    test t | Text.all Char.isSpace t = Right ()
+    test _ = Left XmlError
+
+elementNode :: Node -> Either XmlError Element
+elementNode (NodeElement e) = Right e
+elementNode _ = Left XmlError
 
 elementLocal :: Text -> Element -> Either XmlError Element
 elementLocal n e | elementName e == Name n Nothing Nothing = Right e
 elementLocal _ _ = Left XmlError
 
 element :: (MonadParsec e s m, Token s ~ Node) => Text -> m Element
-element t = tokenN (elementNodeT >=> elementLocal t)
+element t = tokenN $ elementNode >=> elementLocal t
 
 sblgnt :: (MonadParsec e s m, Token s ~ Node) => m (Element, Element, [Element])
 sblgnt = do
-  title <- element "title"
-  license <- element "license"
-  books <- some (element "book")
+  _ <- whitespace
+  title <- element "title" <* whitespace 
+  license <- element "license" <* whitespace
+  books <- some (element "book" <* whitespace)
+  _ <- eof
   return $ (title, license, books)
 
 isElement :: Node -> Bool
