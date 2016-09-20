@@ -5,8 +5,9 @@ import qualified Text.XML as XML
 
 main :: IO ()
 main = do
-  sblgntDocument <- XML.readFile XML.def "./data/xml-sblgnt/sblgnt.xml"
-  let parsedSblgnt = parseDocument (XML.documentRoot sblgntDocument)
+  let file = "./data/xml-sblgnt/sblgnt.xml"
+  sblgntDocument <- XML.readFile XML.def file 
+  let parsedSblgnt = parseSblgnt file (XML.documentRoot sblgntDocument)
   case parsedSblgnt of
     Left x -> print x
-    Right _ -> putStrLn "Success!"
+    Right (x,y,zs) -> putStrLn $ (show . length $ zs) ++ " books"

@@ -1,14 +1,25 @@
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module Sblgnt where
 
 import Prelude hiding (Word)
+import Control.Applicative
 import Control.Monad
 import qualified Data.List as List
+import qualified Data.List.NonEmpty as NonEmpty
+import Data.List.NonEmpty (NonEmpty (..))
 import Data.Map (Map)
 import qualified Data.Map as Map
+import Data.Set (Set)
+import qualified Data.Set as Set
 import Data.Text (Text)
 import Text.XML
+import Text.Megaparsec.Combinator
+import Text.Megaparsec.Error
+import Text.Megaparsec.Pos
+import Text.Megaparsec.Prim
 
 data Sblgnt = Sblgnt
   { sblgntTitle :: [HeadParagraph]
@@ -49,119 +60,64 @@ data Content
   | ContentWord Text
   | ContentSuffix Text
 
-data ParseError
-  = UnexpectedNode Node
-  | UnexpectedElement Element
-  | UnexpectedAttribute (Name, Text)
-  | UnexpectedAttributes [(Name, Text)]
-  | UnexpectedName Name
-  | ExpectedSingleNode [Node]
-  | ExpectedSingleAttribute [(Name, Text)]
+data XmlError
+  = XmlError
   deriving (Show)
 
-type Result a = Either [ParseError] a
-
-local :: Text -> Name
-local t = Name t Nothing Nothing
-
-localName :: Text -> Name -> Result Name
-localName t n | local t == n = Right n
-localName _ n = Left . pure . UnexpectedName $ n
-
-localElement :: Text -> Element -> Result Element
-localElement t e | elementName e == local t = Right e
-localElement _ e = Left . pure . UnexpectedElement $ e
-
-noAttr :: Map Name Text -> Result ()
-noAttr m | Map.null m = Right ()
-noAttr m = Left . pure . UnexpectedAttributes . Map.assocs $ m
-
-elementToNode :: (Element -> Result a) -> Node -> Result a
-elementToNode f (NodeElement e) = f e
-elementToNode _ n = Left . pure . UnexpectedNode $ n
-
-contentNode :: Node -> Result Text
-contentNode (NodeContent t) = Right t
-
-elementNode :: Node -> Result Element
-elementNode (NodeElement e) = Right e
-elementNode n = Left . pure . UnexpectedNode $ n
-
-single :: ([a] -> ParseError) -> [a] -> Result a
-single _ [x] = Right x
-single f xs = Left . pure . f $ xs
-
-singleNode :: [Node] -> Result Node
-singleNode = single ExpectedSingleNode
-
-attributeName :: Name -> (Name, Text) -> Result Text
-attributeName n (m, t) | n == m = Right t
-attributeName _ a = Left . pure . UnexpectedAttribute $ a 
-
-localAttribute :: Text -> (Name, Text) -> Result Text
-localAttribute = attributeName . local
-
-singleAttribute :: Map Name Text -> Result (Name, Text)
-singleAttribute = single ExpectedSingleAttribute . Map.assocs 
-
-elementTotal
-  :: (Name -> Result a)
-  -> (Map Name Text -> Result b)
-  -> ([Node] -> Result c)
-  -> Element
-  -> Result (a, b, c)
-elementTotal f g h e = do
-  a <- f (elementName e)
-  b <- g (elementAttributes e)
-  c <- h (elementNodes e)
-  return (a, b, c)
-
-link :: Node -> Result Link
-link
-  = elementNode
-  >=> elementTotal
-    (localName "a")
-    (singleAttribute >=> localAttribute "href")
-    (singleNode >=> contentNode)
-  >=> (\(_, b, c) -> return $ Link b c)
-
-(<|>) :: (a -> Result b) -> (a -> Result b) -> (a -> Result b)
-(<|>) f g x = case f x of
-  Left e -> g x
-  r@(Right _) -> r
-infixl 3 <|>
-
-manyThen :: (a -> Result b) -> (a -> Result c) -> [a] -> Result ([b], [c])
-manyThen f g = fmap reversePair . List.foldl' go (Right ([], []))
+tokenN
+  :: MonadParsec e s m
+  => (Token s -> Either XmlError a)
+  -> m a
+tokenN f = token g Nothing
   where
-    reversePair (bs, cs) = (reverse bs, reverse cs)
+    g t = case f t of
+      Left e -> Left
+        ( Set.singleton (Tokens (t :| []))
+        , Set.empty
+        , Set.empty
+        )
+      Right x -> Right x
 
-    go (Left e) _ = Left e
-    go (Right (bs, [])) a = case f a of
-      Left e -> case g a of
-        Left e' -> Left e'
-        Right c -> return (bs, [c]) 
-      Right b -> Right (b : bs, [])
-    go (Right (bs, cs@(_ : _))) a = do
-      c <- g a
-      return (bs, c : cs)
+elementNode :: (MonadParsec e s m, Token s ~ Node) => m Element
+elementNode = tokenN elementNodeT
 
-headContent :: Node -> Result HeadContent
-headContent
-  = fmap HeadContentText . contentNode
-  <|> fmap HeadContentLink . link
+elementNodeT :: Node -> Either XmlError Element
+elementNodeT (NodeElement e) = Right e
+elementNodeT _ = Left XmlError
 
-headParagraph :: Node -> Result HeadParagraph
-headParagraph
-  = elementNode
-  >=> elementTotal
-    (localName "p")
-    noAttr
-    (mapM headContent)
-  >=> (\(_, _, xs) -> return . HeadParagraph $ xs)
+elementLocal :: Text -> Element -> Either XmlError Element
+elementLocal n e | elementName e == Name n Nothing Nothing = Right e
+elementLocal _ _ = Left XmlError
 
-headParagraphs :: [Node] -> Result [HeadParagraph]
-headParagraphs = mapM headParagraph 
+element :: (MonadParsec e s m, Token s ~ Node) => Text -> m Element
+element t = tokenN (elementNodeT >=> elementLocal t)
 
-parseDocument :: Element -> Result Sblgnt
-parseDocument e = e `seq` return $ Sblgnt [] [] []
+sblgnt :: (MonadParsec e s m, Token s ~ Node) => m (Element, Element, [Element])
+sblgnt = do
+  title <- element "title"
+  license <- element "license"
+  books <- some (element "book")
+  return $ (title, license, books)
+
+isElement :: Node -> Bool
+isElement (NodeElement _) = True
+isElement _ = False
+
+parseSblgnt :: FilePath -> Element -> Either String (Element, Element, [Element])
+parseSblgnt file e = case result of
+  Left x -> Left . parseErrorPretty $ x
+  Right x -> Right x
+  where
+    result :: Either (ParseError Node Dec) (Element, Element, [Element])
+    result = runParser sblgnt file (List.filter isElement . elementNodes $ e)
+
+instance Stream [Node] where
+  type Token [Node] = Node
+  uncons [] = Nothing
+  uncons (t : ts) = Just (t, ts)
+  {-# INLINE uncons #-}
+  updatePos _ _ p _ = (p, p)
+  {-# INLINE updatePos #-}
+
+instance ShowToken Node where
+  showTokens = List.intercalate " " . fmap show . NonEmpty.toList
