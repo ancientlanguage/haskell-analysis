@@ -46,7 +46,7 @@ data Content
   | ContentWord Text
   | ContentSuffix Text
 
-sblgnt :: XmlParser (Element, Element, [Element])
+sblgnt :: NodeParser (Element, Element, [Element])
 sblgnt = do
   _ <- whitespace
   title <- element "title" 

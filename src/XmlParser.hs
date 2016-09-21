@@ -8,7 +8,8 @@ module XmlParser
   , readParse
   , some
   , whitespace
-  , XmlParser
+  , NodeParser
+  , AttributeParser
   )
 where
 
@@ -31,14 +32,15 @@ import Text.Megaparsec.Pos
 import Text.Megaparsec.Prim
 import Text.XML as XML
 
-type XmlParser a = Parsec Dec [Node] a
+type NodeParser a = Parsec Dec [Node] a
+type AttributeParser a = Parsec Dec [(Name, Text)] a
 
 data XmlError
   = XmlError
   deriving (Show)
 
-instance Stream [Node] where
-  type Token [Node] = Node
+instance Ord a => Stream [a] where
+  type Token [a] = a
   uncons [] = Nothing
   uncons (t : ts) = Just (t, ts)
   {-# INLINE uncons #-}
@@ -66,7 +68,7 @@ contentNode :: Node -> Either XmlError Text
 contentNode (NodeContent t) = Right t
 contentNode _ = Left XmlError
 
-whitespace :: XmlParser ()
+whitespace :: NodeParser ()
 whitespace = skipMany . tokenN $ contentNode >=> test
   where
     test t | Text.all Char.isSpace t = Right ()
@@ -83,22 +85,22 @@ elementLocal :: Text -> Element -> Either XmlError Element
 elementLocal n e | elementName e == localName n = Right e
 elementLocal _ _ = Left XmlError
 
-elementPlain :: Text -> XmlParser Element
+elementPlain :: Text -> NodeParser Element
 elementPlain t = tokenN $ elementNode >=> elementLocal t
 
 attribute :: Text -> (Name, Text) -> Either XmlError Text
 attribute t (n, v) | n == localName t = Right v
 attribute _ _ = Left XmlError
 
-element :: Text -> XmlParser Element
+element :: Text -> NodeParser Element
 element t = elementPlain t <* whitespace
 
-end :: XmlParser ()
+end :: NodeParser ()
 end = eof
 
 parseNodes
   :: FilePath
-  -> XmlParser a
+  -> NodeParser a
   -> Element
   -> Either String a
 parseNodes file parser el = case result of
@@ -109,7 +111,7 @@ parseNodes file parser el = case result of
 
 readParse
   :: FilePath
-  -> XmlParser a
+  -> NodeParser a
   -> IO (Either String a)
 readParse file parser = do
   document <- readFile def file 
