@@ -72,16 +72,23 @@ whitespace = skipMany . tokenN $ contentNode >=> test
     test t | Text.all Char.isSpace t = Right ()
     test _ = Left XmlError
 
+localName :: Text -> Name
+localName t = Name t Nothing Nothing
+
 elementNode :: Node -> Either XmlError Element
 elementNode (NodeElement e) = Right e
 elementNode _ = Left XmlError
 
 elementLocal :: Text -> Element -> Either XmlError Element
-elementLocal n e | elementName e == Name n Nothing Nothing = Right e
+elementLocal n e | elementName e == localName n = Right e
 elementLocal _ _ = Left XmlError
 
 elementPlain :: Text -> XmlParser Element
 elementPlain t = tokenN $ elementNode >=> elementLocal t
+
+attribute :: Text -> (Name, Text) -> Either XmlError Text
+attribute t (n, v) | n == localName t = Right v
+attribute _ _ = Left XmlError
 
 element :: Text -> XmlParser Element
 element t = elementPlain t <* whitespace
