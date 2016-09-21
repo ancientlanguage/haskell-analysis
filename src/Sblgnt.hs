@@ -49,8 +49,8 @@ data Content
 sblgnt :: XmlParser (Element, Element, [Element])
 sblgnt = do
   _ <- whitespace
-  title <- element "title" <* whitespace 
-  license <- element "license" <* whitespace
-  books <- some (element "book" <* whitespace)
+  title <- element "title" 
+  license <- element "license"
+  books <- some (element "book")
   _ <- end
   return $ (title, license, books)

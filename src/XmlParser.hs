@@ -80,8 +80,11 @@ elementLocal :: Text -> Element -> Either XmlError Element
 elementLocal n e | elementName e == Name n Nothing Nothing = Right e
 elementLocal _ _ = Left XmlError
 
+elementPlain :: Text -> XmlParser Element
+elementPlain t = tokenN $ elementNode >=> elementLocal t
+
 element :: Text -> XmlParser Element
-element t = tokenN $ elementNode >=> elementLocal t
+element t = elementPlain t <* whitespace
 
 end :: XmlParser ()
 end = eof
