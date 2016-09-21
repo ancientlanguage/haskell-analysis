@@ -5,8 +5,9 @@ import XmlParser (readParse)
 
 main :: IO ()
 main = do
-  let file = "./data/xml-sblgnt/sblgnt.xml"
-  parsedSblgnt <- readParse file sblgnt
+--  let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
+  let sblgntFile = "./examples/sblgnt-test.xml"
+  parsedSblgnt <- readParse sblgntFile sblgnt
   case parsedSblgnt of
     Left x -> print x
-    Right (x,y,zs) -> putStrLn $ (show . length $ zs) ++ " books"
+    Right (xs, ys) -> putStrLn . show . length $ xs

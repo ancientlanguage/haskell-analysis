@@ -46,11 +46,25 @@ data Content
   | ContentWord Text
   | ContentSuffix Text
 
-sblgnt :: NodeParser (Element, Element, [Element])
-sblgnt = do
-  _ <- whitespace
-  title <- element "title" 
-  license <- element "license"
-  books <- some (element "book")
-  _ <- end
-  return $ (title, license, books)
+link :: NodeParser Link
+link = (uncurry Link) <$> elementContentAttr "a" (attribute "href")
+
+headContent :: NodeParser HeadContent
+headContent
+  = HeadContentText <$> content
+  <|> HeadContentLink <$> link
+
+headParagraph :: NodeParser HeadParagraph
+headParagraph = HeadParagraph <$> some headContent
+
+headParagraphList :: NodeParser [HeadParagraph]
+headParagraphList = some headParagraph
+
+title :: NodeParser [HeadParagraph]
+title = element "title" headParagraphList
+
+license :: NodeParser [HeadParagraph]
+license = element "license" headParagraphList
+
+sblgnt :: NodeParser ([HeadParagraph], [HeadParagraph])
+sblgnt = (const ([], [])) <$> elementEmpty "sblgnt"

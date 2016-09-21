@@ -1,9 +1,18 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module XmlParser
   ( (<|>)
   , element
+  , elementAttr
+  , elementEmpty
+  , attribute
+  , content
+  , onlyContent
+  , elementContent
+  , elementContentAttr
+  , noAttributes
   , end
   , readParse
   , some
@@ -32,8 +41,9 @@ import Text.Megaparsec.Pos
 import Text.Megaparsec.Prim
 import Text.XML as XML
 
-type NodeParser a = Parsec Dec [Node] a
-type AttributeParser a = Parsec Dec [(Name, Text)] a
+type XmlParser s a = Parsec Dec s a
+type NodeParser a = XmlParser [Node] a
+type AttributeParser a = XmlParser [(Name, Text)] a
 
 data XmlError
   = XmlError
@@ -47,8 +57,17 @@ instance Ord a => Stream [a] where
   updatePos _ _ p _ = (p, p)
   {-# INLINE updatePos #-}
 
-instance ShowToken Node where
-  showTokens = List.intercalate " " . fmap show . NonEmpty.toList
+showsTokenFromShow :: Show a => NonEmpty a -> String
+showsTokenFromShow = List.intercalate " " . fmap show . NonEmpty.toList 
+
+instance ShowToken Node where showTokens = showsTokenFromShow
+instance ShowToken (Name, Text) where showTokens = showsTokenFromShow
+
+end :: Stream s => XmlParser s ()
+end = eof
+
+noAttributes :: AttributeParser ()
+noAttributes = end
 
 tokenN
   :: MonadParsec e s m
@@ -81,22 +100,85 @@ elementNode :: Node -> Either XmlError Element
 elementNode (NodeElement e) = Right e
 elementNode _ = Left XmlError
 
-elementLocal :: Text -> Element -> Either XmlError Element
-elementLocal n e | elementName e == localName n = Right e
-elementLocal _ _ = Left XmlError
+localElementName :: Text -> Element -> Either XmlError Element
+localElementName n e | elementName e == localName n = Right e
+localElementName _ _ = Left XmlError
 
 elementPlain :: Text -> NodeParser Element
-elementPlain t = tokenN $ elementNode >=> elementLocal t
+elementPlain t = tokenN $ elementNode >=> localElementName t
 
-attribute :: Text -> (Name, Text) -> Either XmlError Text
-attribute t (n, v) | n == localName t = Right v
-attribute _ _ = Left XmlError
+attributeName :: Text -> (Name, Text) -> Either XmlError Text
+attributeName t (n, v) | n == localName t = Right v
+attributeName _ _ = Left XmlError
 
-element :: Text -> NodeParser Element
-element t = elementPlain t <* whitespace
+attribute :: Text -> AttributeParser Text
+attribute = tokenN . attributeName
 
-end :: NodeParser ()
-end = eof
+content :: NodeParser Text
+content = tokenN contentNode
+
+onlyContent :: NodeParser Text
+onlyContent = content <* end
+
+setPositionParser :: Stream s => SourcePos -> XmlParser s a -> XmlParser s a
+setPositionParser pos p = setPosition pos *> p
+
+parseNested :: (Stream a, Stream c, ShowToken (Token a)) => XmlParser a b -> String -> SourcePos -> a -> XmlParser c b
+parseNested p label pos xs = case runParser (setPositionParser pos p) (sourceName pos) xs of
+    Left e -> unexpected . Label . NonEmpty.fromList $ label ++ " " ++ parseErrorPretty e
+    Right x -> return x
+
+elementFull
+  :: Text
+  -> AttributeParser a
+  -> NodeParser c
+  -> NodeParser (a, c)
+elementFull name attributeParser childrenParser = do
+  element <- elementPlain name
+  pos <- getPosition
+  let orderedAttributes = Map.assocs . elementAttributes $ element
+  attributeResult <- parseNested attributeParser "Attribute" pos orderedAttributes 
+  childrenResult <- parseNested childrenParser "Child" pos (elementNodes element)
+  return (attributeResult, childrenResult)
+
+wrapAttributeParser :: AttributeParser a -> AttributeParser a
+wrapAttributeParser p = p <* end
+
+wrapNodeParser :: NodeParser a -> NodeParser a
+wrapNodeParser p = whitespace *> p <* end 
+
+elementEmpty
+  :: Text
+  -> NodeParser ()
+elementEmpty t = const () <$> elementFull t end end
+
+elementAttr
+  :: Text
+  -> AttributeParser a
+  -> NodeParser c
+  -> NodeParser (a, c)
+elementAttr t a c
+  = elementFull t (wrapAttributeParser a) (wrapNodeParser c)
+  <* whitespace
+
+elementContentAttr
+  :: Text
+  -> AttributeParser a
+  -> NodeParser (a, Text)
+elementContentAttr t a
+  = elementFull t (wrapAttributeParser a) onlyContent
+  <* whitespace
+
+element 
+  :: Text
+  -> NodeParser c
+  -> NodeParser c
+element t c = snd <$> elementAttr t noAttributes c
+
+elementContent
+  :: Text
+  -> NodeParser Text
+elementContent t = snd <$> elementContentAttr t noAttributes 
 
 parseNodes
   :: FilePath
