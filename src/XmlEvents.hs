@@ -1,7 +1,9 @@
+{-# LANGUAGE FlexibleContexts #-}
+
 module XmlEvents where
 
 import Conduit
-import Control.Exception (Exception (..))
+import Control.Exception (Exception (..), try, SomeException)
 import Control.Monad (when)
 import Control.Monad.Trans.Resource
 import qualified Data.Char as Char
@@ -28,8 +30,8 @@ instance Exception InvalidXml
 readEvents :: FilePath -> IO [P.EventPos]
 readEvents path = runResourceT $ sourceFile path =$= P.parseBytesPos def $$ sinkList
 
-readDocument :: FilePath -> IO Document
-readDocument path = runResourceT $ sourceFile path =$= P.parseBytesPos def $$ document
+readDocument :: FilePath -> IO (Either SomeException Document)
+readDocument path = try $ runResourceT $ sourceFile path =$= P.parseBytesPos def $$ document
 
 many :: Monad m => m (Maybe a) -> m [a]
 many f = go id

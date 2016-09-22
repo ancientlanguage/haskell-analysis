@@ -6,10 +6,12 @@ import XmlParser (readParse)
 
 main :: IO ()
 main = do
-  let file = "./examples/sblgnt-test.xml"
---  let file = "./data/xml-sblgnt/sblgnt.xml"
+--  let file = "./examples/sblgnt-test.xml"
+  let file = "./data/xml-sblgnt/sblgnt.xml"
   result <- readDocument file
-  putStrLn . show $ result
+  case result of
+    Right _ -> putStrLn "Success!"
+    Left x -> putStrLn $ "Error: " ++ show x
 {-
   let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
   parsedSblgnt <- readParse sblgntFile sblgnt
