@@ -7,8 +7,8 @@ import XmlParser (readParse)
 main :: IO ()
 main = do
   let file = "./examples/sblgnt-test.xml"
-  events <- readEvents file
-  putStrLn . show $ events
+  result <- readDocument file
+  putStrLn . show $ result
 {-
   let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
   parsedSblgnt <- readParse sblgntFile sblgnt
