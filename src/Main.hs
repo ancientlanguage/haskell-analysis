@@ -7,6 +7,7 @@ import XmlParser (readParse)
 main :: IO ()
 main = do
   let file = "./examples/sblgnt-test.xml"
+--  let file = "./data/xml-sblgnt/sblgnt.xml"
   result <- readDocument file
   putStrLn . show $ result
 {-

@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Sblgnt where
 
 import Prelude hiding (Word)
