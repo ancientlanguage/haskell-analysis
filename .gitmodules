@@ -4,3 +4,6 @@
 [submodule "data/xml-perseus-greek"]
 	path = data/xml-perseus-greek
 	url = https://github.com/ancientlanguage/xml-perseus-greek.git
+[submodule "data/xml-papyri"]
+	path = data/xml-papyri
+	url = https://github.com/ancientlanguage/xml-papyri.git
