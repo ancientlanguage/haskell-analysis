@@ -30,7 +30,7 @@ instance Exception InvalidXml
 readEvents :: FilePath -> IO [P.EventPos]
 readEvents path = runResourceT $ sourceFile path =$= P.parseBytesPos def $$ sinkList
 
-readDocument :: FilePath -> IO (Either SomeException Document)
+readDocument :: FilePath -> IO (Either InvalidXml Document)
 readDocument path = try $ runResourceT $ sourceFile path =$= P.parseBytesPos def $$ document
 
 many :: Monad m => m (Maybe a) -> m [a]
