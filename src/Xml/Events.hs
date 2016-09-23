@@ -12,7 +12,7 @@ import qualified Data.Text as Text
 import Data.Typeable (Typeable)
 import Data.XML.Types hiding (Node(..), Element(..), Content)
 import qualified Data.XML.Types as XML
-import Text.XML.Stream.Parse (def, ParseSettings, PositionRange)
+import Text.XML.Stream.Parse (def,  PositionRange)
 import qualified Text.XML.Stream.Parse as P
 import Xml.PositionTypes
 
@@ -97,12 +97,19 @@ convertEntity :: MonadThrow m => Text -> PositionRange -> m Content
 convertEntity t p = Content <$> tryConvert t <*> pure [p]
   where
   tryConvert = \case
-    "&quot;" -> pure "\x0022"
-    "&amp;" -> pure "\x0026"
-    "&apos;" -> pure "\x0027"
-    "&lt;" -> pure "\x003c"
-    "&gt;" -> pure "\x003e"
-    t -> throwM $ InvalidEntity t p
+    -- Standard XML entities
+    "quot" -> pure "\x0022"
+    "amp" -> pure "\x0026"
+    "apos" -> pure "\x0027"
+    "lt" -> pure "\x003c"
+    "gt" -> pure "\x003e"
+
+    -- ISO 8879 entities 
+    "lpar" -> pure "\x0028"
+    "rpar" -> pure "\x0029"
+    "ast" -> pure "\x002a"
+    "dash" -> pure "\x2010"
+    t' -> throwM $ InvalidEntity t' p
 
 convertAttributes :: MonadThrow m => PositionRange -> [(Name, [XML.Content])] -> m [(Name, Text)]
 convertAttributes p as = mapM convert as
@@ -120,8 +127,8 @@ node = CL.peek >>= \case
       e' <- convertEntity e p
       dropReturn . Just . NodeContent $ e'
     ContentText t -> dropReturn . Just . NodeContent $ Content t [p] 
-  Just (_, EventInstruction i) -> CL.drop 1 >> node
-  Just (_, EventComment t) -> CL.drop 1 >> node
+  Just (_, EventInstruction _) -> CL.drop 1 >> node
+  Just (_, EventComment _) -> CL.drop 1 >> node
   Just ((Just p), EventCDATA t) -> dropReturn . Just $ NodeContent (Content t [p])
   _ -> return Nothing
 
@@ -136,7 +143,8 @@ finishElement p n as = do
   as' <- convertAttributes p as
   ns <- many node
   CL.head >>= \case
-    Just (Just p', EventEndElement n) -> return $ Element n as' (compressNodes ns) (p, p')
+    Just (Just p', EventEndElement n') | n == n' ->
+      return $ Element n as' (compressNodes ns) (p, p')
     x -> throwM $ MissingEndElement n x 
 
 element :: MonadThrow m => Consumer P.EventPos m (Maybe Element)
