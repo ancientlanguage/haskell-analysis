@@ -16,8 +16,8 @@ executable prepare
   main-is: Main.hs
   other-modules:
     Sblgnt,
-    XmlEvents,
-    XmlParser
+    Xml.Events,
+    Xml.Parser
   default-language: Haskell2010
   extensions:
     LambdaCase,

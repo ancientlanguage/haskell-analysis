@@ -3,7 +3,7 @@ module Sblgnt where
 import Prelude hiding (Word)
 import Data.Text (Text)
 import Text.XML
-import XmlParser
+import Xml.Parser
 
 data Sblgnt = Sblgnt
   { sblgntTitle :: [HeadParagraph]

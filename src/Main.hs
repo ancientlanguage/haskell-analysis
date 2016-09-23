@@ -1,8 +1,8 @@
 module Main where
 
 import Sblgnt
-import XmlEvents
-import XmlParser (readParse)
+import Xml.Events
+import Xml.Parser (readParse)
 
 main :: IO ()
 main = do

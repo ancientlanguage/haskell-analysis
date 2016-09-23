@@ -2,7 +2,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module XmlParser
+module Xml.Parser
   ( (<|>)
   , element
   , elementAttr

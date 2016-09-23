@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-module XmlEvents where
+module Xml.Events where
 
 import Conduit
 import Control.Exception (Exception (..), try, SomeException)
