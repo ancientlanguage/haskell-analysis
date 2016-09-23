@@ -5,7 +5,7 @@ import System.FilePath.Find
 
 loadFile :: FilePath -> IO ()
 loadFile file = do
-  result <- readDocument file
+  result <- readRootElement file
   case result of
     Right _ -> putStrLn $ "Success: " ++ file
     Left x -> putStrLn $ "Error: " ++ file ++ " -- " ++ show x

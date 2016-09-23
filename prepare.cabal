@@ -17,9 +17,10 @@ executable prepare
   other-modules:
     Sblgnt,
     Xml.Events,
-    Xml.Parser
+    Xml.Parser,
+    Xml.PositionTypes
   default-language: Haskell2010
-  ghc-options: -Wall -Werror -fwarn-tabs -O2
+  ghc-options: -Wall -fwarn-tabs -O2
   default-extensions:
     LambdaCase,
     OverloadedStrings
