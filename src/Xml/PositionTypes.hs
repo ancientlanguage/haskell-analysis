@@ -1,13 +1,22 @@
 module Xml.PositionTypes where
 
 import Data.Text (Text)
-import Text.XML.Stream.Parse (PositionRange)
+import Data.Conduit.Attoparsec (PositionRange(..), Position(..))
 import Text.XML (Name, Prologue, Miscellaneous)
 
 data Node
   = NodeElement Element
   | NodeContent Content
-  deriving Show
+  deriving (Eq, Ord, Show)
+
+emptyPositionRange :: PositionRange
+emptyPositionRange = PositionRange e e where e = Position 0 0
+
+getNodePosition :: Node -> PositionRange
+getNodePosition (NodeElement e) = fst . elementPosition $ e
+getNodePosition (NodeContent c) = case contentPosition c of
+  [] -> emptyPositionRange
+  (p : _) -> p 
 
 data Element = Element
   { elementName :: Name
@@ -15,13 +24,13 @@ data Element = Element
   , elementNodes :: [Node]
   , elementPosition :: (PositionRange, PositionRange)
   }
-  deriving Show
+  deriving (Eq, Ord, Show)
 
 data Content = Content
   { contentText :: Text
   , contentPosition :: [PositionRange]
   }
-  deriving Show
+  deriving (Eq, Ord, Show)
 
 instance Monoid Content where
   mempty = Content "" []

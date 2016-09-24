@@ -29,8 +29,6 @@ import qualified Data.Char as Char
 import qualified Data.List as List
 import qualified Data.List.NonEmpty as NonEmpty
 import Data.List.NonEmpty (NonEmpty (..))
-import Data.Map (Map)
-import qualified Data.Map as Map
 import Data.Set (Set)
 import qualified Data.Set as Set
 import Data.Text (Text)
@@ -39,7 +37,10 @@ import Text.Megaparsec.Combinator
 import Text.Megaparsec.Error
 import Text.Megaparsec.Pos
 import Text.Megaparsec.Prim
-import Text.XML as XML
+import Data.Conduit.Attoparsec (PositionRange(..), Position(..))
+import Text.XML (Name(..))
+import Xml.PositionTypes
+import Xml.Events (readRootElement)
 
 type XmlParser s a = Parsec Dec s a
 type NodeParser a = XmlParser [Node] a
@@ -49,8 +50,17 @@ data XmlError
   = XmlError
   deriving (Show)
 
-instance Ord a => Stream [a] where
-  type Token [a] = a
+instance Stream [Node] where
+  type Token [Node] = Node
+  uncons [] = Nothing
+  uncons (t : ts) = Just (t, ts)
+  {-# INLINE uncons #-}
+  updatePos _ _ p n = (np, np)
+    where np = updatePositionRangePos (getNodePosition n) p
+  {-# INLINE updatePos #-}
+
+instance Stream [(Name, Text)] where
+  type Token [(Name, Text)] = (Name, Text)
   uncons [] = Nothing
   uncons (t : ts) = Just (t, ts)
   {-# INLINE uncons #-}
@@ -69,22 +79,37 @@ end = eof
 noAttributes :: AttributeParser ()
 noAttributes = end
 
+updatePositionRangePos :: PositionRange -> SourcePos -> SourcePos
+updatePositionRangePos pr pos = SourcePos (sourceName pos) line column
+  where
+  tryGetLineColumn p = do
+    newLine <- mkPos . posLine . posRangeStart $ p
+    newColumn <- mkPos . posCol . posRangeStart $ p
+    return (newLine, newColumn)
+  (line, column) = case tryGetLineColumn pr of
+    Just (x, y) -> (x, y)
+    Nothing -> (unsafePos 1, unsafePos 1)
+
+handleToken
+  :: (t -> Either e a)
+  -> t
+  -> Either (Set (ErrorItem t), Set y, Set z) a
+handleToken f t = case f t of
+  Left _ -> Left
+    ( Set.singleton (Tokens (t :| []))
+    , Set.empty
+    , Set.empty
+    )
+  Right x -> Right x
+
 tokenN
   :: MonadParsec e s m
   => (Token s -> Either XmlError a)
   -> m a
-tokenN f = token g Nothing
-  where
-    g t = case f t of
-      Left e -> Left
-        ( Set.singleton (Tokens (t :| []))
-        , Set.empty
-        , Set.empty
-        )
-      Right x -> Right x
+tokenN f = token (handleToken f) Nothing
 
 contentNode :: Node -> Either XmlError Text
-contentNode (NodeContent t) = Right t
+contentNode (NodeContent c) = Right . contentText $ c
 contentNode _ = Left XmlError
 
 whitespace :: NodeParser ()
@@ -136,8 +161,7 @@ elementFull
 elementFull name attributeParser childrenParser = do
   element <- elementPlain name
   pos <- getPosition
-  let orderedAttributes = Map.assocs . elementAttributes $ element
-  attributeResult <- parseNested attributeParser "Attribute" pos orderedAttributes 
+  attributeResult <- parseNested attributeParser "Attribute" pos (elementAttributes element) 
   childrenResult <- parseNested childrenParser "Child" pos (elementNodes element)
   return (attributeResult, childrenResult)
 
@@ -196,5 +220,7 @@ readParse
   -> NodeParser a
   -> IO (Either String a)
 readParse file parser = do
-  document <- readFile def file 
-  return $ parseNodes file parser (documentRoot document)
+  elementResult <- readRootElement file
+  case elementResult of 
+    Left e -> return . Left . show $ e
+    Right x -> return $ parseNodes file parser x 
