@@ -3,22 +3,21 @@ module Main where
 import System.FilePath.Find
 import qualified Sblgnt as Parser
 import Xml.Events
+import Xml.PositionTypes
 import Xml.Parser
 
-loadFile :: FilePath -> IO ()
-loadFile file = do
-  result <- readRootElement file
-  case result of
-    Right _ -> return () -- putStrLn $ "Success: " ++ file
-    Left x -> putStrLn $ "Error: " ++ file ++ " -- " ++ show x
+loadParseFile :: Show a => FilePath -> NodeParser a -> IO ()
+loadParseFile file parser = readRootElement file >>= \case
+  Right root -> case parseRoot file parser root of
+    Left e -> putStrLn $ "XML Parse Error: " ++ show e
+    Right x -> putStrLn $ "Success!\n" ++ show x 
+  Left e -> putStrLn $ "XML Load Error: " ++ file ++ " -- " ++ show e
 
 main :: IO ()
 main = do
-  let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
-  sblgnt <- readParse sblgntFile Parser.sblgnt
-  case sblgnt of
-    Left x -> putStrLn $ "Error: " ++ show x
-    Right x -> putStrLn $ "Success!"
+--  let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
+  let sblgntFile = "./examples/sblgnt-test.xml"
+  loadParseFile sblgntFile Parser.sblgnt
 
   -- let perseusDir = "./data/xml-perseus-greek"
   -- let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"

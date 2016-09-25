@@ -14,7 +14,7 @@ module Xml.Parser
   , elementContentAttr
   , noAttributes
   , end
-  , readParse
+  , parseRoot
   , some
   , whitespace
   , NodeParser
@@ -40,7 +40,6 @@ import Text.Megaparsec.Prim
 import Data.Conduit.Attoparsec (PositionRange(..), Position(..))
 import Text.XML (Name(..))
 import Xml.PositionTypes
-import Xml.Events (readRootElement)
 
 type XmlParser s a = Parsec Dec s a
 type NodeParser a = XmlParser [Node] a
@@ -149,8 +148,8 @@ setPositionParser :: Stream s => SourcePos -> XmlParser s a -> XmlParser s a
 setPositionParser pos p = setPosition pos *> p
 
 parseNested :: (Stream a, Stream c, ShowToken (Token a)) => XmlParser a b -> String -> SourcePos -> a -> XmlParser c b
-parseNested p label pos xs = case runParser (setPositionParser pos p) (sourceName pos) xs of
-    Left e -> unexpected . Label . NonEmpty.fromList $ label ++ " " ++ parseErrorPretty e
+parseNested p lab pos xs = case runParser (setPositionParser pos p) (sourceName pos) xs of
+    Left e -> unexpected . Label . NonEmpty.fromList $ lab ++ " " ++ parseErrorPretty e
     Right x -> return x
 
 elementFull
@@ -159,10 +158,10 @@ elementFull
   -> NodeParser c
   -> NodeParser (a, c)
 elementFull name attributeParser childrenParser = do
-  element <- elementPlain name
+  el <- elementPlain name
   pos <- getPosition
-  attributeResult <- parseNested attributeParser "Attribute" pos (elementAttributes element) 
-  childrenResult <- parseNested childrenParser "Child" pos (elementNodes element)
+  attributeResult <- parseNested attributeParser "Attribute" pos (elementAttributes el) 
+  childrenResult <- parseNested childrenParser "Child" pos (elementNodes el)
   return (attributeResult, childrenResult)
 
 wrapAttributeParser :: AttributeParser a -> AttributeParser a
@@ -204,23 +203,14 @@ elementContent
   -> NodeParser Text
 elementContent t = snd <$> elementContentAttr t noAttributes 
 
-parseNodes
+parseRoot
   :: FilePath
   -> NodeParser a
   -> Element
   -> Either String a
-parseNodes file parser el = case result of
+parseRoot file parser el = case result of
   Left x -> Left . parseErrorPretty $ x
   Right x -> Right x
   where
-    result = runParser parser file (elementNodes $ el)
-
-readParse
-  :: FilePath
-  -> NodeParser a
-  -> IO (Either String a)
-readParse file parser = do
-  elementResult <- readRootElement file
-  case elementResult of 
-    Left e -> return . Left . show $ e
-    Right x -> return $ parseNodes file parser x 
+    result = runParser (parser <* end) file (rootList el)
+    rootList = pure . NodeElement

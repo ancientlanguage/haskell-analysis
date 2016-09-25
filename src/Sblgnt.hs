@@ -60,7 +60,7 @@ headContent
   <|> HeadContentLink <$> link
 
 headParagraph :: NodeParser HeadParagraph
-headParagraph = HeadParagraph <$> some headContent
+headParagraph = HeadParagraph <$> element "p" (some headContent)
 
 headParagraphList :: NodeParser [HeadParagraph]
 headParagraphList = some headParagraph
@@ -72,4 +72,9 @@ license :: NodeParser [HeadParagraph]
 license = element "license" headParagraphList
 
 sblgnt :: NodeParser ([HeadParagraph], [HeadParagraph])
-sblgnt = (const ([], [])) <$> elementEmpty "sblgnt"
+sblgnt = element "sblgnt" children
+  where
+  children = do
+    t <- title
+    l <- license
+    return (t, l)
