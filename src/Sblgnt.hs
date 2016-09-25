@@ -12,7 +12,8 @@ data Sblgnt = Sblgnt
   deriving (Show)
 
 data Book = Book
-  { bookTitle :: Text
+  { bookId :: Text
+  , bookTitle :: Text
   , bookParagraphs :: [Paragraph]
   }
   deriving (Show)
@@ -65,16 +66,31 @@ headParagraph = HeadParagraph <$> element "p" (some headContent)
 headParagraphList :: NodeParser [HeadParagraph]
 headParagraphList = some headParagraph
 
-title :: NodeParser [HeadParagraph]
-title = element "title" headParagraphList
+headTitle :: NodeParser [HeadParagraph]
+headTitle = element "title" headParagraphList
 
 license :: NodeParser [HeadParagraph]
 license = element "license" headParagraphList
 
-sblgnt :: NodeParser ([HeadParagraph], [HeadParagraph])
+title :: NodeParser Text
+title = element "title" content
+
+book :: NodeParser Book
+book = build <$> elementAttr "book" attributes children
+  where
+  build (i, (t, ps)) = Book i t ps
+  attributes = do
+    i <- attribute "id"
+    return i
+  children = do
+    t <- title
+    return $ (t, [])
+
+sblgnt :: NodeParser Sblgnt
 sblgnt = element "sblgnt" children
   where
   children = do
-    t <- title
+    t <- headTitle
     l <- license
-    return (t, l)
+    bs <- some book
+    return $ Sblgnt t l bs

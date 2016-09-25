@@ -168,7 +168,7 @@ wrapAttributeParser :: AttributeParser a -> AttributeParser a
 wrapAttributeParser p = p <* end
 
 wrapNodeParser :: NodeParser a -> NodeParser a
-wrapNodeParser p = whitespace *> p <* end 
+wrapNodeParser p = whitespace *> p <* end
 
 elementEmpty
   :: Text
