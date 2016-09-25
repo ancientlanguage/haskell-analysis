@@ -2,7 +2,8 @@ module Sblgnt where
 
 import Prelude hiding (Word)
 import Data.Text (Text)
-import Xml.Parser
+import Xml.Parser (NodeParser, (<|>), some)
+import qualified Xml.Parser as Xml
 
 data Sblgnt = Sblgnt
   { sblgntTitle :: [HeadParagraph]
@@ -53,41 +54,44 @@ data Content
   deriving (Show)
 
 link :: NodeParser Link
-link = (uncurry Link) <$> elementContentAttr "a" (attribute "href")
+link = (uncurry Link) <$> Xml.elementContentAttr "a" (Xml.attribute "href")
 
 headContent :: NodeParser HeadContent
 headContent
-  = HeadContentText <$> content
+  = HeadContentText <$> Xml.content
   <|> HeadContentLink <$> link
 
 headParagraph :: NodeParser HeadParagraph
-headParagraph = HeadParagraph <$> element "p" (some headContent)
+headParagraph = HeadParagraph <$> Xml.element "p" (some headContent)
 
 headParagraphList :: NodeParser [HeadParagraph]
 headParagraphList = some headParagraph
 
 headTitle :: NodeParser [HeadParagraph]
-headTitle = element "title" headParagraphList
+headTitle = Xml.element "title" headParagraphList
 
 license :: NodeParser [HeadParagraph]
-license = element "license" headParagraphList
+license = Xml.element "license" headParagraphList
 
 title :: NodeParser Text
-title = element "title" content
+title = Xml.element "title" Xml.content
+
+paragraph :: NodeParser Text
+paragraph = Xml.element "p" Xml.content
 
 book :: NodeParser Book
-book = build <$> elementAttr "book" attributes children
+book = build <$> Xml.elementAttr "book" attributes children
   where
   build (i, (t, ps)) = Book i t ps
   attributes = do
-    i <- attribute "id"
+    i <- Xml.attribute "id"
     return i
   children = do
     t <- title
     return $ (t, [])
 
 sblgnt :: NodeParser Sblgnt
-sblgnt = element "sblgnt" children
+sblgnt = Xml.element "sblgnt" children
   where
   children = do
     t <- headTitle

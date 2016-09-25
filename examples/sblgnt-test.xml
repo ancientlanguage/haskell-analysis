@@ -9,5 +9,93 @@
   </license>
   <book id="Phm">
     <title>ΠΡΟΣ ΦΙΛΗΜΟΝΑ</title>
+    <p>
+      <verse-number id="Philemon 1:1">1:1</verse-number>
+      <w>Παῦλος</w>
+      <suffix> </suffix>
+      <w>δέσμιος</w>
+      <suffix> </suffix>
+      <w>Χριστοῦ</w>
+      <suffix> </suffix>
+      <w>Ἰησοῦ</w>
+      <suffix> </suffix>
+      <w>καὶ</w>
+      <suffix> </suffix>
+      <w>Τιμόθεος</w>
+      <suffix> </suffix>
+      <w>ὁ</w>
+      <suffix> </suffix>
+      <w>ἀδελφὸς</w>
+      <suffix> </suffix>
+      <w>Φιλήμονι</w>
+      <suffix> </suffix>
+      <w>τῷ</w>
+      <suffix> </suffix>
+      <w>ἀγαπητῷ</w>
+      <suffix> </suffix>
+      <w>καὶ</w>
+      <suffix> </suffix>
+      <w>συνεργῷ</w>
+      <suffix> </suffix>
+      <w>ἡμῶν</w>
+      <suffix> </suffix>
+      <verse-number id="Philemon 1:2">2</verse-number>
+      <w>καὶ</w>
+      <suffix> </suffix>
+      <w>Ἀπφίᾳ</w>
+      <suffix> </suffix>
+      <w>τῇ</w>
+      <suffix> </suffix>
+      <prefix> ⸀</prefix>
+      <w>ἀδελφῇ</w>
+      <suffix> </suffix>
+      <w>καὶ</w>
+      <suffix> </suffix>
+      <w>Ἀρχίππῳ</w>
+      <suffix> </suffix>
+      <w>τῷ</w>
+      <suffix> </suffix>
+      <w>συστρατιώτῃ</w>
+      <suffix> </suffix>
+      <w>ἡμῶν</w>
+      <suffix> </suffix>
+      <w>καὶ</w>
+      <suffix> </suffix>
+      <w>τῇ</w>
+      <suffix> </suffix>
+      <w>κατ’</w>
+      <suffix> </suffix>
+      <w>οἶκόν</w>
+      <suffix> </suffix>
+      <w>σου</w>
+      <suffix> </suffix>
+      <w>ἐκκλησίᾳ</w>
+      <suffix>·  </suffix>
+      <verse-number id="Philemon 1:3">3</verse-number>
+      <w>χάρις</w>
+      <suffix> </suffix>
+      <w>ὑμῖν</w>
+      <suffix> </suffix>
+      <w>καὶ</w>
+      <suffix> </suffix>
+      <w>εἰρήνη</w>
+      <suffix> </suffix>
+      <w>ἀπὸ</w>
+      <suffix> </suffix>
+      <w>θεοῦ</w>
+      <suffix> </suffix>
+      <w>πατρὸς</w>
+      <suffix> </suffix>
+      <w>ἡμῶν</w>
+      <suffix> </suffix>
+      <w>καὶ</w>
+      <suffix> </suffix>
+      <w>κυρίου</w>
+      <suffix> </suffix>
+      <w>Ἰησοῦ</w>
+      <suffix> </suffix>
+      <w>Χριστοῦ</w>
+      <suffix>.  </suffix>
+    </p>
   </book>
 </sblgnt>
