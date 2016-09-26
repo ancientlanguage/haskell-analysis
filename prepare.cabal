@@ -33,12 +33,11 @@ library
     conduit-extra >=1.1,
     xml-types >=0.3,
     xml-conduit >=1.3,
-    megaparsec >=5.0,
-    filemanip >=0.3
+    megaparsec >=5.0
   default-language: Haskell2010
 
-executable prepare
-  hs-source-dirs: src
+executable prepare-exe
+  hs-source-dirs: app
   main-is: Main.hs
   default-language: Haskell2010
   ghc-options: -Wall -fwarn-tabs -O2
@@ -47,14 +46,22 @@ executable prepare
     OverloadedStrings
   build-depends:
     base,
-    containers,
-    text,
-    resourcet,
-    conduit,
-    conduit-combinators,
-    conduit-extra,
-    xml-types,
-    xml-conduit,
-    megaparsec,
-    filemanip,
-    prepare
+    prepare,
+    filemanip >=0.3
+
+test-suite prepare-test
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is: Spec.hs
+  ghc-options: -Wall -fwarn-tabs -O2 -threaded -rtsopts -with-rtsopts=-N
+  default-extensions:
+    LambdaCase,
+    OverloadedStrings
+  build-depends:
+    base,
+    prepare,
+    test-framework,
+    test-framework-hunit,
+    HUnit,
+    hspec
+  default-language: Haskell2010
