@@ -9,7 +9,7 @@ import Xml.Parser
 loadParseFile :: Show a => FilePath -> NodeParser a -> IO ()
 loadParseFile file parser = readRootElement file >>= \case
   Right root -> case parseRoot file parser root of
-    Left e -> putStrLn $ "XML Parse Error: " ++ show e
+    Left e -> putStrLn $ "XML Parse Error:\n" ++ e
     Right x -> putStrLn $ "Success!\n" ++ show x 
   Left e -> putStrLn $ "XML Load Error: " ++ file ++ " -- " ++ show e
 

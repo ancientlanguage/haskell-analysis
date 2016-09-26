@@ -15,7 +15,9 @@ module Xml.Parser
   , noAttributes
   , end
   , parseRoot
+  , many
   , some
+  , optional
   , whitespace
   , NodeParser
   , AttributeParser
