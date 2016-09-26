@@ -1,7 +1,10 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module Xml.Events where
 
+import Prelude hiding (log)
 import Conduit
 import Control.Exception (Exception (..), try)
 import Control.Monad (when)
@@ -30,8 +33,8 @@ instance Exception InvalidXml
 readEvents :: FilePath -> IO [P.EventPos]
 readEvents path = runResourceT $ sourceFile path =$= P.parseBytesPos def $$ sinkList
 
-readRootElement :: FilePath -> IO (Either InvalidXml Element)
-readRootElement path = try $ runResourceT $ sourceFile path =$= P.parseBytesPos def $$ rootElement
+readRootElement :: (Element -> IO ()) -> FilePath -> IO (Either InvalidXml Element)
+readRootElement log path = try $ runResourceT $ sourceFile path =$= P.parseBytesPos def $$ rootElement log
 
 many :: Monad m => m (Maybe a) -> m [a]
 many f = go id
@@ -119,48 +122,53 @@ convertAttributes p as = mapM convert as
   valuePart (XML.ContentText t) = pure t
   valuePart (XML.ContentEntity e) = contentText <$> convertEntity e p
 
-node :: MonadThrow m => ConduitM (Maybe PositionRange, Event) o m (Maybe Node)
-node = CL.peek >>= \case
-  Just ((Just p), EventBeginElement n as) -> (Just . NodeElement) <$> finishElement p n as
+node :: (MonadThrow m, MonadIO m) => (Element -> IO ()) -> ConduitM (Maybe PositionRange, Event) o m (Maybe Node)
+node log = CL.peek >>= \case
+  Just ((Just p), EventBeginElement n as) -> (Just . NodeElement) <$> finishElement log p n as
   Just ((Just p), EventContent c) -> case c of
     ContentEntity e -> do
       e' <- convertEntity e p
       dropReturn . Just . NodeContent $ e'
     ContentText t -> dropReturn . Just . NodeContent $ Content t [p] 
-  Just (_, EventInstruction _) -> CL.drop 1 >> node
-  Just (_, EventComment _) -> CL.drop 1 >> node
+  Just (_, EventInstruction _) -> CL.drop 1 >> node log
+  Just (_, EventComment _) -> CL.drop 1 >> node log
   Just ((Just p), EventCDATA t) -> dropReturn . Just $ NodeContent (Content t [p])
   _ -> return Nothing
 
 finishElement
-  :: MonadThrow m
-  => PositionRange
+  :: (MonadThrow m, MonadIO m)
+  => (Element -> IO ())
+  -> PositionRange
   -> Name
   -> [(Name, [XML.Content])]
   -> ConduitM (Maybe PositionRange, Event) o m Element
-finishElement p n as = do
+finishElement log p n as = do
   CL.drop 1
   as' <- convertAttributes p as
-  ns <- many node
+  ns <- many (node log)
   CL.head >>= \case
-    Just (Just p', EventEndElement n') | n == n' ->
-      return $ Element n as' (compressNodes ns) (p, p')
+    Just (Just p', EventEndElement n') | n == n' -> do
+      let e = Element n as' (compressNodes ns) (p, p')
+      liftIO $ log e
+      return e 
     x -> throwM $ MissingEndElement n x 
 
-element :: MonadThrow m => Consumer P.EventPos m (Maybe Element)
-element = CL.peek >>= \case
-  Just ((Just p), EventBeginElement n as) -> Just <$> finishElement p n as
+element :: (MonadThrow m, MonadIO m) => (Element -> IO ()) -> Consumer P.EventPos m (Maybe Element)
+element log = CL.peek >>= \case
+  Just ((Just p), EventBeginElement n as) -> Just <$> finishElement log p n as
   _ -> return Nothing
 
-document :: MonadThrow m => Consumer P.EventPos m (Prologue, Element, [Miscellaneous])
-document = do
+document :: (MonadThrow m, MonadIO m) => (Element -> IO ()) -> Consumer P.EventPos m (Prologue, Element, [Miscellaneous])
+document log = do
   skip EventBeginDocument
-  d <- (,,) <$> prologue <*> require element <*> miscellaneousList
+  d <- (,,) <$> prologue <*> require (element log) <*> miscellaneousList
   skip EventEndDocument
   CL.head >>= \case
     Nothing -> return d
     Just (_, EventEndDocument) -> throwM MissingRootElement
     Just x -> throwM $ ContentAfterRoot x
 
-rootElement :: MonadThrow m => Consumer P.EventPos m Element
-rootElement = (\(_, r, _) -> r) <$> document
+rootElement :: (MonadThrow m, MonadIO m) => (Element -> IO ()) -> Consumer P.EventPos m Element
+rootElement log = do
+  (_, r, _) <- document log
+  return r

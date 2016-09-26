@@ -1,13 +1,35 @@
 module Main where
 
+import Data.Text (Text)
+import qualified Data.Text as Text
+import qualified Data.Text.IO as Text
+import qualified Text.XML as XML
 import System.FilePath.Find
 import qualified Sblgnt.Parser as Parser
 import Xml.Events
 import Xml.PositionTypes
 import Xml.Parser
 
+showName :: XML.Name -> Text
+showName (XML.Name ln _ Nothing) = ln
+showName (XML.Name ln _ (Just p)) = Text.concat [p, ":", ln]
+
+showAttribute :: (XML.Name, Text) -> Text
+showAttribute (n, t) = Text.concat [showName n, "=\"", t, "\""]
+
+showAttributes :: [(XML.Name, Text)] -> Text
+showAttributes = Text.intercalate " " . fmap showAttribute
+
+logElement :: Element -> IO ()
+logElement e
+  | n <- XML.nameLocalName . elementName $ e
+  , n == "title" || n == "book"
+  , as <- elementAttributes e
+  = Text.putStrLn $ Text.intercalate " " [n, showAttributes as]
+logElement _ = return ()
+
 loadParseFile :: Show a => FilePath -> NodeParser a -> IO ()
-loadParseFile file parser = readRootElement file >>= \case
+loadParseFile file parser = readRootElement logElement file >>= \case
   Right root -> case parseRoot file parser root of
     Left e -> putStrLn $ "XML Parse Error:\n" ++ e
     Right x -> putStrLn $ "Success!" 

@@ -46,6 +46,8 @@ executable prepare-exe
     OverloadedStrings
   build-depends:
     base,
+    text,
+    xml-conduit,
     prepare,
     filemanip >=0.3
 
