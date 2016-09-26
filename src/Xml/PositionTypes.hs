@@ -2,7 +2,7 @@ module Xml.PositionTypes where
 
 import Data.Text (Text)
 import Data.Conduit.Attoparsec (PositionRange(..), Position(..))
-import Text.XML (Name, Prologue, Miscellaneous)
+import Text.XML (Name)
 
 data Node
   = NodeElement Element
