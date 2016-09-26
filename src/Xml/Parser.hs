@@ -8,6 +8,8 @@ module Xml.Parser
   , elementAttr
   , elementEmpty
   , attribute
+  , attributeFull
+  , attributeXml
   , content
   , onlyContent
   , elementContent
@@ -133,12 +135,19 @@ localElementName _ _ = Left XmlError
 elementPlain :: Text -> NodeParser Element
 elementPlain t = tokenN $ elementNode >=> localElementName t
 
-attributeName :: Text -> (Name, Text) -> Either XmlError Text
-attributeName t (n, v) | n == localName t = Right v
+attributeName :: Name -> (Name, Text) -> Either XmlError Text
+attributeName n' (n, v) | n == n' = Right v
 attributeName _ _ = Left XmlError
 
 attribute :: Text -> AttributeParser Text
-attribute = tokenN . attributeName
+attribute = tokenN . attributeName . localName
+
+attributeFull :: Name -> AttributeParser Text
+attributeFull = tokenN . attributeName
+
+attributeXml :: Text -> AttributeParser Text
+attributeXml t = attributeFull n
+  where n = Name t (Just "http://www.w3.org/XML/1998/namespace") (Just "xml")
 
 content :: NodeParser Text
 content = tokenN contentNode

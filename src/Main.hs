@@ -10,13 +10,13 @@ loadParseFile :: Show a => FilePath -> NodeParser a -> IO ()
 loadParseFile file parser = readRootElement file >>= \case
   Right root -> case parseRoot file parser root of
     Left e -> putStrLn $ "XML Parse Error:\n" ++ e
-    Right x -> putStrLn $ "Success!\n" ++ show x 
+    Right x -> putStrLn $ "Success!" 
   Left e -> putStrLn $ "XML Load Error: " ++ file ++ " -- " ++ show e
 
 main :: IO ()
 main = do
---  let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
-  let sblgntFile = "./examples/sblgnt-test.xml"
+  let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
+  -- let sblgntFile = "./examples/sblgnt-test.xml"
   loadParseFile sblgntFile Parser.sblgnt
 
   -- let perseusDir = "./data/xml-perseus-greek"

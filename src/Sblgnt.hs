@@ -16,6 +16,7 @@ data Book = Book
   { bookId :: Text
   , bookTitle :: Text
   , bookParagraphs :: [Paragraph]
+  , bookMarkEnd :: Maybe MarkEnd
   }
   deriving (Show)
 
@@ -33,6 +34,18 @@ data HeadParagraph = HeadParagraph
 data HeadContent
   = HeadContentText Text
   | HeadContentLink Link
+  deriving (Show)
+
+data Ending = Ending
+  { endingTitle :: Text
+  , endingParagraphs :: [Paragraph]
+  }
+  deriving (Show)
+
+data MarkEnd = MarkEnd
+  { markEndTitle :: Text
+  , markEndEndings :: [Ending]
+  }
   deriving (Show)
 
 data Paragraph = Paragraph
@@ -101,20 +114,30 @@ content
   = ContentVerse <$> verse
   <|> ContentWord <$> word
 
+markEndText :: NodeParser Text
+markEndText = snd <$> Xml.elementContentAttr "mark-end" (Xml.attributeXml "lang")
+
+ending :: NodeParser Ending
+ending = Ending <$> markEndText <*> some paragraph
+
+markEnd :: NodeParser MarkEnd
+markEnd = MarkEnd <$> markEndText <*> some ending
+
 paragraph :: NodeParser Paragraph
 paragraph = Paragraph <$> Xml.element "p" (many content)
 
 book :: NodeParser Book
 book = build <$> Xml.elementAttr "book" attributes children
   where
-  build (i, (t, ps)) = Book i t ps
+  build (i, (t, ps, me)) = Book i t ps me
   attributes = do
     i <- Xml.attribute "id"
     return i
   children = do
     t <- title
     ps <- some paragraph
-    return $ (t, ps)
+    me <- optional markEnd
+    return $ (t, ps, me)
 
 sblgnt :: NodeParser Sblgnt
 sblgnt = Xml.element "sblgnt" children
