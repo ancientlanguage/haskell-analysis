@@ -7,6 +7,7 @@ import qualified Xml.Parser as Xml
 
 parseSblgnt :: Test
 parseSblgnt = testCase "parse sblgnt" $ do
+  putStrLn "  beginning test"
   let xmlPath = "./data/xml-sblgnt/sblgnt.xml"
   rootResult <- Xml.readRootElement xmlPath
   putStrLn "  Xml.readRootElement"
