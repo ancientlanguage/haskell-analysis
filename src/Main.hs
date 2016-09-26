@@ -1,7 +1,7 @@
 module Main where
 
 import System.FilePath.Find
-import qualified Sblgnt as Parser
+import qualified Sblgnt.Parser as Parser
 import Xml.Events
 import Xml.PositionTypes
 import Xml.Parser
