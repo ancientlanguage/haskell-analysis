@@ -1,19 +1,22 @@
 import Test.Framework
 import Test.Framework.Providers.HUnit
-import Test.HUnit
+import Test.HUnit hiding (Test)
 import qualified Sblgnt.Parser as Sblgnt
 import qualified Xml.Events as Xml
 import qualified Xml.Parser as Xml
 
+parseSblgnt :: Test
 parseSblgnt = testCase "parse sblgnt" $ do
-  let path = "./data/xml-sblgnt/sblgnt.xml"
-  Xml.readRootElement path >>= \case
+  let xmlPath = "./data/xml-sblgnt/sblgnt.xml"
+  rootResult <- Xml.readRootElement xmlPath
+  putStrLn "  Xml.readRootElement"
+  case rootResult of
     Left e -> assertFailure $ "Xml.readRootElement:\n" ++ show e
-    Right root -> case Xml.parseRoot path Sblgnt.sblgnt root of
+    Right root -> case Xml.parseRoot xmlPath Sblgnt.sblgnt root of
       Left e -> assertFailure $ "Xml.parseRoot:\n" ++ e
-      Right x -> return ()
+      Right _ -> return ()
 
 main :: IO ()
 main = defaultMain
-  [ testGroup "SBL GNT" [parseSblgnt]
+  [ testGroup "SBLGNT" [parseSblgnt]
   ]
