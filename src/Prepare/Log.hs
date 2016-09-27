@@ -1,10 +1,10 @@
-module Log where
+module Prepare.Log where
 
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import qualified Text.XML as XML
-import Xml.PositionTypes
+import Prepare.Xml.PositionTypes
 
 showName :: XML.Name -> Text
 showName (XML.Name ln _ Nothing) = ln
@@ -23,3 +23,6 @@ logElement p e
   , as <- elementAttributes e
   = Text.putStrLn $ Text.intercalate " " [n, showAttributes as]
 logElement _ _ = return ()
+
+logBook :: Element -> IO ()
+logBook = logElement (== "book")

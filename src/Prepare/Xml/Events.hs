@@ -2,7 +2,7 @@
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Xml.Events where
+module Prepare.Xml.Events where
 
 import Prelude hiding (log)
 import Conduit
@@ -17,7 +17,7 @@ import Data.XML.Types hiding (Node(..), Element(..), Content)
 import qualified Data.XML.Types as XML
 import Text.XML.Stream.Parse (def,  PositionRange)
 import qualified Text.XML.Stream.Parse as P
-import Xml.PositionTypes
+import Prepare.Xml.PositionTypes
 
 data InvalidXml
   = ContentAfterRoot P.EventPos

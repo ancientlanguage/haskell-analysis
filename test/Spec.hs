@@ -1,14 +1,10 @@
 import Test.Framework
 import Test.Framework.Providers.HUnit
 import Test.HUnit hiding (Test)
-import qualified Sblgnt.Parser as Sblgnt
-import qualified Xml.Events as Xml
-import qualified Xml.Parser as Xml
-import qualified Xml.PositionTypes as Xml
-import Log
-
-logBook :: Xml.Element -> IO ()
-logBook = logElement (\x -> x == "book")
+import qualified Prepare.Sblgnt.Parser as Sblgnt
+import qualified Prepare.Xml.Events as Xml
+import qualified Prepare.Xml.Parser as Xml
+import Prepare.Log
 
 parseSblgnt :: Test
 parseSblgnt = testCase "parse sblgnt" $ do

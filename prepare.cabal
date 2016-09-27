@@ -14,12 +14,12 @@ cabal-version: >=1.10
 library
   hs-source-dirs: src
   exposed-modules:
-    Log,
-    Sblgnt.Model,
-    Sblgnt.Parser,
-    Xml.Events,
-    Xml.Parser,
-    Xml.PositionTypes
+    Prepare.Log,
+    Prepare.Sblgnt.Model,
+    Prepare.Sblgnt.Parser,
+    Prepare.Xml.Events,
+    Prepare.Xml.Parser,
+    Prepare.Xml.PositionTypes
   ghc-options: -Wall -fwarn-tabs -O2
   default-extensions:
     LambdaCase,
@@ -37,7 +37,7 @@ library
     megaparsec >=5.0
   default-language: Haskell2010
 
-executable prepare-exe
+executable prep
   hs-source-dirs: app
   main-is: Main.hs
   default-language: Haskell2010

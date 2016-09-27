@@ -1,10 +1,10 @@
-module Sblgnt.Parser where
+module Prepare.Sblgnt.Parser where
 
 import Prelude hiding (Word)
 import Data.Text (Text)
-import Sblgnt.Model
-import Xml.Parser (NodeParser, (<|>), many, some, optional)
-import qualified Xml.Parser as Xml
+import Prepare.Sblgnt.Model
+import Prepare.Xml.Parser (NodeParser, (<|>), many, some, optional)
+import qualified Prepare.Xml.Parser as Xml
 
 link :: NodeParser Link
 link = (uncurry Link) <$> Xml.elementContentAttr "a" (Xml.attribute "href")

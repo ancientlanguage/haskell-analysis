@@ -1,4 +1,4 @@
-module Sblgnt.Model where
+module Prepare.Sblgnt.Model where
 
 import Prelude hiding (Word)
 import Data.Text (Text)

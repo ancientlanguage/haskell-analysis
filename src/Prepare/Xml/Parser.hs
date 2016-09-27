@@ -2,7 +2,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Xml.Parser
+module Prepare.Xml.Parser
   ( (<|>)
   , element
   , elementAttr
@@ -43,7 +43,7 @@ import Text.Megaparsec.Pos
 import Text.Megaparsec.Prim
 import Data.Conduit.Attoparsec (PositionRange(..), Position(..))
 import Text.XML (Name(..))
-import Xml.PositionTypes
+import Prepare.Xml.PositionTypes
 
 type XmlParser s a = Parsec Dec s a
 type NodeParser a = XmlParser [Node] a

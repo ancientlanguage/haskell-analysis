@@ -1,14 +1,10 @@
 module Main where
 
 import System.FilePath.Find
-import qualified Sblgnt.Parser as Parser
-import Xml.Events
-import Xml.PositionTypes
-import Xml.Parser
-import Log
-
-logBook :: Element -> IO ()
-logBook = logElement (== "book")
+import qualified Prepare.Sblgnt.Parser as Parser
+import Prepare.Xml.Events
+import Prepare.Xml.Parser
+import Prepare.Log
 
 loadParseFile :: Show a => FilePath -> NodeParser a -> IO ()
 loadParseFile file parser = readRootElement logBook file >>= \case

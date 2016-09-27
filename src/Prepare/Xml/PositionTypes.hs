@@ -1,4 +1,4 @@
-module Xml.PositionTypes where
+module Prepare.Xml.PositionTypes where
 
 import Data.Text (Text)
 import Data.Conduit.Attoparsec (PositionRange(..), Position(..))
