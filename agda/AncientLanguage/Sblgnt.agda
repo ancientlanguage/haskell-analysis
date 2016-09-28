@@ -1,6 +1,8 @@
+{-# OPTIONS --no-eta-equality #-}
+
 module AncientLanguage.Sblgnt where
 
-open import Agda.Builtin.List
+open import Agda.Builtin.List public
 open import Agda.Builtin.String
 
 data Maybe (A : Set) : Set where
@@ -8,64 +10,70 @@ data Maybe (A : Set) : Set where
   some : A → Maybe A
 
 record Verse : Set where
+  constructor verse
   field
-    id : String
-    number : String
+    getId : String
+    getNumber : String
 
 record Word : Set where
+  constructor word
   field
-    prefix : Maybe String
-    text : String
-    suffix : Maybe String
+    getPrefix : Maybe String
+    getText : String
+    getSuffix : Maybe String
 
 data Content : Set where
   verse : Verse → Content
   word : Word → Content
 
+pattern v i n = verse (verse i n)
+pattern w t s = word (word none t (some s))
+pattern ws t = word (word none t (some " "))
+pattern wp p t s = word (word (some p) t (some s))
+
 record Paragraph : Set where
+  constructor p
   field
-    contents : List Content
+    getContents : List Content
 
 record Ending : Set where
+  constructor ending
   field
-    title : String
-    paragraphs : List Paragraph
+    getTitle : String
+    getParagraphs : List Paragraph
 
 record MarkEnd : Set where
+  constructor mark-end
   field
-    title : String
-    endings : List Ending
+    getTitle : String
+    getEndings : List Ending
 
 record Book : Set where
+  constructor book
   field
-    id : String
-    title : String
-    paragraphs : List Paragraph
-    markEnd : Maybe MarkEnd
-
-record Body : Set where
-  field
-    books : List Book
+    getId : String
+    getTitle : String
+    getParagraphs : List Paragraph
+    getMarkEnd : Maybe MarkEnd
 
 record Link : Set where
+  constructor a
   field
-    href : String
-    text : String
+    getHref : String
+    getText : String
 
 data HeadContent : Set where
   text : String → HeadContent
   link : Link → HeadContent
 
 record HeadParagraph : Set where
+  constructor p
   field
-    contents : List HeadContent
-
-record Head : Set where
-  field
-    title : List HeadParagraph
-    license : List HeadParagraph
+    getContents : List HeadContent
 
 record Sblgnt : Set where
+  constructor sblgnt
   field
-    head : Head
-    body : Body
+    getTitle : List HeadParagraph
+    getLicense : List HeadParagraph
+    getBooks : List Book
