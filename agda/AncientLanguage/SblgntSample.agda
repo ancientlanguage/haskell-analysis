@@ -8,8 +8,7 @@ tmSblgnt = sblgnt
   ∷ p (text "Michael W. Holmes, General Editor" ∷ [])
   ∷ p (text "Copyright 2010 Logos Bible Software and the Society of Biblical Literature" ∷ [])
   ∷ [])
-  ( p (text "See " ∷ link (a "http://SBLGNT.com" "SBLGNT.com") ∷ text " for license details." ∷ [])
-  ∷ [])
+  ( p (text "See " ∷ link (a "http://SBLGNT.com" "SBLGNT.com") ∷ text " for license details." ∷ []) ∷ [])
   ( book "Mt" "ΚΑΤΑ ΜΑΘΘΑΙΟΝ"
     ( p
       ( v "Matthew 1:1" "1:1"

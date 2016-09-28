@@ -17,6 +17,7 @@ library
     Prepare,
     Prepare.Log,
     Prepare.Sblgnt.Model,
+    Prepare.Sblgnt.Output,
     Prepare.Sblgnt.Parser,
     Prepare.Xml.Events,
     Prepare.Xml.Parser,
