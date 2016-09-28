@@ -2,10 +2,17 @@ module Main where
 
 import System.FilePath.Find
 import Prepare
+import Prepare.Sblgnt.Model (Sblgnt)
+import qualified Prepare.Sblgnt.Output as Output
+import qualified Data.Text.IO as Text
 
-showResult :: Either String a -> IO ()
+outputSblgnt :: Sblgnt -> IO ()
+outputSblgnt s = do
+  Text.putStrLn $ Output.sblgnt Output.emptyContext s
+
+showResult :: Either String Sblgnt -> IO ()
 showResult (Left x) = putStrLn x
-showResult (Right _) = putStrLn "Success!"
+showResult (Right x) = outputSblgnt x 
 
 main :: IO ()
 main = do
