@@ -26,3 +26,6 @@ logElement _ _ = return ()
 
 logBook :: Element -> IO ()
 logBook = logElement (== "book")
+
+emptyLog :: Element -> IO ()
+emptyLog _ = return ()
