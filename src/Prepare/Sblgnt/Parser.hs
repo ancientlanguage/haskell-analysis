@@ -42,7 +42,7 @@ suffix :: NodeParser Text
 suffix = Xml.elementContent "suffix"
 
 word :: NodeParser Word
-word = Word <$> optional prefix <*> surface <*> optional suffix
+word = Word <$> optional prefix <*> surface <*> suffix
 
 content :: NodeParser Content
 content

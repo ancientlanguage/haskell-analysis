@@ -60,7 +60,7 @@ data Verse = Verse
 data Word = Word
   { wordPrefix :: Maybe Text
   , wordText :: Text
-  , wordSuffix :: Maybe Text
+  , wordSuffix :: Text
   }
   deriving (Show)
 

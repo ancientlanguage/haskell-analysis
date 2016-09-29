@@ -28,9 +28,9 @@ sblgnt ctx (Sblgnt ts ls bs) = Text.append prologue $
     , "sblgntTerm : Sblgnt"
     , "sblgntTerm = sblgnt"
     ]
+  newCtx = increaseIndent ctx
   titleText = onePerLine headParagraph newCtx ts
   licenseText = onePerLine headParagraph newCtx ls
-  newCtx = increaseIndent ctx
 
 headParagraph :: Output HeadParagraph
 headParagraph ctx (HeadParagraph cs) = Text.append
