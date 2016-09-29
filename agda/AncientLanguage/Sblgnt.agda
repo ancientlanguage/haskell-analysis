@@ -27,8 +27,8 @@ data Content : Set where
   word : Word → Content
 
 pattern v i n = verse (verse i n)
-pattern w t s = word (word none t (some s))
-pattern ws t = word (word none t (some " "))
+pattern ws t s = word (word none t (some s))
+pattern w t = word (word none t (some " "))
 pattern wp p t s = word (word (some p) t (some s))
 
 record Paragraph : Set where
