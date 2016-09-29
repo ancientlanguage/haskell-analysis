@@ -57,7 +57,7 @@ record Book : Set where
     getMarkEnd : Maybe MarkEnd
 
 record Link : Set where
-  constructor a
+  constructor link
   field
     getHref : String
     getText : String
@@ -65,6 +65,8 @@ record Link : Set where
 data HeadContent : Set where
   text : String → HeadContent
   link : Link → HeadContent
+
+pattern a h t = link (link h t)
 
 record HeadParagraph : Set where
   constructor p
