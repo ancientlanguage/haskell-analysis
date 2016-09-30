@@ -2,11 +2,12 @@ module Prepare.Sblgnt.Unify where
 
 import Data.Foldable
 import Data.Text (Text)
+import Prepare.Language
 import qualified Prepare.Sblgnt.Model as Sblgnt
 import qualified Prepare.Source.Model as Source
 
 unify :: Sblgnt.Sblgnt -> Source.Group
-unify (Sblgnt.Sblgnt st sl bs) = Source.Group "Sblgnt" "SBLGNT" lic
+unify (Sblgnt.Sblgnt st sl bs) = Source.Group "Sblgnt" Greek "SBLGNT" lic
   (fmap (bookSource lic) bs)
   where
   lic = []

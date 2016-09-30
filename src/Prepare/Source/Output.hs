@@ -16,7 +16,7 @@ source :: Group -> Output Source
 source g ctx (Source sid st sl sc) =
   Text.concat [ prologue, licenseText, contentsText ]
   where
-  prologue = tjoin "\n"
+  prologue = joinText "\n"
     [ moduleLine
     , ""
     , "open import AncientLanguage.Source"
@@ -25,15 +25,15 @@ source g ctx (Source sid st sl sc) =
     , termDecl
     ]
   newCtx = increaseIndent ctx
-  moduleLine = tjoin " "
+  moduleLine = joinText " "
     [ "module"
-    , tjoin "." [ "AncientLanguage", groupId g, sid ]
+    , joinText "." [ "AncientLanguage", groupId g, sid ]
     , "where"
     ]
   termName = idAsTerm sid
-  termType = tspaced [ termName, ":", "Source" ]
-  termDecl = tspaced [ termName, "=", "source", quoted sid, quoted st ]
-  licenseText = onePerLine (\_ -> quoted) newCtx sl
+  termType = spacedText [ termName, ":", "Source" ]
+  termDecl = spacedText [ termName, "=", "source", quoted sid, quoted st ]
+  licenseText = onePerLine (const quoted) newCtx sl
   contentsText = onePerLine content newCtx sc
 
 content :: Output Content
@@ -45,19 +45,19 @@ milestone _ MilestoneParagraph = "p"
 milestone ctx (MilestoneVerse v) = verse ctx v
 
 verse :: Output Verse
-verse _ (Verse cn vn) = tspaced [ "v", num cn, num vn ]
+verse _ (Verse cn vn) = spacedText [ "v", num cn, num vn ]
 
 word :: Output Word
-word _ (Word Nothing t " ") = tspaced [ "w", quoted t ]
-word _ (Word Nothing t s) = tspaced [ "ws", quoted t, quoted s ]
-word _ (Word (Just p) t s) = tspaced [ "wp", quoted p, quoted t, quoted s ]
+word _ (Word Nothing t " ") = spacedText [ "w", quoted t ]
+word _ (Word Nothing t s) = spacedText [ "ws", quoted t, quoted s ]
+word _ (Word (Just p) t s) = spacedText [ "wp", quoted p, quoted t, quoted s ]
 
 
-tjoin :: Text -> [Text] -> Text
-tjoin t = Text.intercalate t
+joinText :: Text -> [Text] -> Text
+joinText t = Text.intercalate t
 
-tspaced :: [Text] -> Text
-tspaced = tjoin " "
+spacedText :: [Text] -> Text
+spacedText = joinText " "
 
 emptyContext :: Context
 emptyContext = Context ""

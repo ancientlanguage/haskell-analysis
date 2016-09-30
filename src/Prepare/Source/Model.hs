@@ -2,6 +2,7 @@ module Prepare.Source.Model where
 
 import Prelude hiding (Word)
 import Data.Text (Text)
+import Prepare.Language
 
 data Verse = Verse
   { verseChapter :: Int
@@ -36,6 +37,7 @@ data Source = Source
 
 data Group = Group
   { groupId :: Text
+  , groupLanguage :: Language
   , groupTitle :: Text
   , groupDescription :: [Text]
   , groupSources :: [Source]

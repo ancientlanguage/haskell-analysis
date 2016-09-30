@@ -15,6 +15,7 @@ library
   hs-source-dirs: src
   exposed-modules:
     Prepare,
+    Prepare.Language,
     Prepare.Log,
     Prepare.Sblgnt.Model,
     Prepare.Sblgnt.Parser,
