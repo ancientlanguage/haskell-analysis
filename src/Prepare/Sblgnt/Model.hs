@@ -52,8 +52,10 @@ data Paragraph = Paragraph
   deriving (Show)
 
 data Verse = Verse
-  { verseId :: Text
-  , verseNumber :: Text
+  { verseBook :: Text
+  , verseChapter :: Integer
+  , verseVerse :: Integer
+  , verseContextual :: Text
   }
   deriving (Show)
 

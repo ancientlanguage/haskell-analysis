@@ -17,6 +17,7 @@ module Prepare.Xml.Parser
   , noAttributes
   , end
   , parseRoot
+  , parseNested
   , many
   , some
   , optional
@@ -158,8 +159,10 @@ onlyContent = content <* end
 setPositionParser :: Stream s => SourcePos -> XmlParser s a -> XmlParser s a
 setPositionParser pos p = setPosition pos *> p
 
-parseNested :: (Stream a, Stream c, ShowToken (Token a)) => XmlParser a b -> String -> SourcePos -> a -> XmlParser c b
-parseNested p lab pos xs = case runParser (setPositionParser pos p) (sourceName pos) xs of
+parseNested :: (Stream a, Stream c, ShowToken (Token a)) => String -> XmlParser a b -> a -> XmlParser c b
+parseNested lab p xs = do
+  pos <- getPosition
+  case runParser (setPositionParser pos p) (sourceName pos) xs of
     Left e -> unexpected . Label . NonEmpty.fromList $ lab ++ " " ++ parseErrorPretty e
     Right x -> return x
 
@@ -170,9 +173,8 @@ elementFull
   -> NodeParser (a, c)
 elementFull name attributeParser childrenParser = do
   el <- elementPlain name
-  pos <- getPosition
-  attributeResult <- parseNested attributeParser "Attribute" pos (elementAttributes el) 
-  childrenResult <- parseNested childrenParser "Child" pos (elementNodes el)
+  attributeResult <- parseNested "Attribute" attributeParser (elementAttributes el) 
+  childrenResult <- parseNested "Child" childrenParser (elementNodes el)
   return (attributeResult, childrenResult)
 
 wrapAttributeParser :: AttributeParser a -> AttributeParser a

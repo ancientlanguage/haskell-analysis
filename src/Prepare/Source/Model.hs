@@ -5,8 +5,8 @@ import Data.Text (Text)
 import Prepare.Language
 
 data Verse = Verse
-  { verseChapter :: Int
-  , verseVerse :: Int
+  { verseChapter :: Integer
+  , verseVerse :: Integer
   }
   deriving (Show)
 

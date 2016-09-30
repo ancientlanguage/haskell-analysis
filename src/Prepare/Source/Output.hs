@@ -25,7 +25,7 @@ source g ctx (Source sid st sl sc) =
     , termDecl
     ]
   newCtx = increaseIndent ctx
-  moduleName = joinText "." [ "AncientLanguage", showText (groupLanguage g), groupId g, sid ] 
+  moduleName = joinText "." [ "AncientLanguage", showText (groupLanguage g), "Source", groupId g, sid ] 
   moduleDecl = spacedText [ "module", moduleName, "where" ]
   termName = idAsTerm sid
   termType = spacedText [ termName, ":", "Source" ]
@@ -71,7 +71,7 @@ asIs _ t = t
 quoted :: Text -> Text
 quoted t = Text.concat [ "\"", t , "\"" ]
 
-num :: Int -> Text
+num :: (Num a, Show a) => a -> Text
 num = Text.pack . show
 
 newline :: Context -> Text

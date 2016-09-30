@@ -1,10 +1,16 @@
+{-# LANGUAGE TypeFamilies #-}
+
 module Prepare.Sblgnt.Parser where
 
 import Prelude hiding (Word)
 import Data.Text (Text)
+import qualified Data.Text as Text
 import Prepare.Sblgnt.Model
 import Prepare.Xml.Parser (NodeParser, (<|>), many, some, optional)
 import qualified Prepare.Xml.Parser as Xml
+import qualified Text.Megaparsec.Char as MP
+import qualified Text.Megaparsec.Lexer as MP
+import qualified Text.Megaparsec.Prim as MP
 
 link :: NodeParser Link
 link = (uncurry Link) <$> Xml.elementContentAttr "a" (Xml.attribute "href")
@@ -29,8 +35,27 @@ license = Xml.element "license" headParagraphList
 title :: NodeParser Text
 title = Xml.element "title" Xml.content
 
+verseId
+  :: (MP.MonadParsec e s m, MP.Token s ~ Char)
+  => m (Text, Integer, Integer)
+verseId = do
+  bn <- optional (some MP.digitChar <* MP.spaceChar)
+  bt <- some MP.letterChar
+  _ <- MP.spaceChar
+  cn <- MP.integer
+  _ <- MP.char ':'
+  vn <- MP.integer
+  _ <- MP.eof
+  return (Text.pack (makeBook bn bt), cn, vn)
+  where
+    makeBook Nothing t = t
+    makeBook (Just bn) t = bn ++ " " ++ t
+
 verse :: NodeParser Verse
-verse = uncurry Verse <$> Xml.elementContentAttr "verse-number" (Xml.attribute "id")
+verse = do
+  (vid, vtext) <- Xml.elementContentAttr "verse-number" (Xml.attribute "id")
+  (b, cn, vn) <- Xml.parseNested "verse-number id" verseId vid
+  return $ Verse b cn vn vtext
 
 surface :: NodeParser Text
 surface = Xml.elementContent "w"

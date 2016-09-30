@@ -5,7 +5,7 @@ open import Agda.Builtin.Char
 open import Agda.Builtin.Nat
 open import Agda.Builtin.String
 open import AncientLanguage.Source
-open import AncientLanguage.Sblgnt.Matthew
+open import AncientLanguage.Greek.Source.Sblgnt.Matthew
 
 length : {A : Set} → List A → Nat
 length [] = 0
@@ -39,3 +39,5 @@ infixr 6 _++_
 join : {A : Set} → List (List A) → List A
 join [] = []
 join (x ∷ xs) = x ++ join xs
+
+betaCount = length (join (map betas (Source.getContents matthew)))

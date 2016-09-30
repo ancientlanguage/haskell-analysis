@@ -28,7 +28,7 @@ content (Sblgnt.ContentVerse v) = Source.ContentMilestone (verse v)
 content (Sblgnt.ContentWord w) = Source.ContentWord (word w)
 
 verse :: Sblgnt.Verse -> Source.Milestone
-verse (Sblgnt.Verse _ _ ) = Source.MilestoneVerse (Source.Verse 1 1)
+verse (Sblgnt.Verse _ cn vn _) = Source.MilestoneVerse (Source.Verse cn vn)
 
 word :: Sblgnt.Word -> Source.Word
 word (Sblgnt.Word p t s) = Source.Word p t s
