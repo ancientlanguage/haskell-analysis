@@ -17,8 +17,10 @@ library
     Prepare,
     Prepare.Log,
     Prepare.Sblgnt.Model,
-    Prepare.Sblgnt.Output,
     Prepare.Sblgnt.Parser,
+    Prepare.Sblgnt.Unify,
+    Prepare.Source.Model,
+    Prepare.Source.Output,
     Prepare.Xml.Events,
     Prepare.Xml.Parser,
     Prepare.Xml.PositionTypes

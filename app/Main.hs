@@ -3,12 +3,15 @@ module Main where
 import System.FilePath.Find
 import Prepare
 import Prepare.Sblgnt.Model (Sblgnt)
-import qualified Prepare.Sblgnt.Output as Output
+import qualified Prepare.Sblgnt.Unify as Sblgnt
+import qualified Prepare.Source.Model as Source
+import qualified Prepare.Source.Output as Output
 import qualified Data.Text.IO as Text
 
 outputSblgnt :: Sblgnt -> IO ()
 outputSblgnt s = do
-  Text.putStrLn $ Output.sblgnt Output.emptyContext s
+  let g = Sblgnt.unify s
+  Text.putStrLn $ Output.source g Output.emptyContext $ head $ Source.groupSources g
 
 showResult :: Either String Sblgnt -> IO ()
 showResult (Left x) = putStrLn x
