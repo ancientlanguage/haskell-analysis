@@ -17,7 +17,7 @@ source g ctx (Source sid st sl sc) =
   Text.concat [ prologue, licenseText, contentsText ]
   where
   prologue = joinText "\n"
-    [ moduleLine
+    [ moduleDecl
     , ""
     , "open import AncientLanguage.Source"
     , ""
@@ -25,11 +25,8 @@ source g ctx (Source sid st sl sc) =
     , termDecl
     ]
   newCtx = increaseIndent ctx
-  moduleLine = joinText " "
-    [ "module"
-    , joinText "." [ "AncientLanguage", groupId g, sid ]
-    , "where"
-    ]
+  moduleName = joinText "." [ "AncientLanguage", showText (groupLanguage g), groupId g, sid ] 
+  moduleDecl = spacedText [ "module", moduleName, "where" ]
   termName = idAsTerm sid
   termType = spacedText [ termName, ":", "Source" ]
   termDecl = spacedText [ termName, "=", "source", quoted sid, quoted st ]
@@ -58,6 +55,9 @@ joinText t = Text.intercalate t
 
 spacedText :: [Text] -> Text
 spacedText = joinText " "
+
+showText :: Show a => a -> Text
+showText = Text.pack . show
 
 emptyContext :: Context
 emptyContext = Context ""
