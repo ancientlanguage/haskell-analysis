@@ -1,6 +1,5 @@
 module Prepare.Sblgnt.Unify where
 
-import Data.Foldable
 import Data.Text (Text)
 import Prepare.Language
 import qualified Prepare.Sblgnt.Model as Sblgnt
