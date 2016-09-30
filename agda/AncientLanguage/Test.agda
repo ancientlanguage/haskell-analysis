@@ -31,13 +31,4 @@ map : {A B : Set} → (A → B) → List A → List B
 map f [] = []
 map f (x ∷ xs) = f x ∷ map f xs
 
-_++_ : {A : Set} → (xs ys : List A) → List A
-[] ++ ys = ys
-(x ∷ xs) ++ ys = x ∷ xs ++ ys
-infixr 6 _++_
-
-join : {A : Set} → List (List A) → List A
-join [] = []
-join (x ∷ xs) = x ++ join xs
-
 betaCount = length (join (map betas (Source.getContents matthew)))

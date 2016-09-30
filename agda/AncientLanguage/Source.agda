@@ -10,6 +10,17 @@ data Maybe (A : Set) : Set where
   none : Maybe A
   some : A → Maybe A
 
+append : {A : Set} → (xs ys : List A) → List A
+append [] ys = ys
+append (x ∷ xs) ys = x ∷ append xs ys
+
+_++_ = append
+infixr 6 _++_
+
+join : {A : Set} → List (List A) → List A
+join [] = []
+join (x ∷ xs) = append x (join xs)
+
 record Verse : Set where
   constructor verse
   field

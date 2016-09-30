@@ -2,6 +2,7 @@ module Prepare.Source.Output where
 
 import Prelude hiding (Word, last)
 import qualified Data.Char as Char
+import qualified Data.List.Split as Split
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Prepare.Source.Model
@@ -31,7 +32,24 @@ source g ctx (Source sid st sl sc) =
   termType = spacedText [ termName, ":", "Source" ]
   termDecl = spacedText [ termName, "=", "source", quoted sid, quoted st ]
   licenseText = onePerLine (const quoted) newCtx sl
-  contentsText = onePerLine content newCtx sc
+  contentsText = contentChunkJoin newCtx (chunkByVerse sc)
+
+chunkByVerse :: [Content] -> [[Content]]
+chunkByVerse = Split.split . Split.keepDelimsL . Split.whenElt $ isVerse
+  where
+  isVerse :: Content -> Bool
+  isVerse (ContentMilestone (MilestoneVerse _)) = True
+  isVerse _ = False
+
+contentChunkJoin :: Output [[Content]]
+contentChunkJoin ctx xs = spacedText
+  [ joinText "" [ newline ctx, "( join" ]
+  , onePerLine contentChunk ctx xs
+  , ")"
+  ]
+
+contentChunk :: Output [Content]
+contentChunk ctx = onePerLine content (increaseIndent ctx)
 
 content :: Output Content
 content ctx (ContentMilestone m) = milestone ctx m
