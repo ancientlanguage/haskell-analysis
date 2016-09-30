@@ -7,13 +7,17 @@ import qualified Prepare.Sblgnt.Model as Sblgnt
 import qualified Prepare.Source.Model as Source
 
 unify :: Sblgnt.Sblgnt -> Source.Group
-unify (Sblgnt.Sblgnt st sl bs) = Source.Group "Sblgnt" Greek "SBLGNT" lic
-  (fmap (bookSource lic) bs)
+unify (Sblgnt.Sblgnt st sl bs) =
+  Source.Group "Sblgnt" Greek (getTitle desc) desc contents
   where
-  lic = licenseLines st sl
+  groupId = "Sblgnt"
+  getTitle [] = groupId
+  getTitle (x : _) = x
+  desc = descLines st sl
+  contents = fmap (bookSource desc) bs
 
-licenseLines :: [Sblgnt.HeadParagraph] -> [Sblgnt.HeadParagraph] -> [Text]
-licenseLines st sl = headParagraphLines st ++ headParagraphLines sl
+descLines :: [Sblgnt.HeadParagraph] -> [Sblgnt.HeadParagraph] -> [Text]
+descLines st sl = headParagraphLines st ++ headParagraphLines sl
 
 headParagraphLines :: [Sblgnt.HeadParagraph] -> [Text]
 headParagraphLines = fmap headParagraphText
