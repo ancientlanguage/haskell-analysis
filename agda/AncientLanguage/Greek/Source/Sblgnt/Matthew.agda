@@ -4,7 +4,11 @@ open import AncientLanguage.Source
 
 matthew : Source
 matthew = source "Matthew" "ΚΑΤΑ ΜΑΘΘΑΙΟΝ"
-  []
+  ( "The Greek New Testament: SBL Edition"
+  ∷ "Michael W. Holmes, General Editor"
+  ∷ "Copyright 2010 Logos Bible Software and the Society of Biblical Literature"
+  ∷ "See http://SBLGNT.com for license details."
+  ∷ [] )
   ( join 
   ( 
     ( p

@@ -1,6 +1,7 @@
 module Prepare.Sblgnt.Unify where
 
 import Data.Text (Text)
+import qualified Data.Text as Text
 import Prepare.Language
 import qualified Prepare.Sblgnt.Model as Sblgnt
 import qualified Prepare.Source.Model as Source
@@ -9,10 +10,23 @@ unify :: Sblgnt.Sblgnt -> Source.Group
 unify (Sblgnt.Sblgnt st sl bs) = Source.Group "Sblgnt" Greek "SBLGNT" lic
   (fmap (bookSource lic) bs)
   where
-  lic = []
+  lic = licenseLines st sl
+
+licenseLines :: [Sblgnt.HeadParagraph] -> [Sblgnt.HeadParagraph] -> [Text]
+licenseLines st sl = headParagraphLines st ++ headParagraphLines sl
+
+headParagraphLines :: [Sblgnt.HeadParagraph] -> [Text]
+headParagraphLines = fmap headParagraphText
+
+headParagraphText :: Sblgnt.HeadParagraph -> Text
+headParagraphText = Text.concat . fmap headContentText . Sblgnt.headParagraphContents  
+
+headContentText :: Sblgnt.HeadContent -> Text
+headContentText (Sblgnt.HeadContentText t) = t
+headContentText (Sblgnt.HeadContentLink (Sblgnt.Link h _)) = h 
 
 bookSource :: [Text] -> Sblgnt.Book -> Source.Source
-bookSource lic (Sblgnt.Book bid btitle bp be) = Source.Source
+bookSource lic (Sblgnt.Book bid btitle bp _) = Source.Source
   (shortIdToLong bid)
   btitle
   lic
