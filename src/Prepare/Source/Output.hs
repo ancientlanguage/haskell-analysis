@@ -2,9 +2,13 @@ module Prepare.Source.Output where
 
 import Prelude hiding (Word, last)
 import qualified Data.Char as Char
+import qualified Data.List as List
 import qualified Data.List.Split as Split
 import Data.Text (Text)
 import qualified Data.Text as Text
+import qualified Data.Text.IO as Text
+import qualified System.Directory as FilePath
+import qualified System.FilePath as FilePath
 import Prepare.Source.Model
 
 data Context = Context
@@ -13,33 +17,73 @@ data Context = Context
 
 type Output a = Context -> a -> Text
 
-source :: Group -> Output Source
-source g ctx (Source sid st sl sc) =
-  Text.concat [ prologue, licenseText, contentsText ]
+newtype ModuleName = ModuleName { getModuleName :: [Text] }
+  deriving (Show)
+
+emptyModuleName :: ModuleName
+emptyModuleName = ModuleName []
+
+addModuleName :: Text -> ModuleName -> ModuleName
+addModuleName t (ModuleName ps) = ModuleName (t : ps)
+
+dottedModuleName :: ModuleName -> Text
+dottedModuleName (ModuleName ps) = joinText "." (reverse ps)
+
+moduleNamePath :: ModuleName -> FilePath
+moduleNamePath (ModuleName ps) = FilePath.joinPath . fmap Text.unpack . reverse $ ps
+
+data Module = Module
+  { moduleName :: ModuleName
+  , moduleTermName :: Text
+  , moduleContents :: Text
+  }
+  deriving (Show)
+
+writeModule :: FilePath -> Module -> IO ()
+writeModule dir m = do
+  let mp = moduleNamePath (moduleName m)
+  let mpf = FilePath.addExtension mp "agda"
+  let full = dir FilePath.</> mpf
+  let md = FilePath.takeDirectory full
+  let createParents = True
+  _ <- FilePath.createDirectoryIfMissing createParents md
+  Text.writeFile full (moduleContents m)
+
+sourceModules :: ModuleName -> Source -> [Module]
+sourceModules pm (Source sid st sl sc) = [ srcModule ]
   where
+  srcModule = Module srcModuleName termName srcContents
+  srcContents = Text.concat [ prologue, licenseText, contentsText, "\n" ]
+  srcModuleName = addModuleName sid pm
   prologue = joinText "\n"
-    [ moduleDecl
-    , ""
-    , "open import AncientLanguage.Source"
-    , ""
+    [ getModulePrefix srcModuleName
     , termType
     , termDecl
     ]
-  newCtx = increaseIndent ctx
-  moduleName = joinText "." [ "AncientLanguage", showText (groupLanguage g), "Source", groupId g, sid ] 
-  moduleDecl = spacedText [ "module", moduleName, "where" ]
+  newCtx = increaseIndent emptyContext
   termName = idAsTerm sid
   termType = spacedText [ termName, ":", "Source" ]
   termDecl = spacedText [ termName, "=", "source", quoted sid, quoted st ]
   licenseText = onePerLine (const quoted) newCtx sl
   contentsText = contentChunkJoin newCtx (chunkByMilestone sc)
 
+getModulePrefix :: ModuleName -> Text
+getModulePrefix n =
+  joinText "\n"
+    [ moduleDecl
+    , ""
+    , "open import AncientLanguage.Source"
+    , ""
+    ]
+  where
+  moduleDecl = spacedText [ "module", dottedModuleName n, "where" ]
+
 chunkByMilestone :: [Content] -> [[Content]]
 chunkByMilestone = Split.split . Split.dropInitBlank . Split.keepDelimsL . Split.condense . Split.whenElt $ isMilestone
-  where
-  isMilestone :: Content -> Bool
-  isMilestone (ContentMilestone _) = True
-  isMilestone _ = False
+
+isMilestone :: Content -> Bool
+isMilestone (ContentMilestone _) = True
+isMilestone _ = False
 
 contentChunkJoin :: Output [[Content]]
 contentChunkJoin ctx xs = spacedText
@@ -47,6 +91,17 @@ contentChunkJoin ctx xs = spacedText
   , onePerLine contentChunk ctx xs
   , ")"
   ]
+
+getChapter :: [Content] -> Maybe Integer
+getChapter = foldr go Nothing
+  where
+  go (ContentMilestone (MilestoneVerse (Verse c _))) _ = Just c
+  go _ r = r
+
+groupByChapter :: [[Content]] -> [[[Content]]]
+groupByChapter = List.groupBy f
+  where
+  f x y = getChapter x == getChapter y
 
 contentChunk :: Output [Content]
 contentChunk ctx = onePerLine content (increaseIndent ctx)

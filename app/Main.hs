@@ -11,7 +11,10 @@ import qualified Data.Text.IO as Text
 outputSblgnt :: Sblgnt -> IO ()
 outputSblgnt s = do
   let g = Sblgnt.unify s
-  Text.putStrLn $ Output.source g Output.emptyContext $ head $ Source.groupSources g
+  let gm = Output.ModuleName [ Source.groupId g, "Source", "Greek", "AncientLanguage" ]
+  let sourceModules = Output.sourceModules gm (head $ Source.groupSources g)
+  let baseDir = "./agda"
+  mapM_ (Output.writeModule baseDir) sourceModules
 
 showResult :: Either String Sblgnt -> IO ()
 showResult (Left x) = putStrLn x
