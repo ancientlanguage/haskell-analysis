@@ -30,15 +30,17 @@ headContentText (Sblgnt.HeadContentText t) = t
 headContentText (Sblgnt.HeadContentLink (Sblgnt.Link h _)) = h 
 
 bookSource :: [Text] -> Sblgnt.Book -> Source.Source
-bookSource lic (Sblgnt.Book bid btitle bp _) = Source.Source
-  (shortIdToLong bid)
-  btitle
-  lic
-  (concatMap flatParagraph bp)
+bookSource lic (Sblgnt.Book bid btitle bp _) =
+  Source.Source
+    (shortIdToLong bid)
+    btitle
+    lic
+    (concatMap flatParagraph bp)
 
 flatParagraph :: Sblgnt.Paragraph -> [Source.Content]
-flatParagraph (Sblgnt.Paragraph cs) = p : fmap content cs
-  where p = Source.ContentMilestone Source.MilestoneParagraph
+flatParagraph (Sblgnt.Paragraph cs) = if null cs then [] else p : fmap content cs
+  where
+  p = Source.ContentMilestone Source.MilestoneParagraph
 
 content :: Sblgnt.Content -> Source.Content
 content (Sblgnt.ContentVerse v) = Source.ContentMilestone (verse v)

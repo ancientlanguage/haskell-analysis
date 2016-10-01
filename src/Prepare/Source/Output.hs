@@ -32,14 +32,14 @@ source g ctx (Source sid st sl sc) =
   termType = spacedText [ termName, ":", "Source" ]
   termDecl = spacedText [ termName, "=", "source", quoted sid, quoted st ]
   licenseText = onePerLine (const quoted) newCtx sl
-  contentsText = contentChunkJoin newCtx (chunkByVerse sc)
+  contentsText = contentChunkJoin newCtx (chunkByMilestone sc)
 
-chunkByVerse :: [Content] -> [[Content]]
-chunkByVerse = Split.split . Split.keepDelimsL . Split.whenElt $ isVerse
+chunkByMilestone :: [Content] -> [[Content]]
+chunkByMilestone = Split.split . Split.dropInitBlank . Split.keepDelimsL . Split.condense . Split.whenElt $ isMilestone
   where
-  isVerse :: Content -> Bool
-  isVerse (ContentMilestone (MilestoneVerse _)) = True
-  isVerse _ = False
+  isMilestone :: Content -> Bool
+  isMilestone (ContentMilestone _) = True
+  isMilestone _ = False
 
 contentChunkJoin :: Output [[Content]]
 contentChunkJoin ctx xs = spacedText
