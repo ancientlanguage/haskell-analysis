@@ -47,7 +47,28 @@ writeModule dir m = do
   let md = FilePath.takeDirectory full
   let createParents = True
   _ <- FilePath.createDirectoryIfMissing createParents md
+  _ <- putStrLn ("Writing " ++ full)
   Text.writeFile full (moduleContents m)
+
+groupModules :: ModuleName -> Group -> [Module]
+groupModules pm (Group gid gl gt gd gs) = groupModule : srcModules
+  where
+  groupModule = Module groupModuleName termName groupContents
+  groupContents = Text.concat [ prologue, descText, contentsText, "\n" ]
+  groupModuleName = addModuleName gid pm
+  imports = fmap (flip addModuleName groupModuleName . sourceId) gs
+  prologue = joinText "\n"
+    [ getModulePrefix groupModuleName imports
+    , termType
+    , termDecl
+    ]
+  ctx = increaseIndent emptyContext
+  termName = idAsTerm gid
+  termType = spacedText [ termName, ":", "Group" ]
+  termDecl = spacedText [ termName, "=", "group", quoted gid, showText gl, quoted gt ]
+  descText = onePerLine (const quoted) ctx gd
+  contentsText = onePerLine (const id) ctx $ fmap (idAsTerm . sourceId) gs
+  srcModules = concatMap (sourceModules groupModuleName) gs 
 
 sourceModules :: ModuleName -> Source -> [Module]
 sourceModules pm (Source sid st sl sc) = [ srcModule ]
@@ -55,28 +76,30 @@ sourceModules pm (Source sid st sl sc) = [ srcModule ]
   srcModule = Module srcModuleName termName srcContents
   srcContents = Text.concat [ prologue, licenseText, contentsText, "\n" ]
   srcModuleName = addModuleName sid pm
+  typeModuleName = ModuleName [ "Source", "AncientLanguage" ]
   prologue = joinText "\n"
-    [ getModulePrefix srcModuleName
+    [ getModulePrefix srcModuleName [typeModuleName]
     , termType
     , termDecl
     ]
-  newCtx = increaseIndent emptyContext
+  ctx = increaseIndent emptyContext
   termName = idAsTerm sid
   termType = spacedText [ termName, ":", "Source" ]
   termDecl = spacedText [ termName, "=", "source", quoted sid, quoted st ]
-  licenseText = onePerLine (const quoted) newCtx sl
-  contentsText = contentChunkJoin newCtx (chunkByMilestone sc)
+  licenseText = onePerLine (const quoted) ctx sl
+  contentsText = contentChunkJoin ctx (chunkByMilestone sc)
 
-getModulePrefix :: ModuleName -> Text
-getModulePrefix n =
+getModulePrefix :: ModuleName -> [ModuleName] -> Text
+getModulePrefix n is =
   joinText "\n"
     [ moduleDecl
     , ""
-    , "open import AncientLanguage.Source"
+    , imports
     , ""
     ]
   where
   moduleDecl = spacedText [ "module", dottedModuleName n, "where" ]
+  imports = joinText "\n" $ fmap (\x -> spacedText [ "open", "import", dottedModuleName x ]) is
 
 chunkByMilestone :: [Content] -> [[Content]]
 chunkByMilestone = Split.split . Split.dropInitBlank . Split.keepDelimsL . Split.condense . Split.whenElt $ isMilestone

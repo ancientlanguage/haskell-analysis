@@ -56,9 +56,14 @@ record Source : Set where
     getLicense : List String
     getContents : List Content
 
+data Language : Set where
+  Greek Hebrew Latin : Language
+
 record Group : Set where
   constructor group
   field
+    getId : String
+    getLanguage : Language
     getTitle : String
     getDescription : List String
     getSources : List Source
