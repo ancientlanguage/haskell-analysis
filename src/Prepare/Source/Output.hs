@@ -58,7 +58,7 @@ groupModules pm (Group gid gl gt gd gs) = groupModule : srcModules
   groupModuleName = addModuleName gid pm
   imports = fmap (flip addModuleName groupModuleName . sourceId) gs
   prologue = joinText "\n"
-    [ getModulePrefix groupModuleName imports
+    [ getModulePrefix groupModuleName (sourceTypeModuleName : imports)
     , termType
     , termDecl
     ]
@@ -70,15 +70,17 @@ groupModules pm (Group gid gl gt gd gs) = groupModule : srcModules
   contentsText = onePerLine (const id) ctx $ fmap (idAsTerm . sourceId) gs
   srcModules = concatMap (sourceModules groupModuleName) gs 
 
+sourceTypeModuleName :: ModuleName
+sourceTypeModuleName = ModuleName [ "Source", "AncientLanguage" ]
+
 sourceModules :: ModuleName -> Source -> [Module]
 sourceModules pm (Source sid st sl sc) = [ srcModule ]
   where
   srcModule = Module srcModuleName termName srcContents
   srcContents = Text.concat [ prologue, licenseText, contentsText, "\n" ]
   srcModuleName = addModuleName sid pm
-  typeModuleName = ModuleName [ "Source", "AncientLanguage" ]
   prologue = joinText "\n"
-    [ getModulePrefix srcModuleName [typeModuleName]
+    [ getModulePrefix srcModuleName [sourceTypeModuleName]
     , termType
     , termDecl
     ]
