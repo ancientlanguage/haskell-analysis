@@ -36,8 +36,12 @@ data Module = Module
   { moduleName :: ModuleName
   , moduleTermName :: Text
   , moduleContents :: Text
+  , moduleChildren :: [Module]
   }
   deriving (Show)
+
+flatModules :: Module -> [Module]
+flatModules m = m : concatMap flatModules (moduleChildren m)
 
 writeModule :: FilePath -> Module -> IO ()
 writeModule dir m = do
@@ -50,13 +54,12 @@ writeModule dir m = do
   _ <- putStrLn ("Writing " ++ full)
   Text.writeFile full (moduleContents m)
 
-groupModules :: ModuleName -> Group -> [Module]
-groupModules pm (Group gid gl gt gd gs) = groupModule : srcModules
+groupModule :: Group -> Module
+groupModule (Group gid gl gt gd gs) = Module groupModuleName termName groupContents srcModules
   where
-  groupModule = Module groupModuleName termName groupContents
   groupContents = Text.concat [ prologue, descText, contentsText, "\n" ]
-  groupModuleName = addModuleName gid pm
-  imports = fmap (flip addModuleName groupModuleName . sourceId) gs
+  groupModuleName = addModuleName gid (addModuleName (showText gl) sourceTypeModuleName)
+  imports = fmap moduleName srcModules
   prologue = joinText "\n"
     [ getModulePrefix groupModuleName (sourceTypeModuleName : imports)
     , termType
@@ -67,16 +70,16 @@ groupModules pm (Group gid gl gt gd gs) = groupModule : srcModules
   termType = spacedText [ termName, ":", "Group" ]
   termDecl = spacedText [ termName, "=", "group", quoted gid, showText gl, quoted gt ]
   descText = onePerLine (const quoted) ctx gd
-  contentsText = onePerLine (const id) ctx $ fmap (idAsTerm . sourceId) gs
-  srcModules = concatMap (sourceModules groupModuleName) gs 
+  contentsText = onePerLine (const id) ctx $ fmap moduleTermName srcModules
+  srcModules = fmap (sourceModule groupModuleName) gs
 
 sourceTypeModuleName :: ModuleName
-sourceTypeModuleName = ModuleName [ "Source", "AncientLanguage" ]
+sourceTypeModuleName = ModuleName [ "PrimarySource", "AncientLanguage" ]
 
-sourceModules :: ModuleName -> Source -> [Module]
-sourceModules pm (Source sid st sl sc) = [ srcModule ]
+sourceModule :: ModuleName -> Source -> Module
+sourceModule pm (Source sid st sl sc) = srcModule
   where
-  srcModule = Module srcModuleName termName srcContents
+  srcModule = Module srcModuleName termName srcContents []
   srcContents = Text.concat [ prologue, licenseText, contentsText, "\n" ]
   srcModuleName = addModuleName sid pm
   prologue = joinText "\n"

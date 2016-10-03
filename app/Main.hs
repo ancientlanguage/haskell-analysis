@@ -11,10 +11,9 @@ import qualified Data.Text.IO as Text
 outputSblgnt :: Sblgnt -> IO ()
 outputSblgnt s = do
   let g = Sblgnt.unify s
-  let sm = Output.ModuleName [ "Source", "Greek", "AncientLanguage" ]
-  let groupModules = Output.groupModules sm g
-  let baseDir = "./agda"
-  mapM_ (Output.writeModule baseDir) groupModules
+  let m = Output.groupModule g
+  let baseDir = "../agda-primary/src"
+  mapM_ (Output.writeModule baseDir) (Output.flatModules m)
 
 showResult :: Either String Sblgnt -> IO ()
 showResult (Left x) = putStrLn x
