@@ -9,6 +9,7 @@ import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import qualified System.Directory as FilePath
 import qualified System.FilePath as FilePath
+import Prepare.Decompose
 import Prepare.Source.Model
 
 data Context = Context
@@ -146,9 +147,9 @@ verse :: Output Verse
 verse _ (Verse cn vn) = spacedText [ "v", num cn, num vn ]
 
 word :: Output Word
-word _ (Word Nothing t " ") = spacedText [ "w", quoted t ]
-word _ (Word Nothing t s) = spacedText [ "ws", quoted t, quoted s ]
-word _ (Word (Just p) t s) = spacedText [ "wp", quoted p, quoted t, quoted s ]
+word _ (Word Nothing t " ") = spacedText [ "w", quoted (decompose t) ]
+word _ (Word Nothing t s) = spacedText [ "ws", quoted (decompose t), quoted (decompose s) ]
+word _ (Word (Just p) t s) = spacedText [ "wp", quoted (decompose p), quoted (decompose t), quoted (decompose s) ]
 
 
 joinText :: Text -> [Text] -> Text
