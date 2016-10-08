@@ -1,5 +1,6 @@
 module Prepare.Sblgnt.Unify where
 
+import qualified Data.Char as Char
 import qualified Data.Maybe as Maybe
 import Data.Set (Set)
 import qualified Data.Set as Set
@@ -55,7 +56,7 @@ verse (Sblgnt.Verse _ cn vn _) = Source.MilestoneVerse (Source.Verse cn vn)
 word :: Sblgnt.Word -> Source.Word
 word (Sblgnt.Word p t s) = Source.Word p' t s'
   where
-  ignore x = Text.filter (not . flip Set.member x)
+  ignore cs = Text.filter (not . (\x -> Char.isSpace x || flip Set.member cs x))
   p' = ignore ignoredPrefixChars (Maybe.maybe "" id p)
   s' = ignore ignoredSuffixChars s
 
