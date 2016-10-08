@@ -147,7 +147,7 @@ verse :: Output Verse
 verse _ (Verse cn vn) = spacedText [ "v", num cn, num vn ]
 
 word :: Output Word
-word _ (Word p t " ") | Text.null p = spacedText [ "w", quoted (decompose t) ]
+word _ (Word p t s) | Text.null p, Text.null s = spacedText [ "w", quoted (decompose t) ]
 word _ (Word p t s) | Text.null p = spacedText [ "ws", quoted (decompose t), quoted (decompose s) ]
 word _ (Word p t s) = spacedText [ "wp", quoted (decompose p), quoted (decompose t), quoted (decompose s) ]
 
