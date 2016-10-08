@@ -16,7 +16,7 @@ data Milestone
   deriving (Show)
 
 data Word = Word
-  { wordPrefix :: Maybe Text
+  { wordPrefix :: Text
   , wordSurface :: Text
   , wordSuffix :: Text
   }

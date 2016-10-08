@@ -1,5 +1,8 @@
 module Prepare.Sblgnt.Unify where
 
+import qualified Data.Maybe as Maybe
+import Data.Set (Set)
+import qualified Data.Set as Set
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Prepare.Language
@@ -50,7 +53,30 @@ verse :: Sblgnt.Verse -> Source.Milestone
 verse (Sblgnt.Verse _ cn vn _) = Source.MilestoneVerse (Source.Verse cn vn)
 
 word :: Sblgnt.Word -> Source.Word
-word (Sblgnt.Word p t s) = Source.Word p t s
+word (Sblgnt.Word p t s) = Source.Word p' t s'
+  where
+  ignore x = Text.filter (not . flip Set.member x)
+  p' = ignore ignoredPrefixChars (Maybe.maybe "" id p)
+  s' = ignore ignoredSuffixChars s
+
+ignoredPrefixChars :: Set Char
+ignoredPrefixChars = Set.fromList
+  [ '\x2E00' -- RIGHT ANGLE SUBSTITUTION MARKER
+  , '\x2E01' -- RIGHT ANGLE DOTTED SUBSTITUTION MARKER
+  , '\x2E02' -- LEFT SUBSTITUTION BRACKET
+  , '\x2E04' -- LEFT DOTTED SUBSTITUTION BRACKET
+  , '['
+  , '1'
+  , '2'
+  ]
+
+ignoredSuffixChars :: Set Char
+ignoredSuffixChars = Set.fromList
+  [ '\x2E02' -- LEFT SUBSTITUTION BRACKET
+  , '\x2E03' -- RIGHT SUBSTITUTION BRACKET
+  , '\x2E05' -- RIGHT DOTTED SUBSTITUTION BRACKET
+  , ']'
+  ]
 
 shortIdToLong :: Text -> Text
 shortIdToLong "Mt" = "Matthew"
