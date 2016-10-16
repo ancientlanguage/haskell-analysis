@@ -14,6 +14,7 @@ import qualified Data.Maybe as Maybe
 outputSblgnt :: Sblgnt -> IO ()
 outputSblgnt s = do
   let g = Sblgnt.unify s
+  _ <- printAffixes g
   let m = Output.groupModule g
   let baseDir = "../agda-primary/src"
   mapM_ (Output.writeModule baseDir) (Output.flatModules m)
