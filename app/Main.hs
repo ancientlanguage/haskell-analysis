@@ -4,6 +4,7 @@ import qualified Data.ByteString as BS
 import qualified Data.Maybe as Maybe
 import qualified Data.Serialize as Serialize
 import qualified Data.Set as Set
+import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import System.FilePath.Find
@@ -24,10 +25,11 @@ outputSblgntAgda s = do
 
 outputSblgntBinary :: Sblgnt -> IO ()
 outputSblgntBinary s = do
-  let path = "../data-breakfast/groups.data"
+  let path = "../binary-primary/data/groups.data"
   let g = Sblgnt.unify s
   let gs = [g]
   let encoded = Serialize.encode gs
+  _ <- printText ["Writing", Text.pack path] 
   BS.writeFile path encoded
 
 getWords :: Primary.Content -> [Primary.Word]
@@ -52,10 +54,14 @@ showResult :: (Sblgnt -> IO ()) -> Either String Sblgnt -> IO ()
 showResult _ (Left x) = putStrLn x
 showResult f (Right x) = f x 
 
+printText :: [Text] -> IO ()
+printText = Text.putStrLn . Text.intercalate " "
+
 main :: IO ()
 main = do
   let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
   -- let sblgntFile = "./examples/sblgnt-test.xml"
+  _ <- printText ["Reading", Text.pack sblgntFile]
   result <- loadParse sblgntFile sblgnt emptyLog
   showResult outputSblgntBinary $ result
 
