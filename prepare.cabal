@@ -64,7 +64,9 @@ executable prep
     text,
     xml-conduit,
     prepare,
-    filemanip >=0.3
+    cereal,
+    filemanip >=0.3,
+    bytestring >=0.10
 
 test-suite prepare-test
   type: exitcode-stdio-1.0

@@ -1,23 +1,34 @@
 module Main where
 
+import qualified Data.ByteString as BS
+import qualified Data.Maybe as Maybe
+import qualified Data.Serialize as Serialize
+import qualified Data.Set as Set
+import qualified Data.Text as Text
+import qualified Data.Text.IO as Text
 import System.FilePath.Find
+
 import Prepare
 import Prepare.Sblgnt.Model (Sblgnt)
 import qualified Prepare.Sblgnt.Unify as Sblgnt
 import qualified Prepare.Source.Model as Source
 import qualified Prepare.Source.Output as Output
-import qualified Data.Text as Text
-import qualified Data.Text.IO as Text
-import qualified Data.Set as Set
-import qualified Data.Maybe as Maybe
 
-outputSblgnt :: Sblgnt -> IO ()
-outputSblgnt s = do
+outputSblgntAgda :: Sblgnt -> IO ()
+outputSblgntAgda s = do
   let g = Sblgnt.unify s
   _ <- printAffixes g
   let m = Output.groupModule g
   let baseDir = "../agda-primary/src"
   mapM_ (Output.writeModule baseDir) (Output.flatModules m)
+
+outputSblgntBinary :: Sblgnt -> IO ()
+outputSblgntBinary s = do
+  let path = "../data-breakfast/groups.data"
+  let g = Sblgnt.unify s
+  let gs = [g]
+  let encoded = Serialize.encode gs
+  BS.writeFile path encoded
 
 getWords :: Source.Content -> [Source.Word]
 getWords (Source.ContentWord w) = [w]
@@ -37,16 +48,16 @@ printAffixes g = do
   _ <- printTexts suffixes
   return ()
 
-showResult :: Either String Sblgnt -> IO ()
-showResult (Left x) = putStrLn x
-showResult (Right x) = outputSblgnt x 
+showResult :: (Sblgnt -> IO ()) -> Either String Sblgnt -> IO ()
+showResult _ (Left x) = putStrLn x
+showResult f (Right x) = f x 
 
 main :: IO ()
 main = do
   let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
   -- let sblgntFile = "./examples/sblgnt-test.xml"
   result <- loadParse sblgntFile sblgnt emptyLog
-  showResult result
+  showResult outputSblgntBinary $ result
 
   -- let perseusDir = "./data/xml-perseus-greek"
   -- let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
