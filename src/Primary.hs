@@ -10,7 +10,7 @@ import Data.Text.Encoding (encodeUtf8, decodeUtf8)
 
 instance Serialize Text where
   put = put . encodeUtf8
-  get = decodeUtf8 <$> get 
+  get = decodeUtf8 <$> get
 
 data Language
   = Greek
