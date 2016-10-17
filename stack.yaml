@@ -1,7 +1,10 @@
 resolver: lts-7.4
 packages:
 - '.'
-- '../haskell-prepare'
+- location:
+    git: https://github.com/ancientlanguage/haskell-primary-type.git
+    commit: 2c796f09fdc850e5526874b422e6b4a432a77209
+  extra-dep: true
 extra-deps: []
 flags: {}
 extra-package-dbs: []

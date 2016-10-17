@@ -2,7 +2,7 @@ module Main where
 
 import qualified Data.ByteString as BS
 import qualified Data.Serialize as Serialize
-import Prepare.Source.Model
+import Primary
 import Lib
 
 decodeGroups :: BS.ByteString -> Either String [Group]
