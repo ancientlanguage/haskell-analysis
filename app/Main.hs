@@ -11,7 +11,7 @@ import System.FilePath.Find
 import Prepare
 import Prepare.Sblgnt.Model (Sblgnt)
 import qualified Prepare.Sblgnt.Unify as Sblgnt
-import qualified Prepare.Source.Model as Source
+import qualified Primary as Primary
 import qualified Prepare.Source.Output as Output
 
 outputSblgntAgda :: Sblgnt -> IO ()
@@ -30,17 +30,17 @@ outputSblgntBinary s = do
   let encoded = Serialize.encode gs
   BS.writeFile path encoded
 
-getWords :: Source.Content -> [Source.Word]
-getWords (Source.ContentWord w) = [w]
-getWords (Source.ContentMilestone _) = []
+getWords :: Primary.Content -> [Primary.Word]
+getWords (Primary.ContentWord w) = [w]
+getWords (Primary.ContentMilestone _) = []
 
-printAffixes :: Source.Group -> IO ()
+printAffixes :: Primary.Group -> IO ()
 printAffixes g = do
-  let sources = Source.groupSources g
-  let contents = concatMap Source.sourceContents sources
+  let sources = Primary.groupSources g
+  let contents = concatMap Primary.sourceContents sources
   let words = concatMap getWords contents
-  let prefixes = Set.fromList . fmap Source.wordPrefix $ words
-  let suffixes = Set.fromList . fmap Source.wordSuffix $ words
+  let prefixes = Set.fromList . fmap Primary.wordPrefix $ words
+  let suffixes = Set.fromList . fmap Primary.wordSuffix $ words
   let printTexts = mapM_ (Text.putStrLn . (\x -> Text.concat ["\"", x, "\""])) 
   _ <- putStrLn "Prefixes"
   _ <- printTexts prefixes

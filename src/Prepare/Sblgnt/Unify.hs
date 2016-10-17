@@ -6,13 +6,12 @@ import Data.Set (Set)
 import qualified Data.Set as Set
 import Data.Text (Text)
 import qualified Data.Text as Text
-import Prepare.Language
 import qualified Prepare.Sblgnt.Model as Sblgnt
-import qualified Prepare.Source.Model as Source
+import qualified Primary as Primary
 
-unify :: Sblgnt.Sblgnt -> Source.Group
+unify :: Sblgnt.Sblgnt -> Primary.Group
 unify (Sblgnt.Sblgnt st sl bs) =
-  Source.Group "Sblgnt" Greek (getTitle desc) desc contents
+  Primary.Group "Sblgnt" Primary.Greek (getTitle desc) desc contents
   where
   groupId = "Sblgnt"
   getTitle [] = groupId
@@ -33,28 +32,28 @@ headContentText :: Sblgnt.HeadContent -> Text
 headContentText (Sblgnt.HeadContentText t) = t
 headContentText (Sblgnt.HeadContentLink (Sblgnt.Link h _)) = h 
 
-bookSource :: [Text] -> Sblgnt.Book -> Source.Source
+bookSource :: [Text] -> Sblgnt.Book -> Primary.Source
 bookSource lic (Sblgnt.Book bid btitle bp _) =
-  Source.Source
+  Primary.Source
     (shortIdToLong bid)
     btitle
     lic
     (concatMap flatParagraph bp)
 
-flatParagraph :: Sblgnt.Paragraph -> [Source.Content]
+flatParagraph :: Sblgnt.Paragraph -> [Primary.Content]
 flatParagraph (Sblgnt.Paragraph cs) = if null cs then [] else p : fmap content cs
   where
-  p = Source.ContentMilestone Source.MilestoneParagraph
+  p = Primary.ContentMilestone Primary.MilestoneParagraph
 
-content :: Sblgnt.Content -> Source.Content
-content (Sblgnt.ContentVerse v) = Source.ContentMilestone (verse v)
-content (Sblgnt.ContentWord w) = Source.ContentWord (word w)
+content :: Sblgnt.Content -> Primary.Content
+content (Sblgnt.ContentVerse v) = Primary.ContentMilestone (verse v)
+content (Sblgnt.ContentWord w) = Primary.ContentWord (word w)
 
-verse :: Sblgnt.Verse -> Source.Milestone
-verse (Sblgnt.Verse _ cn vn _) = Source.MilestoneVerse (Source.Verse cn vn)
+verse :: Sblgnt.Verse -> Primary.Milestone
+verse (Sblgnt.Verse _ cn vn _) = Primary.MilestoneVerse (Primary.Verse cn vn)
 
-word :: Sblgnt.Word -> Source.Word
-word (Sblgnt.Word p t s) = Source.Word p' t s'
+word :: Sblgnt.Word -> Primary.Word
+word (Sblgnt.Word p t s) = Primary.Word p' t s'
   where
   ignore cs = Text.filter (not . (\x -> Char.isSpace x || flip Set.member cs x))
   p' = ignore ignoredPrefixChars (Maybe.maybe "" id p)

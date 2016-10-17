@@ -10,7 +10,7 @@ import qualified Data.Text.IO as Text
 import qualified System.Directory as FilePath
 import qualified System.FilePath as FilePath
 import Prepare.Decompose
-import Prepare.Source.Model
+import Primary
 
 data Context = Context
   { contextIndent :: Text

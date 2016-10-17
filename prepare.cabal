@@ -14,16 +14,13 @@ cabal-version: >=1.10
 library
   hs-source-dirs: src
   exposed-modules:
-    Data.Serialize.Text,
     Grammar.Greek.Script.Letter,
     Prepare,
     Prepare.Decompose,
-    Prepare.Language,
     Prepare.Log,
     Prepare.Sblgnt.Model,
     Prepare.Sblgnt.Parser,
     Prepare.Sblgnt.Unify,
-    Prepare.Source.Model,
     Prepare.Source.Output,
     Prepare.Xml.Events,
     Prepare.Xml.Parser,
@@ -47,7 +44,8 @@ library
     filepath >=1.4,
     directory >=1.2,
     lens >=4.1,
-    cereal >=0.5
+    cereal >=0.5,
+    primary-type
   default-language: Haskell2010
 
 executable prep
@@ -66,7 +64,8 @@ executable prep
     prepare,
     cereal,
     filemanip >=0.3,
-    bytestring >=0.10
+    bytestring >=0.10,
+    primary-type
 
 test-suite prepare-test
   type: exitcode-stdio-1.0
