@@ -1,0 +1,7 @@
+resolver: lts-7.4
+packages:
+- '.'
+- '../haskell-prepare'
+extra-deps: []
+flags: {}
+extra-package-dbs: []
