@@ -1,19 +1,12 @@
 import Test.Framework
 import Test.Framework.Providers.HUnit
 import Test.HUnit hiding (Test)
-import qualified Data.ByteString as BS
-import qualified Data.Serialize as Serialize
-import Primary
-import Lib
-
-decodeGroups :: BS.ByteString -> Either String [Group]
-decodeGroups = Serialize.decode
+import Grammar.Serialize
 
 testDecodeGroups :: Test
 testDecodeGroups = testCase "groups" $ do
-  let path = "./modules/binary-primary/data/groups.data"
-  encoded <- BS.readFile path
-  case decodeGroups encoded of
+  result <- readGroups
+  case result of
     Left x -> assertFailure $ "decode failure:\n" ++ x
     Right x -> return ()
 

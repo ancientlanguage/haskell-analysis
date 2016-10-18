@@ -12,10 +12,12 @@ cabal-version: >=1.10
 library
   hs-source-dirs: src
   exposed-modules:
-    Lib
+    Grammar.Serialize
   build-depends:
     base >= 4.9,
-    primary-type
+    primary-type,
+    bytestring >=0.10,
+    cereal >=0.5
   default-language: Haskell2010
 
 executable verify
@@ -25,9 +27,7 @@ executable verify
   build-depends:
     base,
     grammar,
-    primary-type,
-    bytestring >=0.10,
-    cereal >=0.5
+    primary-type
   default-language: Haskell2010
 
 test-suite grammar-test
@@ -41,9 +41,7 @@ test-suite grammar-test
     test-framework-hunit,
     HUnit,
     hspec,
-    primary-type,
-    bytestring >=0.10,
-    cereal >=0.5
+    primary-type
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   default-language: Haskell2010
 
