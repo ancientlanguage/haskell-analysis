@@ -49,3 +49,6 @@ prepareSource gid s = (SourceId gid (Primary.sourceId s) , prepareContents (Prim
 
 prepareGroup :: Primary.Group -> AllWords Primary.Word
 prepareGroup g = fmap (prepareSource (Primary.groupId g)) . listToFwd $ Primary.groupSources g
+
+prepareGroups :: [Primary.Group] -> AllWords Primary.Word
+prepareGroups = fwdConcatMap prepareGroup

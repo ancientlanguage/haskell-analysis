@@ -7,6 +7,7 @@ module Grammar.CommonTypes
   , Paragraph(..)
   , Fwd(..)
   , listToFwd
+  , fwdConcatMap
   )
   where
 
@@ -53,3 +54,7 @@ instance Traversable Fwd where
 listToFwd :: [a] -> Fwd a
 listToFwd [] = F0
 listToFwd (x : xs) = x :> listToFwd xs
+fwdConcatMap :: Foldable t => (a -> Fwd b) -> t a -> Fwd b
+fwdConcatMap f xs = build (\c n -> foldr (\x b -> foldr c b (f x)) n xs)
+  where
+  build g = g (:>) F0
