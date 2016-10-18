@@ -15,6 +15,10 @@ data Mark = M_Acute | M_Grave | M_Circumflex | M_Smooth | M_Rough | M_IotaSubscr
   deriving (Eq, Ord, Show, Generic)
 instance Serialize Mark
 
+data WordPunctuation = P_RightQuote
+  deriving (Eq, Ord, Show, Generic)
+instance Serialize WordPunctuation
+
 data Letter
   = L_α | L_β | L_γ | L_δ | L_ε | L_ζ | L_η | L_θ | L_ι | L_κ | L_λ | L_μ
   | L_ν | L_ξ | L_ο | L_π | L_ρ | L_σ | L_τ | L_υ | L_φ | L_χ | L_ψ | L_ω
