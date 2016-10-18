@@ -6,8 +6,10 @@ import GHC.Generics (Generic)
 import Data.Serialize (Serialize)
 
 data Symbol
-  = S_Α | S_Β | S_Γ | S_Δ | S_Ε | S_Ζ | S_Η | S_Θ | S_Ι | S_Κ | S_Λ | S_Μ | S_Ν | S_Ξ | S_Ο | S_Π | S_Ρ | S_Σ       | S_Τ | S_Υ | S_Φ | S_Χ | S_Ψ | S_Ω
-  | S_α | S_β | S_γ | S_δ | S_ε | S_ζ | S_η | S_θ | S_ι | S_κ | S_λ | S_μ | S_ν | S_ξ | S_ο | S_π | S_ρ | S_σ | S_ς | S_τ | S_υ | S_φ | S_χ | S_ψ | S_ω
+  = S_Α | S_Β | S_Γ | S_Δ | S_Ε | S_Ζ | S_Η | S_Θ | S_Ι | S_Κ | S_Λ | S_Μ
+  | S_Ν | S_Ξ | S_Ο | S_Π | S_Ρ | S_Σ       | S_Τ | S_Υ | S_Φ | S_Χ | S_Ψ | S_Ω
+  | S_α | S_β | S_γ | S_δ | S_ε | S_ζ | S_η | S_θ | S_ι | S_κ | S_λ | S_μ
+  | S_ν | S_ξ | S_ο | S_π | S_ρ | S_σ | S_ς | S_τ | S_υ | S_φ | S_χ | S_ψ | S_ω
   deriving (Eq, Ord, Show, Generic)
 instance Serialize Symbol 
 
