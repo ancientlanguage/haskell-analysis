@@ -16,6 +16,7 @@ library
     Grammar.CommonTypes
     Grammar.Greek.Script.Types
     Grammar.Greek.Script.UnicodeSymbol
+    Grammar.Prepare
     Grammar.Serialize
   ghc-options: -Wall -fwarn-tabs -O2
   default-extensions:
@@ -23,10 +24,11 @@ library
     TypeOperators
   build-depends:
     base >= 4.9,
-    primary-type,
     bytestring >=0.10,
     text >=1.2,
-    cereal >=0.5
+    cereal >=0.5,
+    lens >=4.14,
+    primary-type
   default-language: Haskell2010
 
 executable verify
