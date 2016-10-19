@@ -7,7 +7,10 @@ import Data.Text (Text)
 import qualified Primary
 import Grammar.CommonTypes
 
-type Milestone = Maybe Primary.Verse :* Maybe Paragraph
+type Milestone = Maybe Verse :* Maybe Paragraph
+
+toLocalVerse :: Primary.Verse -> Verse
+toLocalVerse (Primary.Verse c v) = Verse c v
 
 emptyMilestone :: Milestone
 emptyMilestone = (Nothing, Nothing)
@@ -65,7 +68,7 @@ prepareContents = go emptyMilestone
   where
   go :: Milestone -> [Primary.Content] -> [Milestoned Primary.Word]
   go _ [] = []
-  go m (Primary.ContentMilestone (Primary.MilestoneVerse x) : xs) = go (over _1 (const (Just x)) m) xs
+  go m (Primary.ContentMilestone (Primary.MilestoneVerse x) : xs) = go (over _1 (const (Just (toLocalVerse x))) m) xs
   go m (Primary.ContentMilestone Primary.MilestoneParagraph : xs) = go (over _2 nextParagraph m) xs 
   go m (Primary.ContentWord w : xs) = (m , w) : go m xs
 

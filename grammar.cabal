@@ -16,7 +16,7 @@ library
     Grammar.CommonTypes
     Grammar.Greek.Script.Types
     Grammar.Greek.Script.UnicodeSymbol
-    Grammar.Greek.Stage
+    Grammar.Greek.Stages
     Grammar.Prepare
     Grammar.Serialize
   ghc-options: -Werror -Wall -fwarn-tabs -O2

@@ -5,6 +5,7 @@ module Grammar.CommonTypes
   , (:+)
   , SourceId(..)
   , Paragraph(..)
+  , Verse(..)
   )
   where
 
@@ -29,3 +30,10 @@ data SourceId = SourceId
   }
   deriving (Eq, Show, Ord, Generic)
 instance Serialize SourceId
+
+data Verse = Verse
+  { verseChapter :: Integer
+  , verseNumber :: Integer
+  }
+  deriving (Eq, Show, Ord, Generic)
+instance Serialize Verse
