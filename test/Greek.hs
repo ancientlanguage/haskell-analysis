@@ -16,7 +16,7 @@ testStages = testCase "around stages" $ do
     Left x -> assertFailure $ "decode failure:\n" ++ x
     Right gs ->
       case stage0 (start gs) of
-        Failure x -> assertFailure $ "stage failure:\n" ++ show x
+        Failure es -> assertFailure $ "stage failure:" ++ concatMap (('\n' :) . show) es
         Success _ -> return ()
 
 greekGroups =
