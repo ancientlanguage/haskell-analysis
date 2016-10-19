@@ -2,6 +2,7 @@ module Grammar.Prepare where
 
 import Prelude hiding (Word)
 import Control.Lens hiding ((:>))
+import Data.Either.Validation
 import Data.Text (Text)
 import qualified Primary
 import Grammar.CommonTypes
@@ -17,38 +18,44 @@ nextParagraph (Just (Paragraph p)) = Just (Paragraph (p + 1))
 
 type Milestoned x = Milestone :* x
 type Source x = SourceId :* x
-type SourceWords x = Source (Fwd (Milestoned x))
-type AllWords x = Fwd (SourceWords x)
+type SourceWords x = Source [Milestoned x]
+type AllWords x = [SourceWords x]
 
 withMilestone
-  :: (a -> Fwd c :+ b)
+  :: (a -> Validation [c] b)
   -> Milestone :* a
-  -> Fwd (Milestone :* a :* c) :+ Milestone :* b
+  -> Validation [Milestone :* a :* c] (Milestone :* b)
 withMilestone f (m , a) =
   case f a of
-    Left c -> Left (fmap (\x -> (m , (a , x))) c)
-    Right b -> Right (m , b)
+    Failure c -> Failure (fmap (\x -> (m , (a , x))) c)
+    Success b -> Success (m , b)
 
 allWordsPath
-  :: (a -> Fwd c :+ b)
-  -> Fwd (SourceId :* (Fwd (Milestone :* a)))
-  -> Fwd (Milestone :* a :* c) :+ Fwd (SourceId :* (Fwd (Milestone :* b)))
+  :: (a -> Validation [c] b)
+  -> [SourceId :* [Milestone :* a]]
+  -> Validation [Milestone :* a :* c] [SourceId :* [Milestone :* b]]
 allWordsPath f = traverse . _2 . traverse $ withMilestone f
 
-prepareContents :: [Primary.Content] -> Fwd (Milestoned Primary.Word)
+allWordsPathId
+  :: (a -> b)
+  -> [SourceId :* [Milestone :* a]]
+  -> [SourceId :* [Milestone :* b]]
+allWordsPathId = over (traverse . _2 . traverse . _2)
+
+prepareContents :: [Primary.Content] -> [Milestoned Primary.Word]
 prepareContents = go emptyMilestone
   where
-  go :: Milestone -> [Primary.Content] -> Fwd (Milestoned Primary.Word)
-  go _ [] = F0
+  go :: Milestone -> [Primary.Content] -> [Milestoned Primary.Word]
+  go _ [] = []
   go m (Primary.ContentMilestone (Primary.MilestoneVerse x) : xs) = go (over _1 (const (Just x)) m) xs
   go m (Primary.ContentMilestone Primary.MilestoneParagraph : xs) = go (over _2 nextParagraph m) xs 
-  go m (Primary.ContentWord w : xs) = (m , w) :> go m xs
+  go m (Primary.ContentWord w : xs) = (m , w) : go m xs
 
 prepareSource :: Text -> Primary.Source -> SourceWords Primary.Word
 prepareSource gid s = (SourceId gid (Primary.sourceId s) , prepareContents (Primary.sourceContents s))
 
 prepareGroup :: Primary.Group -> AllWords Primary.Word
-prepareGroup g = fmap (prepareSource (Primary.groupId g)) . listToFwd $ Primary.groupSources g
+prepareGroup g = prepareSource (Primary.groupId g) <$> Primary.groupSources g
 
 prepareGroups :: [Primary.Group] -> AllWords Primary.Word
-prepareGroups = fwdConcatMap prepareGroup
+prepareGroups = concatMap prepareGroup

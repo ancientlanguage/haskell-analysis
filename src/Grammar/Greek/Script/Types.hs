@@ -78,3 +78,7 @@ instance Serialize Capitalized
 data Crasis = HasCrasis | NoCrasis
   deriving (Eq, Ord, Show, Generic)
 instance Serialize Crasis
+
+data SentenceBoundary = NotSentenceEnd | SentenceEnd
+  deriving (Eq, Ord, Show, Generic)
+instance Serialize SentenceBoundary

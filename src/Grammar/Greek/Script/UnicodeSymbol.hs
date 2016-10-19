@@ -1,5 +1,6 @@
 module Grammar.Greek.Script.UnicodeSymbol where
 
+import Data.Either.Validation
 import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
@@ -10,10 +11,10 @@ data InvalidChar = InvalidChar Char
 unicodeSymbol :: ParseAround InvalidChar Char (Symbol :+ Mark :+ WordPunctuation)
 unicodeSymbol = makeParseAround to from
   where
-  validSymbol = Right . Left
-  validMark = Right . Right . Left
-  validPunct = Right . Right . Right
-  invalidChar = Left . InvalidChar
+  validSymbol = Success . Left
+  validMark = Success . Right . Left
+  validPunct = Success . Right . Right
+  invalidChar = Failure . pure . InvalidChar
   to 'Α' = validSymbol S_Α
   to 'Β' = validSymbol S_Β
   to 'Γ' = validSymbol S_Γ
