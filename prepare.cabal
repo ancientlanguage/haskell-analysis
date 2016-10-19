@@ -21,6 +21,7 @@ library
     Prepare.Sblgnt.Model,
     Prepare.Sblgnt.Parser,
     Prepare.Sblgnt.Unify,
+    Prepare.Source.DecomposeWords,
     Prepare.Source.Output,
     Prepare.Xml.Events,
     Prepare.Xml.Parser,

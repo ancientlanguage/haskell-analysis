@@ -13,6 +13,7 @@ import Prepare
 import Prepare.Sblgnt.Model (Sblgnt)
 import qualified Prepare.Sblgnt.Unify as Sblgnt
 import qualified Primary as Primary
+import qualified Prepare.Source.DecomposeWords as Decompose
 import qualified Prepare.Source.Output as Output
 
 outputSblgntAgda :: Sblgnt -> IO ()
@@ -27,7 +28,7 @@ outputSblgntBinary :: Sblgnt -> IO ()
 outputSblgntBinary s = do
   let path = "../binary-primary/data/groups.data"
   let g = Sblgnt.unify s
-  let gs = [g]
+  let gs = Decompose.decomposeGroups [g]
   let encoded = Serialize.encode gs
   _ <- printText ["Writing", Text.pack path] 
   BS.writeFile path encoded
