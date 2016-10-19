@@ -7,15 +7,6 @@ import Grammar.Greek.Script.Types
 data InvalidChar = InvalidChar Char
   deriving (Show)
 
-pattern MatchSymbol :: a -> a :+ b
-pattern MatchSymbol x <- Left x
-
-pattern MatchMark :: b -> a :+ b :+ c 
-pattern MatchMark x <- Right (Left x)
-
-pattern MatchPunct :: c -> a :+ b :+ c
-pattern MatchPunct x <- Right (Right x)
-
 unicodeSymbol :: ParseAround InvalidChar Char (Symbol :+ Mark :+ WordPunctuation)
 unicodeSymbol = makeParseAround to from
   where
@@ -82,60 +73,60 @@ unicodeSymbol = makeParseAround to from
   to '\x2019' = validPunct P_RightQuote
   to x = invalidChar x
 
-  from (MatchSymbol S_Α) = 'Α'
-  from (MatchSymbol S_Β) = 'Β'
-  from (MatchSymbol S_Γ) = 'Γ'
-  from (MatchSymbol S_Δ) = 'Δ'
-  from (MatchSymbol S_Ε) = 'Ε'
-  from (MatchSymbol S_Ζ) = 'Ζ'
-  from (MatchSymbol S_Η) = 'Η'
-  from (MatchSymbol S_Θ) = 'Θ'
-  from (MatchSymbol S_Ι) = 'Ι'
-  from (MatchSymbol S_Κ) = 'Κ'
-  from (MatchSymbol S_Λ) = 'Λ'
-  from (MatchSymbol S_Μ) = 'Μ'
-  from (MatchSymbol S_Ν) = 'Ν'
-  from (MatchSymbol S_Ξ) = 'Ξ'
-  from (MatchSymbol S_Ο) = 'Ο'
-  from (MatchSymbol S_Π) = 'Π'
-  from (MatchSymbol S_Ρ) = 'Ρ'
-  from (MatchSymbol S_Σ) = 'Σ'
-  from (MatchSymbol S_Τ) = 'Τ'
-  from (MatchSymbol S_Υ) = 'Υ'
-  from (MatchSymbol S_Φ) = 'Φ'
-  from (MatchSymbol S_Χ) = 'Χ'
-  from (MatchSymbol S_Ψ) = 'Ψ'
-  from (MatchSymbol S_Ω) = 'Ω'
-  from (MatchSymbol S_α) = 'α'
-  from (MatchSymbol S_β) = 'β'
-  from (MatchSymbol S_γ) = 'γ'
-  from (MatchSymbol S_δ) = 'δ'
-  from (MatchSymbol S_ε) = 'ε'
-  from (MatchSymbol S_ζ) = 'ζ'
-  from (MatchSymbol S_η) = 'η'
-  from (MatchSymbol S_θ) = 'θ'
-  from (MatchSymbol S_ι) = 'ι'
-  from (MatchSymbol S_κ) = 'κ'
-  from (MatchSymbol S_λ) = 'λ'
-  from (MatchSymbol S_μ) = 'μ'
-  from (MatchSymbol S_ν) = 'ν'
-  from (MatchSymbol S_ξ) = 'ξ'
-  from (MatchSymbol S_ο) = 'ο'
-  from (MatchSymbol S_π) = 'π'
-  from (MatchSymbol S_ρ) = 'ρ'
-  from (MatchSymbol S_σ) = 'σ'
-  from (MatchSymbol S_ς) = 'ς'
-  from (MatchSymbol S_τ) = 'τ'
-  from (MatchSymbol S_υ) = 'υ'
-  from (MatchSymbol S_φ) = 'φ'
-  from (MatchSymbol S_χ) = 'χ'
-  from (MatchSymbol S_ψ) = 'ψ'
-  from (MatchSymbol S_ω) = 'ω'
-  from (MatchMark M_Grave) = '\x0300' -- COMBINING GRAVE ACCENT
-  from (MatchMark M_Acute) = '\x0301' -- COMBINING ACUTE ACCENT
-  from (MatchMark M_Diaeresis) = '\x0308' -- COMBINING DIAERESIS
-  from (MatchMark M_Smooth) = '\x0313' -- COMBINING COMMA ABOVE
-  from (MatchMark M_Rough) = '\x0314' -- COMBINING REVERSED COMMA ABOVE
-  from (MatchMark M_Circumflex) = '\x0342' -- COMBINING GREEK PERISPOMENI
-  from (MatchMark M_IotaSubscript) = '\x0345' -- COMBINING GREEK YPOGEGRAMMENI
-  from (MatchPunct P_RightQuote) = '\x2019'
+  from (Left S_Α) = 'Α'
+  from (Left S_Β) = 'Β'
+  from (Left S_Γ) = 'Γ'
+  from (Left S_Δ) = 'Δ'
+  from (Left S_Ε) = 'Ε'
+  from (Left S_Ζ) = 'Ζ'
+  from (Left S_Η) = 'Η'
+  from (Left S_Θ) = 'Θ'
+  from (Left S_Ι) = 'Ι'
+  from (Left S_Κ) = 'Κ'
+  from (Left S_Λ) = 'Λ'
+  from (Left S_Μ) = 'Μ'
+  from (Left S_Ν) = 'Ν'
+  from (Left S_Ξ) = 'Ξ'
+  from (Left S_Ο) = 'Ο'
+  from (Left S_Π) = 'Π'
+  from (Left S_Ρ) = 'Ρ'
+  from (Left S_Σ) = 'Σ'
+  from (Left S_Τ) = 'Τ'
+  from (Left S_Υ) = 'Υ'
+  from (Left S_Φ) = 'Φ'
+  from (Left S_Χ) = 'Χ'
+  from (Left S_Ψ) = 'Ψ'
+  from (Left S_Ω) = 'Ω'
+  from (Left S_α) = 'α'
+  from (Left S_β) = 'β'
+  from (Left S_γ) = 'γ'
+  from (Left S_δ) = 'δ'
+  from (Left S_ε) = 'ε'
+  from (Left S_ζ) = 'ζ'
+  from (Left S_η) = 'η'
+  from (Left S_θ) = 'θ'
+  from (Left S_ι) = 'ι'
+  from (Left S_κ) = 'κ'
+  from (Left S_λ) = 'λ'
+  from (Left S_μ) = 'μ'
+  from (Left S_ν) = 'ν'
+  from (Left S_ξ) = 'ξ'
+  from (Left S_ο) = 'ο'
+  from (Left S_π) = 'π'
+  from (Left S_ρ) = 'ρ'
+  from (Left S_σ) = 'σ'
+  from (Left S_ς) = 'ς'
+  from (Left S_τ) = 'τ'
+  from (Left S_υ) = 'υ'
+  from (Left S_φ) = 'φ'
+  from (Left S_χ) = 'χ'
+  from (Left S_ψ) = 'ψ'
+  from (Left S_ω) = 'ω'
+  from (Right (Left M_Grave)) = '\x0300' -- COMBINING GRAVE ACCENT
+  from (Right (Left M_Acute)) = '\x0301' -- COMBINING ACUTE ACCENT
+  from (Right (Left M_Diaeresis)) = '\x0308' -- COMBINING DIAERESIS
+  from (Right (Left M_Smooth)) = '\x0313' -- COMBINING COMMA ABOVE
+  from (Right (Left M_Rough)) = '\x0314' -- COMBINING REVERSED COMMA ABOVE
+  from (Right (Left M_Circumflex)) = '\x0342' -- COMBINING GREEK PERISPOMENI
+  from (Right (Left M_IotaSubscript)) = '\x0345' -- COMBINING GREEK YPOGEGRAMMENI
+  from (Right (Right P_RightQuote)) = '\x2019'

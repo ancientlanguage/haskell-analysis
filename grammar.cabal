@@ -18,7 +18,7 @@ library
     Grammar.Greek.Script.UnicodeSymbol
     Grammar.Prepare
     Grammar.Serialize
-  ghc-options: -Wall -fwarn-tabs -O2
+  ghc-options: -Werror -Wall -fwarn-tabs -O2
   default-extensions:
     PatternSynonyms,
     TypeOperators
@@ -45,6 +45,9 @@ test-suite grammar-test
   type: exitcode-stdio-1.0
   hs-source-dirs: test
   main-is: Spec.hs
+  other-modules:
+    Around,
+    Greek
   build-depends:
     base,
     grammar,
