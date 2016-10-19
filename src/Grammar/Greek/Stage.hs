@@ -32,6 +32,6 @@ start = allWordsPathId wordWithSentence . prepareGroups
 stage0
   :: AllWords (String :* SentenceBoundary)
   -> Validation
-    [Milestone :* ((String :* SentenceBoundary) :* InvalidChar)]
+    [SourceId :* Milestone :* (String :* SentenceBoundary) :* InvalidChar]
     (AllWords ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary))
 stage0 = (allWordsPath . _1 . traverse) (aroundTo unicodeSymbol)

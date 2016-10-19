@@ -21,20 +21,38 @@ type Source x = SourceId :* x
 type SourceWords x = Source [Milestoned x]
 type AllWords x = [SourceWords x]
 
-withMilestone
-  :: (a -> Validation [c] b)
-  -> Milestone :* a
-  -> Validation [Milestone :* a :* c] (Milestone :* b)
-withMilestone f (m , a) =
+withItemContext
+  :: (a -> Validation [e] b)
+  -> ctx :* a
+  -> Validation [ctx :* a :* e] (ctx :* b)
+withItemContext f (ctx , a) =
   case f a of
-    Failure c -> Failure (fmap (\x -> (m , (a , x))) c)
-    Success b -> Success (m , b)
+    Failure es -> Failure (fmap (\x -> (ctx , (a , x))) es)
+    Success b -> Success (ctx , b)
+
+withContext
+  :: (a -> Validation [e] b)
+  -> ctx :* a
+  -> Validation [ctx :* e] (ctx :* b)
+withContext f (ctx , a) =
+  case f a of
+    Failure es -> Failure (fmap (\x -> (ctx , x)) es)
+    Success b -> Success (ctx , b)
 
 allWordsPath
-  :: (a -> Validation [c] b)
+  :: forall a b c. (a -> Validation [c] b)
   -> [SourceId :* [Milestone :* a]]
-  -> Validation [Milestone :* a :* c] [SourceId :* [Milestone :* b]]
-allWordsPath f = traverse . _2 . traverse $ withMilestone f
+  -> Validation
+    [SourceId :* Milestone :* a :* c]
+    [SourceId :* [Milestone :* b]]
+allWordsPath f = traverse (withContext go)
+  where
+  go
+    :: [Milestone :* a]
+    -> Validation
+      [Milestone :* a :* c]
+      [Milestone :* b]
+  go = traverse (withItemContext f)
 
 allWordsPathId
   :: (a -> b)

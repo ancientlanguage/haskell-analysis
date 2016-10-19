@@ -22,6 +22,7 @@ library
   ghc-options: -Werror -Wall -fwarn-tabs -O2
   default-extensions:
     PatternSynonyms,
+    ScopedTypeVariables,
     TypeOperators
   build-depends:
     base >= 4.9,
@@ -50,6 +51,9 @@ test-suite grammar-test
   other-modules:
     Around,
     Greek
+  default-extensions:
+    OverloadedStrings,
+    TypeOperators
   build-depends:
     base,
     either,
@@ -58,6 +62,7 @@ test-suite grammar-test
     test-framework-hunit,
     HUnit,
     hspec,
+    text,
     primary-type
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   default-language: Haskell2010
