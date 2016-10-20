@@ -63,4 +63,16 @@ stage0 :: Stage
   (AllWords (String :* SentenceBoundary))
   (AllWords ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary))
   (AllWords String)
-stage0 = Stage stage0Around stage0Forget
+stage0 = Stage liftedAround forgetPath
+  where
+  inputAround = unicodeSymbol
+  liftPath
+    :: forall a b c
+    . (a -> Validation [c] b)
+    -> [SourceId :* [Milestone :* [a] :* SentenceBoundary]]
+    -> Validation
+      [SourceId :* Milestone :* ([a] :* SentenceBoundary) :* c]
+      [SourceId :* [Milestone :* [b] :* SentenceBoundary]]
+  liftPath = allWordsPath . _1 . traverse
+  liftedAround = Around (liftPath $ aroundTo inputAround) (liftPath $ aroundFrom inputAround)
+  forgetPath = allWordsPathId fst
