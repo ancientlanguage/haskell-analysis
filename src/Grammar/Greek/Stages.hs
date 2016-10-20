@@ -1,3 +1,5 @@
+{-# LANGUAGE RankNTypes #-}
+
 module Grammar.Greek.Stages where
 
 import Prelude hiding (Word)
@@ -67,12 +69,12 @@ stage0 = Stage liftedAround forgetPath
   where
   inputAround = unicodeSymbol
   liftPath
-    :: forall a b c
-    . (a -> Validation [c] b)
-    -> [SourceId :* [Milestone :* [a] :* SentenceBoundary]]
+    :: forall a b e1 d
+    . (a -> Validation [e1] b)
+    -> [SourceId :* [Milestone :* [a] :* d]]
     -> Validation
-      [SourceId :* Milestone :* ([a] :* SentenceBoundary) :* c]
-      [SourceId :* [Milestone :* [b] :* SentenceBoundary]]
+      [SourceId :* Milestone :* ([a] :* d) :* e1]
+      [SourceId :* [Milestone :* [b] :* d]]
   liftPath = allWordsPath . _1 . traverse
   liftedAround = Around (liftPath $ aroundTo inputAround) (liftPath $ aroundFrom inputAround)
   forgetPath = allWordsPathId fst
