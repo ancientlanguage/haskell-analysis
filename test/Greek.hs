@@ -43,12 +43,11 @@ testDataLoss
   => [Milestone :* a]
   -> [Milestone :* a]
   -> IO ()
-testDataLoss xs ys = mapM_ check $ zip xs ys
+testDataLoss xs ys = check . filter (\(x, y) -> x /= y) $ zip xs ys
   where
-  check :: (Eq a, Show a) => ((Milestone, a), (Milestone, a)) -> IO ()
-  check (x , y) = case x == y of
-    True -> return ()
-    False -> assertFailure $ "data loss:\n" ++ prettyMilestoned x ++ "\n" ++ prettyMilestoned y
+  check [] = return ()
+  check xs@(_ : _) = assertFailure $ "data loss:"
+    ++ concatMap (\(x , y) -> "\n initial:" ++ prettyMilestoned x ++ "\n final  :" ++ prettyMilestoned y) xs 
 
 testStages x = do
   let stageTo = aroundTo $ stageAround stage
