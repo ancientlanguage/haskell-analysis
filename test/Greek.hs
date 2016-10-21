@@ -32,7 +32,6 @@ prettySource (SourceId g s, (m, x)) = Text.unpack . Text.intercalate " " $
 
 testStages :: Test
 testStages = testCase "around stages" $ do
-  let stage = stage0
   let stageTo = aroundTo $ stageAround stage
   let stageFrom = aroundFrom $ stageAround stage
   result <- readGroups

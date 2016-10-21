@@ -14,6 +14,7 @@ library
   exposed-modules:
     Grammar.Around
     Grammar.CommonTypes
+    Grammar.Greek.Script.SymbolLetter
     Grammar.Greek.Script.Types
     Grammar.Greek.Script.UnicodeSymbol
     Grammar.Greek.Stages
