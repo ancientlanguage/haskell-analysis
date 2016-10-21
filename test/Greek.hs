@@ -6,6 +6,7 @@ import Test.HUnit hiding (Test)
 import Data.Either.Validation
 import Data.Text (Text)
 import qualified Data.Text as Text
+import qualified Data.Text.IO as Text
 import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Prepare
@@ -30,28 +31,41 @@ prettySource (SourceId g s, (m, x)) = Text.unpack . Text.intercalate " " $
   , textShow $ x
   ]
 
-testStages :: Test
-testStages = testCase "around stages" $ do
+prettyMilestoned :: Show a => Milestone :* a -> String
+prettyMilestoned (m, x) = Text.unpack . Text.intercalate " " $
+  [ prettyMilestone m
+  , "--"
+  , textShow $ x
+  ]
+
+testStages x = do
   let stageTo = aroundTo $ stageAround stage
   let stageFrom = aroundFrom $ stageAround stage
+  case stageTo x of
+    Failure es -> assertFailure $ "stage to failure:" ++ concatMap (('\n' :) . prettyMilestoned) es
+    Success y ->
+      case stageFrom y of
+        Failure es' -> assertFailure $ "stage from failure:" ++ concatMap (('\n' :) . prettyMilestoned) es'
+        Success z ->
+          case (stageForget stage) x == (stageForget stage) z of
+            False -> assertFailure $ "data loss"
+            True -> return ()
+
+testSourceStages (SourceId g s, ms) = do
+  _ <- Text.putStrLn $ Text.intercalate " " [g, s]
+  testStages ms
+
+testGroupStages :: Test
+testGroupStages = testCase "around stages" $ do
   result <- readGroups
   case result of
     Left x -> assertFailure $ "decode failure:\n" ++ x
-    Right gs ->
-      case stageTo (start gs) of
-        Failure es -> assertFailure $ "stage to failure:" ++ concatMap (('\n' :) . prettySource) es
-        Success y ->
-          case stageFrom y of
-            Failure es' -> assertFailure $ "stage from failure:" ++ concatMap (('\n' :) . prettySource) es'
-            Success z ->
-              case (stageForget stage) (start gs) == (stageForget stage) z of
-                False -> assertFailure $ "data loss"
-                True -> return ()
+    Right gs -> mapM_ testSourceStages (start gs)
 
 greekGroups =
   [ testGroup "Unicode-Symbol" $ concat
     [ testAround "unicodeSymbol letters" unicodeSymbol "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρσςτυφχψω"
     , testAround "unicodeSymbol marks" unicodeSymbol "α\x0300\x0301\x0308\x0313\x0314\x0342\x0345\x2019"
     ]
-  , testGroup "Stages" [ testStages ]
+  , testGroup "Stages" [ testGroupStages ]
   ]

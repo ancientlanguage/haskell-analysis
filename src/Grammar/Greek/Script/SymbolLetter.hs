@@ -7,10 +7,10 @@ import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
-data Error = InvalidCombo Letter Case Final 
+data InvalidLetterCaseFinal = InvalidLetterCaseFinal Letter Case Final 
   deriving (Show)
 
-symbolLetter :: Around Void Error Symbol (Letter :* Case :* Final)
+symbolLetter :: Around Void InvalidLetterCaseFinal Symbol (Letter :* Case :* Final)
 symbolLetter = Around (Success . to) (over _Failure pure . from)
   where
   to S_Α = (L_α, (Uppercase, FinalNotSupported))
@@ -112,4 +112,4 @@ symbolLetter = Around (Success . to) (over _Failure pure . from)
   from (L_χ, (Lowercase, FinalNotSupported)) = Success S_χ
   from (L_ψ, (Lowercase, FinalNotSupported)) = Success S_ψ
   from (L_ω, (Lowercase, FinalNotSupported)) = Success S_ω
-  from (l, (c, f)) = Failure $ InvalidCombo l c f
+  from (l, (c, f)) = Failure $ InvalidLetterCaseFinal l c f

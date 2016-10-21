@@ -38,16 +38,16 @@ joinAround (Around a_b b_a) (Around b_c c_b) = Around a_c c_a
   c_a = joinValidation . over _Success b_a . c_b
 
 joinValidation'
-  :: Validation [q :* r :* e1] (Validation [q :* r :* e2] a)
-  -> Validation [q :* r :* (e1 :+ e2)] a
-joinValidation' (Failure es) = Failure (over (traverse . _2 . _2) Left es)
-joinValidation' (Success (Failure es)) = Failure (over (traverse . _2 . _2) Right es)
+  :: Validation [q :* e1] (Validation [q :* e2] a)
+  -> Validation [q :* (e1 :+ e2)] a
+joinValidation' (Failure es) = Failure (over (traverse . _2) Left es)
+joinValidation' (Success (Failure es)) = Failure (over (traverse . _2) Right es)
 joinValidation' (Success (Success x)) = Success x
 
 joinAround'
-  :: Around (q :* r :* e1) (q :* r :* e2) a b
-  -> Around (q :* r :* e3) (q :* r :* e4) b c
-  -> Around (q :* r :* (e1 :+ e3)) (q :* r :* (e4 :+ e2)) a c
+  :: Around (q :* e1) (q :* e2) a b
+  -> Around (q :* e3) (q :* e4) b c
+  -> Around (q :* (e1 :+ e3)) (q :* (e4 :+ e2)) a c
 joinAround' (Around a_b b_a) (Around b_c c_b) = Around a_c c_a
   where
   a_c = joinValidation' . over _Success b_c . a_b
