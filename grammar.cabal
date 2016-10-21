@@ -19,7 +19,7 @@ library
     Grammar.Greek.Stages
     Grammar.Prepare
     Grammar.Serialize
-  ghc-options: -Werror -Wall -fwarn-tabs -O2
+  ghc-options: -Wall -fwarn-tabs -O2
   default-extensions:
     PatternSynonyms,
     ScopedTypeVariables,

@@ -1,4 +1,4 @@
-{-# LANGUAGE RankNTypes #-}
+{-# OPTIONS_GHC -fno-warn-missing-signatures #-}
 
 module Grammar.Greek.Stages where
 
@@ -32,49 +32,12 @@ start
   -> AllWords (String :* SentenceBoundary)
 start = allWordsPathId wordWithSentence . prepareGroups
 
-stage0To
-  :: Around InvalidChar e2 Char (Symbol :+ Mark :+ WordPunctuation)
-  -> AllWords (String :* SentenceBoundary)
-  -> Validation
-    [SourceId :* Milestone :* (String :* SentenceBoundary) :* InvalidChar]
-    (AllWords ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary))
-stage0To x = allWordsPath . _1 . traverse $ aroundTo x
+travList :: Applicative f => (a -> f b) -> [a] -> f [b]
+travList = traverse
 
-stage0From
-  :: Around e1 Void Char (Symbol :+ Mark :+ WordPunctuation)
-  -> AllWords ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary)
-  -> Validation
-    [SourceId :* Milestone :* ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary) :* Void]
-    (AllWords (String :* SentenceBoundary))
-stage0From x = allWordsPath . _1 . traverse $ aroundFrom x
-
-stage0Around
-  :: Around
-    (SourceId :* Milestone :* (String :* SentenceBoundary) :* InvalidChar)
-    (SourceId :* Milestone :* ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary) :* Void)
-    (AllWords (String :* SentenceBoundary))
-    (AllWords ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary))
-stage0Around = Around (stage0To unicodeSymbol) (stage0From unicodeSymbol)
-
-stage0Forget :: AllWords (String :* SentenceBoundary) -> AllWords String
-stage0Forget = allWordsPathId fst
-
-stage0 :: Stage
-  (SourceId :* Milestone :* (String :* SentenceBoundary) :* InvalidChar)
-  (SourceId :* Milestone :* ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary) :* Void)
-  (AllWords (String :* SentenceBoundary))
-  (AllWords ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary))
-  (AllWords String)
-stage0 = Stage liftedAround forgetPath
-  where
-  inputAround = unicodeSymbol
-  liftPath
-    :: forall a b e1 d
-    . (a -> Validation [e1] b)
-    -> [SourceId :* [Milestone :* [a] :* d]]
-    -> Validation
-      [SourceId :* Milestone :* ([a] :* d) :* e1]
-      [SourceId :* [Milestone :* [b] :* d]]
-  liftPath = allWordsPath . _1 . traverse
-  liftedAround = Around (liftPath $ aroundTo inputAround) (liftPath $ aroundFrom inputAround)
-  forgetPath = allWordsPathId fst
+stage0 = Stage
+  ( Around
+    (allWordsPath . _1 . travList $ aroundTo unicodeSymbol)
+    (allWordsPath . _1 . travList $ aroundFrom unicodeSymbol)
+  )
+  (allWordsPathId fst)
