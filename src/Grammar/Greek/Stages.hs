@@ -40,22 +40,31 @@ forget
   -> [Milestone :* [a]]
 forget = over (traverse . _2) fst
 
-around0 :: Around
-  (Milestone :* ([Char] :* SentenceBoundary) :* InvalidChar)
-  (Milestone :* ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary) :* Void)
-  [Milestone :* [Char] :* SentenceBoundary]
-  [Milestone :* [Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary]
-around0 = Around
-  (travList . withItemContext . _1 . travList $ aroundTo unicodeSymbol)
-  (travList . withItemContext . _1 . travList $ aroundFrom unicodeSymbol)
+type AroundMilestone e1 e2 a b =
+  Around
+  (Milestone :* a :* e1)
+  (Milestone :* b :* e2)
+  [Milestone :* a]
+  [Milestone :* b]
 
-around1 :: Around
-  (Milestone :* ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary) :* Void)
-  (Milestone :* ([(Letter :* Case :* Final) :+ Mark :+ WordPunctuation] :* SentenceBoundary) :* InvalidLetterCaseFinal)
-  [Milestone :* [Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary]
-  [Milestone :* [(Letter :* Case :* Final) :+ Mark :+ WordPunctuation] :* SentenceBoundary]
+around0 :: AroundMilestone InvalidChar Void
+  ([Char] :* SentenceBoundary)
+  ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary)
+around0 = Around
+  (milestoneContext . _1 . travList $ aroundTo unicodeSymbol)
+  (milestoneContext . _1 . travList $ aroundFrom unicodeSymbol)
+
+around1 :: AroundMilestone Void InvalidLetterCaseFinal
+  ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary)
+  ([(Letter :* Case :* Final) :+ Mark :+ WordPunctuation] :* SentenceBoundary)
 around1 = Around
   (milestoneContext . _1 . travList . _Left $ aroundTo symbolLetter)
   (milestoneContext . _1 . travList . _Left $ aroundFrom symbolLetter)
 
-stage = Stage (joinAround' around0 around1) forget
+stage = Stage allAround forget
+  where
+    allAround
+      = around0
+      <+> around1
+    (<+>) = joinAround'
+    infixr 6 <+>
