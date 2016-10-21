@@ -38,6 +38,18 @@ prettyMilestoned (m, x) = Text.unpack . Text.intercalate " " $
   , textShow $ x
   ]
 
+testDataLoss
+  :: (Eq a, Show a)
+  => [Milestone :* a]
+  -> [Milestone :* a]
+  -> IO ()
+testDataLoss xs ys = mapM_ check $ zip xs ys
+  where
+  check :: (Eq a, Show a) => ((Milestone, a), (Milestone, a)) -> IO ()
+  check (x , y) = case x == y of
+    True -> return ()
+    False -> assertFailure $ "data loss:\n" ++ prettyMilestoned x ++ "\n" ++ prettyMilestoned y
+
 testStages x = do
   let stageTo = aroundTo $ stageAround stage
   let stageFrom = aroundFrom $ stageAround stage
@@ -46,10 +58,7 @@ testStages x = do
     Success y ->
       case stageFrom y of
         Failure es' -> assertFailure $ "stage from failure:" ++ concatMap (('\n' :) . prettyMilestoned) es'
-        Success z ->
-          case (stageForget stage) x == (stageForget stage) z of
-            False -> assertFailure $ "data loss"
-            True -> return ()
+        Success z -> testDataLoss ((stageForget stage) x) ((stageForget stage) z)
 
 testSourceStages (SourceId g s, ms) = do
   _ <- Text.putStrLn $ Text.intercalate " " [g, s]

@@ -54,6 +54,7 @@ test-suite grammar-test
     Greek
   default-extensions:
     OverloadedStrings,
+    ScopedTypeVariables,
     TypeOperators
   build-depends:
     base,
