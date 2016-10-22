@@ -14,11 +14,12 @@ library
   exposed-modules:
     Grammar.Around
     Grammar.CommonTypes
-    Grammar.Greek.Script.MarkGroups
-    Grammar.Greek.Script.SymbolLetter
+    Grammar.Greek.Script.Around
+    Grammar.Greek.Script.Around.MarkGroups
+    Grammar.Greek.Script.Around.SymbolLetter
+    Grammar.Greek.Script.Around.UnicodeSymbol
     Grammar.Greek.Script.Types
-    Grammar.Greek.Script.UnicodeSymbol
-    Grammar.Greek.Stages
+    Grammar.Greek.Stage
     Grammar.Prepare
     Grammar.Serialize
   ghc-options: -Wall -fwarn-tabs -O2

@@ -1,4 +1,4 @@
-module Grammar.Greek.Script.UnicodeSymbol where
+module Grammar.Greek.Script.Around.UnicodeSymbol where
 
 import Data.Either.Validation
 import Grammar.Around

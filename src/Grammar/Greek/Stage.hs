@@ -1,6 +1,6 @@
 {-# OPTIONS_GHC -fno-warn-missing-signatures #-}
 
-module Grammar.Greek.Stages where
+module Grammar.Greek.Stage where
 
 import Prelude hiding (Word)
 import Data.Text (Text)
@@ -10,10 +10,9 @@ import qualified Primary
 import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Prepare
-import Grammar.Greek.Script.SymbolLetter
+import Grammar.Greek.Script.Around
 import Grammar.Greek.Script.Types
-import Grammar.Greek.Script.UnicodeSymbol
-import Control.Lens hiding ((:>))
+import Control.Lens
 
 suffixSentence :: Text -> SentenceBoundary
 suffixSentence x = go NotSentenceEnd $ Text.unpack x

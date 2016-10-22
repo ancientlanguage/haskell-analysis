@@ -1,4 +1,4 @@
-module Grammar.Greek.Script.MarkGroups where
+module Grammar.Greek.Script.Around.MarkGroups where
 
 import Control.Lens (over)
 import Data.Either.Validation

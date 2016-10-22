@@ -1,4 +1,4 @@
-module Grammar.Greek.Script.SymbolLetter where
+module Grammar.Greek.Script.Around.SymbolLetter where
 
 import Control.Lens (over)
 import Data.Either.Validation

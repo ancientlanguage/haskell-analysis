@@ -10,8 +10,8 @@ import qualified Data.Text.IO as Text
 import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Prepare
-import Grammar.Greek.Script.UnicodeSymbol
-import Grammar.Greek.Stages
+import Grammar.Greek.Script.Around
+import Grammar.Greek.Stage
 import Grammar.Serialize
 import Around
 
