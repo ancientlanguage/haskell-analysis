@@ -63,3 +63,9 @@ aroundSumAssoc12_3 = Around (Success . to) (Success . from)
   from (Left (Left x)) = Left x
   from (Left (Right y)) = Right (Left y)
   from (Right z) = Right (Right z)
+
+aroundProdAssoc12_3 :: Around Void Void (a :* (b :* c)) ((a :* b) :* c)
+aroundProdAssoc12_3 = Around (Success . to) (Success . from)
+  where
+  to (x, (y, z)) = ((x, y), z)
+  from ((x, y), z) = (x, (y, z))

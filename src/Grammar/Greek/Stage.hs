@@ -74,6 +74,13 @@ around30 = Around
   (milestoneContext . _1 . _1 . travList . _Left $ aroundTo symbolLetter)
   (milestoneContext . _1 . _1 . travList . _Left $ aroundFrom symbolLetter)
 
+around40 :: AroundMilestone InitialMarks Void
+  (([(Letter :* Case :* Final) :+ Mark] :* Elision) :* SentenceBoundary)
+  (([(Letter :* Case :* Final) :* [Mark]] :* Elision) :* SentenceBoundary)
+around40 = Around
+  (milestoneContext . _1 . _1 $ aroundTo markGroups)
+  (milestoneContext . _1 . _1 $ aroundFrom markGroups)
+
 stage = Stage allAround forget
   where
     allAround
@@ -81,5 +88,6 @@ stage = Stage allAround forget
       <+> around10
       <+> around20
       <+> around30
+      <+> around40
     (<+>) = joinAround'
     infixr 6 <+>
