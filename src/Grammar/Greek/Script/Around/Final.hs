@@ -7,11 +7,36 @@ import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
-data InvalidFinals = InvalidFinals [Letter :* Final] 
+data InvalidFinals = InvalidFinals [Letter :* Case :* Final]
   deriving (Show)
 
-final :: Around InvalidFinals Void [a :* Letter :* Final] [a :* Letter]
-final = Around (over _Failure pure . to) (Success . from)
+final :: Around InvalidFinals Void [(Letter :* Case :* Final) :* a] [(Letter :* Case) :* a]
+final = Around (fixTo . to) (Success . from)
   where
-    to = undefined
-    from = undefined
+  fixTo
+    = over _Success reverse
+    . over _Failure (pure . InvalidFinals)
+  to xs = case reverse xs of
+    [] -> Success []
+    (x : xs') -> pure (:) <*> check x <*> ensureMedials xs'
+    where
+    check ((l@L_σ, (c@Lowercase, IsFinal)), a) = Success ((l, c), a)
+    check ((l@L_σ, (c@Uppercase, FinalNotSupported)), a) = Success ((l, c), a)
+    check ((l, (c, FinalNotSupported)), a) = Success ((l, c), a)
+    check (x@((l, c), f), a) = Failure [x]
+  ensureMedials [] = Success []
+  ensureMedials (x : xs) = pure (:) <*> check x <*> ensureMedials xs
+    where
+    check (l@L_σ, (c@Lowercase, (NotFinal, a))) = Success ((l, c), a)
+    check (l@L_σ, (c@Uppercase, (FinalNotSupported, a))) = Success ((l, c), a)
+    check (l, (c, (FinalNotSupported, a))) = Success ((l, c), a)
+    check (@((l, c), f), a) = Failure [x]
+
+  from xs = reverse $ case reverse xs of
+    [] -> []
+    (x : xs') -> makeFinal x : fmap makeMedial xs'  
+    where
+    makeFinal (l@L_σ, (c@Lowercase, a)) = (l, (c, (IsFinal, a)))
+    makeFinal (l@L_σ, (c@Uppercase, a)) = (l, (c, (FinalNotSupported, a)))
+    makeFinal ((l, c), a) = (l, (c, (FinalNotSupported, a)))
+    makeMedial ((l, c), a) = (l, (c, (FinalNotSupported, a)))
