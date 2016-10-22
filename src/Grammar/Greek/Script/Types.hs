@@ -47,9 +47,9 @@ data EndOfSentence = IsEndOfSentence | NotEndOfSentence
   deriving (Eq, Ord, Show, Generic)
 instance Serialize EndOfSentence
 
-data Elided = IsElided | NotElided
+data Elision = IsElided | NotElided
   deriving (Eq, Ord, Show, Generic)
-instance Serialize Elided
+instance Serialize Elision
 
 data Accent = A_Acute | A_Grave | A_Circumflex
   deriving (Eq, Ord, Show, Generic)
