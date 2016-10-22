@@ -53,17 +53,33 @@ around0 = Around
   (milestoneContext . _1 . travList $ aroundTo unicodeSymbol)
   (milestoneContext . _1 . travList $ aroundFrom unicodeSymbol)
 
-around1 :: AroundMilestone Void InvalidLetterCaseFinal
+around10 :: AroundMilestone Void Void
   ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary)
-  ([(Letter :* Case :* Final) :+ Mark :+ WordPunctuation] :* SentenceBoundary)
-around1 = Around
-  (milestoneContext . _1 . travList . _Left $ aroundTo symbolLetter)
-  (milestoneContext . _1 . travList . _Left $ aroundFrom symbolLetter)
+  ([(Symbol :+ Mark) :+ WordPunctuation] :* SentenceBoundary)
+around10 = Around
+  (milestoneContext . _1 . travList $ aroundTo aroundSumAssoc12_3)
+  (milestoneContext . _1 . travList $ aroundFrom aroundSumAssoc12_3)
+
+around20 :: AroundMilestone InvalidWordPunctuation Void
+  ([(Symbol :+ Mark) :+ WordPunctuation] :* SentenceBoundary)
+  (([Symbol :+ Mark] :* Elision) :* SentenceBoundary)
+around20 = Around
+  (milestoneContext . _1 $ aroundTo wordPunctuationElision)
+  (milestoneContext . _1 $ aroundFrom wordPunctuationElision)
+
+around30 :: AroundMilestone Void InvalidLetterCaseFinal
+  (([Symbol :+ Mark] :* Elision) :* SentenceBoundary)
+  (([(Letter :* Case :* Final) :+ Mark] :* Elision) :* SentenceBoundary)
+around30 = Around
+  (milestoneContext . _1 . _1 . travList . _Left $ aroundTo symbolLetter)
+  (milestoneContext . _1 . _1 . travList . _Left $ aroundFrom symbolLetter)
 
 stage = Stage allAround forget
   where
     allAround
       = around0
-      <+> around1
+      <+> around10
+      <+> around20
+      <+> around30
     (<+>) = joinAround'
     infixr 6 <+>

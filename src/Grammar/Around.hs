@@ -3,7 +3,7 @@ module Grammar.Around where
 import Data.Either.Validation
 import Data.Void
 import Grammar.CommonTypes
-import Control.Lens
+import Control.Lens (over, _1, _2)
 
 data Around e1 e2 a b = Around
   { aroundTo :: a -> Validation [e1] b
@@ -52,3 +52,14 @@ joinAround' (Around a_b b_a) (Around b_c c_b) = Around a_c c_a
   where
   a_c = joinValidation' . over _Success b_c . a_b
   c_a = joinValidation' . over _Success b_a . c_b
+
+aroundSumAssoc12_3 :: Around Void Void (a :+ (b :+ c)) ((a :+ b) :+ c)
+aroundSumAssoc12_3 = Around (Success . to) (Success . from)
+  where
+  to (Left x) = Left (Left x)
+  to (Right (Left y)) = Left (Right y)
+  to (Right (Right z)) = Right z
+
+  from (Left (Left x)) = Left x
+  from (Left (Right y)) = Right (Left y)
+  from (Right z) = Right (Right z)
