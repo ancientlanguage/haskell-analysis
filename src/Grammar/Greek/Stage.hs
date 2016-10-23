@@ -83,10 +83,10 @@ around40 = Around
 
 around50 :: AroundMilestone InvalidFinals Void
   (([(Letter :* Case :* Final) :* [Mark]] :* Elision) :* SentenceBoundary)
-  (([Letter :* Case :* [Mark]] :* Elision) :* SentenceBoundary)
+  (([(Letter :* Case) :* [Mark]] :* Elision) :* SentenceBoundary)
 around50 = Around
-  (milestoneContext . _1 . _1 . travList $ aroundTo final)
-  (milestoneContext . _1 . _1 . travList $ aroundFrom final)
+  (milestoneContext . _1 . _1 $ aroundTo final)
+  (milestoneContext . _1 . _1 $ aroundFrom final)
 
 stage = Stage allAround forget
   where
