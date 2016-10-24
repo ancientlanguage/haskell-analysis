@@ -1,17 +1,13 @@
 module Grammar.Greek.Script.Around.SymbolLetter where
 
-import Control.Lens (over)
 import Data.Either.Validation
 import Data.Void
 import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
-data InvalidLetterCaseFinal = InvalidLetterCaseFinal Letter Case Final 
-  deriving (Show)
-
-symbolLetter :: Around Void InvalidLetterCaseFinal Symbol (Letter :* Case :* Final)
-symbolLetter = Around (Success . to) (over _Failure pure . from)
+symbolLetter :: Around Void Void Symbol (Letter :* Case :* Final)
+symbolLetter = Around (Success . to) (Success . from)
   where
   to S_Α = (L_α, (Uppercase, FinalNotSupported))
   to S_Β = (L_β, (Uppercase, FinalNotSupported))
@@ -63,53 +59,52 @@ symbolLetter = Around (Success . to) (over _Failure pure . from)
   to S_ψ = (L_ψ, (Lowercase, FinalNotSupported))
   to S_ω = (L_ω, (Lowercase, FinalNotSupported))
 
-  from (L_α, (Uppercase, FinalNotSupported)) = Success S_Α
-  from (L_β, (Uppercase, FinalNotSupported)) = Success S_Β
-  from (L_γ, (Uppercase, FinalNotSupported)) = Success S_Γ
-  from (L_δ, (Uppercase, FinalNotSupported)) = Success S_Δ
-  from (L_ε, (Uppercase, FinalNotSupported)) = Success S_Ε
-  from (L_ζ, (Uppercase, FinalNotSupported)) = Success S_Ζ
-  from (L_η, (Uppercase, FinalNotSupported)) = Success S_Η
-  from (L_θ, (Uppercase, FinalNotSupported)) = Success S_Θ
-  from (L_ι, (Uppercase, FinalNotSupported)) = Success S_Ι
-  from (L_κ, (Uppercase, FinalNotSupported)) = Success S_Κ
-  from (L_λ, (Uppercase, FinalNotSupported)) = Success S_Λ
-  from (L_μ, (Uppercase, FinalNotSupported)) = Success S_Μ
-  from (L_ν, (Uppercase, FinalNotSupported)) = Success S_Ν
-  from (L_ξ, (Uppercase, FinalNotSupported)) = Success S_Ξ
-  from (L_ο, (Uppercase, FinalNotSupported)) = Success S_Ο
-  from (L_π, (Uppercase, FinalNotSupported)) = Success S_Π
-  from (L_ρ, (Uppercase, FinalNotSupported)) = Success S_Ρ
-  from (L_σ, (Uppercase, FinalNotSupported)) = Success S_Σ
-  from (L_τ, (Uppercase, FinalNotSupported)) = Success S_Τ
-  from (L_υ, (Uppercase, FinalNotSupported)) = Success S_Υ
-  from (L_φ, (Uppercase, FinalNotSupported)) = Success S_Φ
-  from (L_χ, (Uppercase, FinalNotSupported)) = Success S_Χ
-  from (L_ψ, (Uppercase, FinalNotSupported)) = Success S_Ψ
-  from (L_ω, (Uppercase, FinalNotSupported)) = Success S_Ω
-  from (L_α, (Lowercase, FinalNotSupported)) = Success S_α
-  from (L_β, (Lowercase, FinalNotSupported)) = Success S_β
-  from (L_γ, (Lowercase, FinalNotSupported)) = Success S_γ
-  from (L_δ, (Lowercase, FinalNotSupported)) = Success S_δ
-  from (L_ε, (Lowercase, FinalNotSupported)) = Success S_ε
-  from (L_ζ, (Lowercase, FinalNotSupported)) = Success S_ζ
-  from (L_η, (Lowercase, FinalNotSupported)) = Success S_η
-  from (L_θ, (Lowercase, FinalNotSupported)) = Success S_θ
-  from (L_ι, (Lowercase, FinalNotSupported)) = Success S_ι
-  from (L_κ, (Lowercase, FinalNotSupported)) = Success S_κ
-  from (L_λ, (Lowercase, FinalNotSupported)) = Success S_λ
-  from (L_μ, (Lowercase, FinalNotSupported)) = Success S_μ
-  from (L_ν, (Lowercase, FinalNotSupported)) = Success S_ν
-  from (L_ξ, (Lowercase, FinalNotSupported)) = Success S_ξ
-  from (L_ο, (Lowercase, FinalNotSupported)) = Success S_ο
-  from (L_π, (Lowercase, FinalNotSupported)) = Success S_π
-  from (L_ρ, (Lowercase, FinalNotSupported)) = Success S_ρ
-  from (L_σ, (Lowercase, NotFinal)) = Success S_σ
-  from (L_σ, (Lowercase, IsFinal)) = Success S_ς
-  from (L_τ, (Lowercase, FinalNotSupported)) = Success S_τ
-  from (L_υ, (Lowercase, FinalNotSupported)) = Success S_υ
-  from (L_φ, (Lowercase, FinalNotSupported)) = Success S_φ
-  from (L_χ, (Lowercase, FinalNotSupported)) = Success S_χ
-  from (L_ψ, (Lowercase, FinalNotSupported)) = Success S_ψ
-  from (L_ω, (Lowercase, FinalNotSupported)) = Success S_ω
-  from (l, (c, f)) = Failure $ InvalidLetterCaseFinal l c f
+  from (L_α, (Uppercase, _)) = S_Α
+  from (L_β, (Uppercase, _)) = S_Β
+  from (L_γ, (Uppercase, _)) = S_Γ
+  from (L_δ, (Uppercase, _)) = S_Δ
+  from (L_ε, (Uppercase, _)) = S_Ε
+  from (L_ζ, (Uppercase, _)) = S_Ζ
+  from (L_η, (Uppercase, _)) = S_Η
+  from (L_θ, (Uppercase, _)) = S_Θ
+  from (L_ι, (Uppercase, _)) = S_Ι
+  from (L_κ, (Uppercase, _)) = S_Κ
+  from (L_λ, (Uppercase, _)) = S_Λ
+  from (L_μ, (Uppercase, _)) = S_Μ
+  from (L_ν, (Uppercase, _)) = S_Ν
+  from (L_ξ, (Uppercase, _)) = S_Ξ
+  from (L_ο, (Uppercase, _)) = S_Ο
+  from (L_π, (Uppercase, _)) = S_Π
+  from (L_ρ, (Uppercase, _)) = S_Ρ
+  from (L_σ, (Uppercase, _)) = S_Σ
+  from (L_τ, (Uppercase, _)) = S_Τ
+  from (L_υ, (Uppercase, _)) = S_Υ
+  from (L_φ, (Uppercase, _)) = S_Φ
+  from (L_χ, (Uppercase, _)) = S_Χ
+  from (L_ψ, (Uppercase, _)) = S_Ψ
+  from (L_ω, (Uppercase, _)) = S_Ω
+  from (L_α, (Lowercase, _)) = S_α
+  from (L_β, (Lowercase, _)) = S_β
+  from (L_γ, (Lowercase, _)) = S_γ
+  from (L_δ, (Lowercase, _)) = S_δ
+  from (L_ε, (Lowercase, _)) = S_ε
+  from (L_ζ, (Lowercase, _)) = S_ζ
+  from (L_η, (Lowercase, _)) = S_η
+  from (L_θ, (Lowercase, _)) = S_θ
+  from (L_ι, (Lowercase, _)) = S_ι
+  from (L_κ, (Lowercase, _)) = S_κ
+  from (L_λ, (Lowercase, _)) = S_λ
+  from (L_μ, (Lowercase, _)) = S_μ
+  from (L_ν, (Lowercase, _)) = S_ν
+  from (L_ξ, (Lowercase, _)) = S_ξ
+  from (L_ο, (Lowercase, _)) = S_ο
+  from (L_π, (Lowercase, _)) = S_π
+  from (L_ρ, (Lowercase, _)) = S_ρ
+  from (L_σ, (Lowercase, IsFinal)) = S_ς
+  from (L_σ, (Lowercase, _)) = S_σ
+  from (L_τ, (Lowercase, _)) = S_τ
+  from (L_υ, (Lowercase, _)) = S_υ
+  from (L_φ, (Lowercase, _)) = S_φ
+  from (L_χ, (Lowercase, _)) = S_χ
+  from (L_ψ, (Lowercase, _)) = S_ψ
+  from (L_ω, (Lowercase, _)) = S_ω

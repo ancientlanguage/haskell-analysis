@@ -8,6 +8,7 @@ import Options.Applicative hiding (Failure, Success)
 
 import Grammar.Around
 import Grammar.CommonTypes
+import qualified Grammar.Greek.Script.Around as Around
 import Grammar.Greek.Stage
 import Grammar.Greek.Script.Types
 import Grammar.Prepare
@@ -51,11 +52,16 @@ showWordCounts x = mapM_ showGroup x
   filterWords (Primary.ContentWord w) = True
   filterWords _ = False
 
-showElision :: (Show a, Show b) => [Milestone :* (a :* Elision) :* b] -> [Text]
+showElision :: (Show a, Show b) => [Milestone :* ([(Letter :* Case) :* a] :* Elision) :* b] -> [Text]
 showElision = fmap prettyMilestoned . filter isElided
   where
   isElided (_, ((_, IsElided), _)) = True
   isElided _ = False
+
+  back1 :: [(Letter :* Case) :* a] -> [Letter]
+  back1 = fmap (fst . fst)
+  -- back2 :: [Letter] -> [Symbol]
+  -- back2 = fmap (aroundFrom Around.symbolLetter . (\x -> (x, Uppercase, NotFinal)) 
 
 queryStage f gs = do
   let stageTo = aroundTo $ stageAround stage

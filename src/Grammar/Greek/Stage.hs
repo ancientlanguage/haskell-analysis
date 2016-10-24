@@ -67,7 +67,7 @@ around20 = Around
   (milestoneContext . _1 $ aroundTo wordPunctuationElision)
   (milestoneContext . _1 $ aroundFrom wordPunctuationElision)
 
-around30 :: AroundMilestone Void InvalidLetterCaseFinal
+around30 :: AroundMilestone Void Void
   (([Symbol :+ Mark] :* Elision) :* SentenceBoundary)
   (([(Letter :* Case :* Final) :+ Mark] :* Elision) :* SentenceBoundary)
 around30 = Around
