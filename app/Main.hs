@@ -10,6 +10,7 @@ import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Greek.Stage
 import Grammar.Prepare
+import Grammar.Pretty
 import Grammar.Serialize
 import Primary
 
@@ -35,9 +36,6 @@ options = subparser
     ( progDesc "Show words with elision" ))
   )
 
-textShow :: Show a => a -> Text
-textShow = Text.pack . show
-
 showWordCounts :: [Group] -> IO ()
 showWordCounts x = mapM_ showGroup x
   where
@@ -55,11 +53,17 @@ showWordCounts x = mapM_ showGroup x
 showElision :: [Group] -> IO ()
 showElision gs = do
   let stageTo = aroundTo $ stageAround stage
-  let stageFrom = aroundFrom $ stageAround stage
-  let ss = concatMap (\(SourceId g s, ms) -> ms) $ start gs
-  case stageTo ss of
-    Failure es -> mapM_ (putStrLn . show) es -- assertFailure $ "stage to failure:" ++ concatMap (('\n' :) . prettyMilestoned) es
-    Success y -> putStrLn "Success!"
+  let ss = start gs
+  let
+    goSource f (SourceId g s, ms) = case f ms of
+      Failure es -> Text.putStrLn $ Text.intercalate " "
+        [ g
+        , s
+        , "to failure:"
+        , Text.concat $ fmap (Text.append "\n" . prettyMilestoned) es
+        ]
+      Success y -> Text.putStrLn $ Text.intercalate " " [ g, s, "Success!" ]
+  mapM_ (goSource stageTo) ss
 
 handleGroups :: ([Group] -> IO ()) -> IO ()
 handleGroups f = do

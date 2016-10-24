@@ -23,9 +23,11 @@ library
     Grammar.Greek.Script.Types
     Grammar.Greek.Stage
     Grammar.Prepare
+    Grammar.Pretty
     Grammar.Serialize
   ghc-options: -Wall -fwarn-tabs -O2
   default-extensions:
+    OverloadedStrings,
     PatternSynonyms,
     ScopedTypeVariables,
     TypeOperators

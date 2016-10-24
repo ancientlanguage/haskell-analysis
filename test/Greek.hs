@@ -9,34 +9,15 @@ import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import Grammar.Around
 import Grammar.CommonTypes
-import Grammar.Prepare
 import Grammar.Greek.Script.Around
 import Grammar.Greek.Stage
+import Grammar.Pretty
+import Grammar.Prepare
 import Grammar.Serialize
 import Around
 
-textShow :: Show a => a -> Text
-textShow = Text.pack . show
-
-prettyMilestone :: Maybe Verse :* Maybe Paragraph -> Text
-prettyMilestone (Nothing, _) = ""
-prettyMilestone (Just (Verse c v), _) = Text.concat [textShow c, ":", textShow v]
-
-prettySource :: Show a => SourceId :* Milestone :* a -> String
-prettySource (SourceId g s, (m, x)) = Text.unpack . Text.intercalate " " $
-  [ g
-  , s
-  , prettyMilestone m
-  , "--"
-  , textShow $ x
-  ]
-
-prettyMilestoned :: Show a => Milestone :* a -> String
-prettyMilestoned (m, x) = Text.unpack . Text.intercalate " " $
-  [ prettyMilestone m
-  , "--"
-  , textShow $ x
-  ]
+failMessage :: Text -> IO ()
+failMessage = assertFailure . Text.unpack
 
 testDataLoss
   :: (Eq a, Show a)
@@ -46,17 +27,25 @@ testDataLoss
 testDataLoss xs ys = check . filter (\(x, y) -> x /= y) $ zip xs ys
   where
   check [] = return ()
-  check xs@(_ : _) = assertFailure $ "data loss:"
-    ++ concatMap (\(x , y) -> "\n initial:" ++ prettyMilestoned x ++ "\n final  :" ++ prettyMilestoned y) xs 
+  check xs@(_ : _) = failMessage $ Text.concat
+    [ "data loss:"
+    , Text.concat $ fmap (\(x , y) -> Text.concat [ "\n initial:", prettyMilestoned x, "\n final  :", prettyMilestoned y ]) xs
+    ]
 
 testStages x = do
   let stageTo = aroundTo $ stageAround stage
   let stageFrom = aroundFrom $ stageAround stage
   case stageTo x of
-    Failure es -> assertFailure $ "stage to failure:" ++ concatMap (('\n' :) . prettyMilestoned) es
+    Failure es -> failMessage $ Text.concat
+      [ "stage to failure:"
+      , Text.concat $ fmap (Text.append "\n" . prettyMilestoned) es
+      ]
     Success y ->
       case stageFrom y of
-        Failure es' -> assertFailure $ "stage from failure:" ++ concatMap (('\n' :) . prettyMilestoned) es'
+        Failure es' -> failMessage $ Text.concat
+          [ "stage from failure:"
+          , Text.concat $ fmap (Text.append "\n" . prettyMilestoned) es'
+          ]
         Success z -> testDataLoss ((stageForget stage) x) ((stageForget stage) z)
 
 testSourceStages (SourceId g s, ms) = do
