@@ -3,7 +3,13 @@ module Main where
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
-import Options.Applicative
+import Data.Either.Validation
+import Options.Applicative hiding (Failure, Success)
+
+import Grammar.Around
+import Grammar.CommonTypes
+import Grammar.Greek.Stage
+import Grammar.Prepare
 import Grammar.Serialize
 import Primary
 
@@ -47,7 +53,13 @@ showWordCounts x = mapM_ showGroup x
   filterWords _ = False
 
 showElision :: [Group] -> IO ()
-showElision _ = putStrLn "elision"
+showElision gs = do
+  let stageTo = aroundTo $ stageAround stage
+  let stageFrom = aroundFrom $ stageAround stage
+  let ss = concatMap (\(SourceId g s, ms) -> ms) $ start gs
+  case stageTo ss of
+    Failure es -> mapM_ (putStrLn . show) es -- assertFailure $ "stage to failure:" ++ concatMap (('\n' :) . prettyMilestoned) es
+    Success y -> putStrLn "Success!"
 
 handleGroups :: ([Group] -> IO ()) -> IO ()
 handleGroups f = do

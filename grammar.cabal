@@ -48,6 +48,7 @@ executable query
   build-depends:
     base,
     text,
+    either,
     grammar,
     primary-type,
     optparse-applicative >=0.12
