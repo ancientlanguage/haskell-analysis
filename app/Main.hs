@@ -1,5 +1,8 @@
 module Main where
 
+import Data.Text (Text)
+import qualified Data.Text as Text
+import qualified Data.Text.IO as Text
 import Options.Applicative
 import Grammar.Serialize
 import Primary
@@ -26,8 +29,22 @@ options = subparser
     ( progDesc "Show words with elision" ))
   )
 
+textShow :: Show a => a -> Text
+textShow = Text.pack . show
+
 showWordCounts :: [Group] -> IO ()
-showWordCounts x = putStrLn . show . sum . fmap (length . groupSources) $ x
+showWordCounts x = mapM_ showGroup x
+  where
+  showGroup g = mapM_ (showSource (groupId g)) (groupSources g) 
+  showSource g s = Text.putStrLn $ Text.intercalate " "
+    [ g
+    , sourceId s
+    , "—"
+    , textShow . length . filter filterWords $ sourceContents s
+    , "words"
+    ]
+  filterWords (ContentWord w) = True
+  filterWords _ = False
 
 showElision :: [Group] -> IO ()
 showElision _ = putStrLn "elision"
