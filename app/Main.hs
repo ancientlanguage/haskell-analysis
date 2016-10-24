@@ -9,10 +9,11 @@ import Options.Applicative hiding (Failure, Success)
 import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Greek.Stage
+import Grammar.Greek.Script.Types
 import Grammar.Prepare
 import Grammar.Pretty
 import Grammar.Serialize
-import Primary
+import qualified Primary
 
 data Command
   = Words
@@ -36,36 +37,41 @@ options = subparser
     ( progDesc "Show words with elision" ))
   )
 
-showWordCounts :: [Group] -> IO ()
+showWordCounts :: [Primary.Group] -> IO ()
 showWordCounts x = mapM_ showGroup x
   where
-  showGroup g = mapM_ (showSource (groupId g)) (groupSources g) 
+  showGroup g = mapM_ (showSource (Primary.groupId g)) (Primary.groupSources g) 
   showSource g s = Text.putStrLn $ Text.intercalate " "
     [ g
-    , sourceId s
+    , Primary.sourceId s
     , "—"
-    , textShow . length . filter filterWords $ sourceContents s
+    , textShow . length . filter filterWords $ Primary.sourceContents s
     , "words"
     ]
-  filterWords (ContentWord w) = True
+  filterWords (Primary.ContentWord w) = True
   filterWords _ = False
 
-showElision :: [Group] -> IO ()
-showElision gs = do
+showElision :: (Show a, Show b) => [Milestone :* (a :* Elision) :* b] -> [Text]
+showElision = fmap prettyMilestoned . filter isElided
+  where
+  isElided (_, ((_, IsElided), _)) = True
+  isElided _ = False
+
+queryStage f gs = do
   let stageTo = aroundTo $ stageAround stage
   let ss = start gs
   let
-    goSource f (SourceId g s, ms) = case f ms of
+    goSource (SourceId g s, ms) = case stageTo ms of
       Failure es -> Text.putStrLn $ Text.intercalate " "
         [ g
         , s
         , "to failure:"
-        , Text.concat $ fmap (Text.append "\n" . prettyMilestoned) es
+        , Text.intercalate "\n" $ fmap prettyMilestoned es
         ]
-      Success y -> Text.putStrLn $ Text.intercalate " " [ g, s, "Success!" ]
-  mapM_ (goSource stageTo) ss
+      Success y -> mapM_ (Text.putStrLn . Text.append (Text.concat [ g , " ", s, " " ])) $ f y
+  mapM_ goSource ss
 
-handleGroups :: ([Group] -> IO ()) -> IO ()
+handleGroups :: ([Primary.Group] -> IO ()) -> IO ()
 handleGroups f = do
   result <- readGroups
   case result of
@@ -74,7 +80,7 @@ handleGroups f = do
 
 runCommand :: Options -> IO ()
 runCommand (Options Words) = handleGroups showWordCounts
-runCommand (Options Elision) = handleGroups showElision
+runCommand (Options Elision) = handleGroups (queryStage showElision)
 
 main :: IO ()
 main = execParser opts >>= runCommand

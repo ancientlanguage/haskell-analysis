@@ -47,6 +47,8 @@ executable query
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   default-extensions:
     OverloadedStrings
+    ScopedTypeVariables,
+    TypeOperators
   build-depends:
     base,
     text,
