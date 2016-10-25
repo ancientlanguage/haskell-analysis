@@ -13,7 +13,8 @@ data Symbol
   deriving (Eq, Ord, Show, Generic)
 instance Serialize Symbol 
 
-data Mark = M_Acute | M_Grave | M_Circumflex | M_Smooth | M_Rough | M_IotaSubscript | M_Diaeresis
+-- this is in expected Unicode order
+data Mark = M_Diaeresis | M_Smooth | M_Rough | M_Acute | M_Grave | M_Circumflex | M_IotaSubscript
   deriving (Eq, Ord, Show, Generic)
 instance Serialize Mark
 

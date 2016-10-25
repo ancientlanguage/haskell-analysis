@@ -20,16 +20,15 @@ failMessage :: Text -> IO ()
 failMessage = assertFailure . Text.unpack
 
 testDataLoss
-  :: (Eq a, Show a)
-  => [Milestone :* a]
-  -> [Milestone :* a]
+  :: [Milestone :* String]
+  -> [Milestone :* String]
   -> IO ()
 testDataLoss xs ys = check . filter (\(x, y) -> x /= y) $ zip xs ys
   where
   check [] = return ()
   check xs@(_ : _) = failMessage $ Text.concat
     [ "data loss:"
-    , Text.concat $ fmap (\(x , y) -> Text.concat [ "\n initial:", prettyMilestoned x, "\n final  :", prettyMilestoned y ]) xs
+    , Text.concat $ fmap (\(x , y) -> Text.concat [ "\n initial:", prettyMilestonedString x, "\n final  :", prettyMilestonedString y ]) xs
     ]
 
 testStages x = do
