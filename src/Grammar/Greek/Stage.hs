@@ -88,12 +88,15 @@ final = Around
   (milestoneContext . _1 . _1 $ aroundTo Around.final)
   (milestoneContext . _1 . _1 $ aroundFrom Around.final)
 
+aroundToElision
+  = unicodeSymbol
+  <+> assocSymbolMark_WordPunctuation
+  <+> wordPunctuationElision
+
 stage = Stage allAround forget
   where
     allAround
-      = unicodeSymbol
-      <+> assocSymbolMark_WordPunctuation
-      <+> wordPunctuationElision
+      = aroundToElision
       <+> symbolLetter
       <+> markGroups
       <+> final

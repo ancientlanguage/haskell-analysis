@@ -57,15 +57,7 @@ isElided :: (a, ((b, Elision), c)) -> Bool
 isElided (_, ((_, IsElided), _)) = True
 isElided _ = False
 
-elisionStage = Stage allAround forget
-  where
-  allAround
-    = unicodeSymbol
-    <+> assocSymbolMark_WordPunctuation
-    <+> wordPunctuationElision
-    <+> symbolLetter
-    <+> markGroups
-    <+> final
+elisionStage = Stage aroundToElision forget
 
 queryStage
   :: Show e1
@@ -105,7 +97,7 @@ handleGroups f = do
 
 runCommand :: Options -> IO ()
 runCommand (Options Words) = handleGroups showWordCounts
-runCommand (Options Elision) = handleGroups (queryStage stage isElided)
+runCommand (Options Elision) = handleGroups (queryStage elisionStage isElided)
 
 main :: IO ()
 main = execParser opts >>= runCommand
