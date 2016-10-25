@@ -71,9 +71,9 @@ data ImproperDiphthong = I_α | I_η | I_ω
   deriving (Eq, Ord, Show, Generic)
 instance Serialize ImproperDiphthong
 
-data Capitalized = IsCapitalized | IsNotCapitalized
+data Capitalization = IsCapitalized | NotCapitalized
   deriving (Eq, Ord, Show, Generic)
-instance Serialize Capitalized
+instance Serialize Capitalization
 
 data Crasis = HasCrasis | NoCrasis
   deriving (Eq, Ord, Show, Generic)

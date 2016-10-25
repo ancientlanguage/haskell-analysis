@@ -88,6 +88,13 @@ final = Around
   (milestoneContext . _1 . _1 $ aroundTo Around.final)
   (milestoneContext . _1 . _1 $ aroundFrom Around.final)
 
+capitalization :: AroundMilestone Around.InvalidUppercase Void
+  (([(Letter :* Case) :* [Mark]] :* Elision) :* SentenceBoundary)
+  ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
+capitalization = Around
+  (milestoneContext . _1 . _1 $ aroundTo Around.capitalization)
+  (milestoneContext . _1 . _1 $ aroundFrom Around.capitalization)
+
 toElision
   = unicodeSymbol
   <+> assocSymbolMark_WordPunctuation
@@ -98,3 +105,4 @@ script
   <+> symbolLetter
   <+> markGroups
   <+> final
+  <+> capitalization
