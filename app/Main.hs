@@ -1,5 +1,6 @@
 module Main where
 
+import Control.Lens (over, _1, _2)
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
@@ -52,30 +53,38 @@ showWordCounts x = mapM_ showGroup x
   filterWords (Primary.ContentWord w) = True
   filterWords _ = False
 
-showElision :: (Show a, Show b) => [Milestone :* ([(Letter :* Case) :* a] :* Elision) :* b] -> [Text]
-showElision = fmap prettyMilestoned . filter isElided
+isElided :: (a, ((b, Elision), c)) -> Bool
+isElided (_, ((_, IsElided), _)) = True
+isElided _ = False
+
+queryStage
+  :: Show e1
+  => Stage
+    (Milestone :* e1)
+    e2
+    [Milestone :* (String :* SentenceBoundary)]
+    [b]
+    [Milestone :* String]
+  -> (b -> Bool)
+  -> [Primary.Group]
+  -> IO ()
+queryStage stg f gs = mapM_ goSource $ start gs
   where
-  isElided (_, ((_, IsElided), _)) = True
-  isElided _ = False
+  goSource (SourceId g s, ms) = case (aroundTo $ stageAround stg) ms of
+    Failure es -> Text.putStrLn $ Text.intercalate " "
+      [ g
+      , s
+      , "Failure: aroundTo --"
+      , Text.intercalate "\n" $ fmap prettyMilestoned es
+      ]
+    Success y -> mapM_ (Text.putStrLn . Text.append (Text.concat [ g , " ", s, " " ])) (goBack . filter f $ y)
 
-  back1 :: [(Letter :* Case) :* a] -> [Letter]
-  back1 = fmap (fst . fst)
-  -- back2 :: [Letter] -> [Symbol]
-  -- back2 = fmap (aroundFrom Around.symbolLetter . (\x -> (x, Uppercase, NotFinal)) 
+  showItems :: [Milestone :* (String :* SentenceBoundary)] -> [Text]
+  showItems = fmap prettyMilestonedString . stageForget stg
 
-queryStage f gs = do
-  let stageTo = aroundTo $ stageAround stage
-  let ss = start gs
-  let
-    goSource (SourceId g s, ms) = case stageTo ms of
-      Failure es -> Text.putStrLn $ Text.intercalate " "
-        [ g
-        , s
-        , "to failure:"
-        , Text.intercalate "\n" $ fmap prettyMilestoned es
-        ]
-      Success y -> mapM_ (Text.putStrLn . Text.append (Text.concat [ g , " ", s, " " ])) $ f y
-  mapM_ goSource ss
+  goBack xs = case (aroundFrom $ stageAround stg) xs of
+    Success ys -> showItems ys
+    Failure _ -> [ "Failure: aroundFrom" ]
 
 handleGroups :: ([Primary.Group] -> IO ()) -> IO ()
 handleGroups f = do
@@ -86,7 +95,7 @@ handleGroups f = do
 
 runCommand :: Options -> IO ()
 runCommand (Options Words) = handleGroups showWordCounts
-runCommand (Options Elision) = handleGroups (queryStage showElision)
+runCommand (Options Elision) = handleGroups (queryStage stage isElided)
 
 main :: IO ()
 main = execParser opts >>= runCommand

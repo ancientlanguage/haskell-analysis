@@ -53,6 +53,7 @@ executable query
     base,
     text,
     either,
+    lens,
     grammar,
     primary-type,
     optparse-applicative >=0.12

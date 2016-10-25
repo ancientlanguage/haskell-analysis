@@ -27,3 +27,10 @@ prettyMilestoned (m, x) = Text.intercalate " " $
   , "--"
   , textShow $ x
   ]
+
+prettyMilestonedString :: Milestone :* String -> Text
+prettyMilestonedString (m, x) = Text.intercalate " " $
+  [ prettyMilestone m
+  , "--"
+  , Text.pack x
+  ]
