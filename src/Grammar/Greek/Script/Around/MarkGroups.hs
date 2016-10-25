@@ -1,6 +1,5 @@
 module Grammar.Greek.Script.Around.MarkGroups where
 
-import Control.Lens (over)
 import Data.Either.Validation
 import Data.Void
 import Grammar.Around
@@ -11,7 +10,7 @@ data InitialMarks = InitialMarks [Mark]
   deriving (Show)
 
 markGroups :: Around InitialMarks Void [a :+ Mark] [a :* [Mark]]
-markGroups = Around (over _Failure pure . to) (Success . from)
+markGroups = makeToValidationAround to from
   where
   to xs = case foldr go ([], []) xs of
     ([], ys) -> Success ys

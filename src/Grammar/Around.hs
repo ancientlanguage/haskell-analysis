@@ -3,20 +3,19 @@ module Grammar.Around where
 import Data.Either.Validation
 import Data.Void
 import Grammar.CommonTypes
-import Control.Lens (over, _1, _2)
+import Control.Lens (over, _2)
 
 data Around e1 e2 a b = Around
   { aroundTo :: a -> Validation [e1] b
   , aroundFrom :: b -> Validation [e2] a
   }
 
-type IdAround = Around Void Void
-makeIdAround :: (a -> b) -> (b -> a) -> IdAround a b
+makeIdAround :: (a -> b) -> (b -> a) -> Around Void Void a b
 makeIdAround f g = Around (Success . f) (Success . g)
 
 type ParseAround e = Around e Void
-makeParseAround :: (a -> Validation [e] b) -> (b -> a) -> ParseAround e a b
-makeParseAround f g = Around f (Success . g)
+makeToValidationAround :: (a -> Validation e b) -> (b -> a) -> Around e Void a b
+makeToValidationAround f g = Around (over _Failure pure . f) (Success . g)
 
 joinValidation :: Validation [e1] (Validation [e2] a) -> Validation [e1 :+ e2] a
 joinValidation (Failure es) = Failure (fmap Left es)

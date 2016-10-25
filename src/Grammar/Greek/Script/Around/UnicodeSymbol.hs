@@ -61,12 +61,12 @@ symbolToChar S_ω = 'ω'
 
 
 unicodeSymbol :: ParseAround InvalidChar Char (Symbol :+ Mark :+ WordPunctuation)
-unicodeSymbol = makeParseAround to from
+unicodeSymbol = makeToValidationAround to from
   where
   validSymbol = Success . Left
   validMark = Success . Right . Left
   validPunct = Success . Right . Right
-  invalidChar = Failure . pure . InvalidChar
+  invalidChar = Failure . InvalidChar
   to 'Α' = validSymbol S_Α
   to 'Β' = validSymbol S_Β
   to 'Γ' = validSymbol S_Γ

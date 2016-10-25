@@ -1,13 +1,12 @@
 module Grammar.Greek.Script.Around.SymbolLetter where
 
-import Data.Either.Validation
 import Data.Void
 import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
 symbolLetter :: Around Void Void Symbol (Letter :* Case :* Final)
-symbolLetter = Around (Success . to) (Success . from)
+symbolLetter = makeIdAround to from
   where
   to S_Α = (L_α, (Uppercase, FinalNotSupported))
   to S_Β = (L_β, (Uppercase, FinalNotSupported))

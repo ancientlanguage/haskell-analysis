@@ -1,6 +1,5 @@
 module Grammar.Greek.Script.Around.WordPunctuationElision where
 
-import Control.Lens (over)
 import Data.Either
 import Data.Either.Validation
 import Data.Void
@@ -14,7 +13,7 @@ data InvalidWordPunctuation
   deriving (Show)
 
 wordPunctuationElision :: Around InvalidWordPunctuation Void [a :+ WordPunctuation] ([a] :* Elision)
-wordPunctuationElision = Around (over _Failure pure . to) (Success . from)
+wordPunctuationElision = makeToValidationAround to from
   where
   to xs = case reverse xs of
     [] -> Failure EmptyWord

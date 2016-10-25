@@ -11,11 +11,11 @@ data InvalidFinals = InvalidFinals [Letter :* Case :* Final]
   deriving (Show)
 
 final :: Around InvalidFinals Void [(Letter :* Case :* Final) :* a] [(Letter :* Case) :* a]
-final = Around (fixTo . to) (Success . from)
+final = makeToValidationAround (fixTo . to) from
   where
   fixTo
     = over _Success reverse
-    . over _Failure (pure . InvalidFinals)
+    . over _Failure InvalidFinals
   to xs = case reverse xs of
     [] -> Success []
     (x : xs') -> pure (:) <*> check x <*> ensureMedials xs'
