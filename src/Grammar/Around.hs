@@ -53,6 +53,13 @@ joinAround' (Around a_b b_a) (Around b_c c_b) = Around a_c c_a
   a_c = joinValidation' . over _Success b_c . a_b
   c_a = joinValidation' . over _Success b_a . c_b
 
+(<+>)
+  :: Around (q :* e1) (q :* e2) a b
+  -> Around (q :* e3) (q :* e4) b c
+  -> Around (q :* (e1 :+ e3)) (q :* (e4 :+ e2)) a c
+(<+>) = joinAround'
+infixr 6 <+>
+
 aroundSumAssoc12_3 :: Around Void Void (a :+ (b :+ c)) ((a :+ b) :+ c)
 aroundSumAssoc12_3 = Around (Success . to) (Success . from)
   where

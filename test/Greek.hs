@@ -9,7 +9,7 @@ import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import Grammar.Around
 import Grammar.CommonTypes
-import Grammar.Greek.Script.Around
+import qualified Grammar.Greek.Script.Around as Around
 import Grammar.Greek.Stage
 import Grammar.Pretty
 import Grammar.Prepare
@@ -61,8 +61,8 @@ testGroupStages = testCase "around stages" $ do
 
 greekGroups =
   [ testGroup "Unicode-Symbol" $ concat
-    [ testAround "unicodeSymbol letters" unicodeSymbol "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρσςτυφχψω"
-    , testAround "unicodeSymbol marks" unicodeSymbol "α\x0300\x0301\x0308\x0313\x0314\x0342\x0345\x2019"
+    [ testAround "unicodeSymbol letters" Around.unicodeSymbol "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρσςτυφχψω"
+    , testAround "unicodeSymbol marks" Around.unicodeSymbol "α\x0300\x0301\x0308\x0313\x0314\x0342\x0345\x2019"
     ]
   , testGroup "Stages" [ testGroupStages ]
   ]

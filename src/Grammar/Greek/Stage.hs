@@ -10,7 +10,7 @@ import qualified Primary
 import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Prepare
-import Grammar.Greek.Script.Around
+import qualified Grammar.Greek.Script.Around as Around
 import Grammar.Greek.Script.Types
 import Control.Lens
 
@@ -46,56 +46,54 @@ type AroundMilestone e1 e2 a b =
   [Milestone :* a]
   [Milestone :* b]
 
-around0 :: AroundMilestone InvalidChar Void
+unicodeSymbol :: AroundMilestone Around.InvalidChar Void
   ([Char] :* SentenceBoundary)
   ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary)
-around0 = Around
-  (milestoneContext . _1 . travList $ aroundTo unicodeSymbol)
-  (milestoneContext . _1 . travList $ aroundFrom unicodeSymbol)
+unicodeSymbol = Around
+  (milestoneContext . _1 . travList $ aroundTo Around.unicodeSymbol)
+  (milestoneContext . _1 . travList $ aroundFrom Around.unicodeSymbol)
 
-around10 :: AroundMilestone Void Void
+assocSymbolMark_WordPunctuation :: AroundMilestone Void Void
   ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary)
   ([(Symbol :+ Mark) :+ WordPunctuation] :* SentenceBoundary)
-around10 = Around
+assocSymbolMark_WordPunctuation = Around
   (milestoneContext . _1 . travList $ aroundTo aroundSumAssoc12_3)
   (milestoneContext . _1 . travList $ aroundFrom aroundSumAssoc12_3)
 
-around20 :: AroundMilestone InvalidWordPunctuation Void
+wordPunctuationElision :: AroundMilestone Around.InvalidWordPunctuation Void
   ([(Symbol :+ Mark) :+ WordPunctuation] :* SentenceBoundary)
   (([Symbol :+ Mark] :* Elision) :* SentenceBoundary)
-around20 = Around
-  (milestoneContext . _1 $ aroundTo wordPunctuationElision)
-  (milestoneContext . _1 $ aroundFrom wordPunctuationElision)
+wordPunctuationElision = Around
+  (milestoneContext . _1 $ aroundTo Around.wordPunctuationElision)
+  (milestoneContext . _1 $ aroundFrom Around.wordPunctuationElision)
 
-around30 :: AroundMilestone Void Void
+symbolLetter :: AroundMilestone Void Void
   (([Symbol :+ Mark] :* Elision) :* SentenceBoundary)
   (([(Letter :* Case :* Final) :+ Mark] :* Elision) :* SentenceBoundary)
-around30 = Around
-  (milestoneContext . _1 . _1 . travList . _Left $ aroundTo symbolLetter)
-  (milestoneContext . _1 . _1 . travList . _Left $ aroundFrom symbolLetter)
+symbolLetter = Around
+  (milestoneContext . _1 . _1 . travList . _Left $ aroundTo Around.symbolLetter)
+  (milestoneContext . _1 . _1 . travList . _Left $ aroundFrom Around.symbolLetter)
 
-around40 :: AroundMilestone InitialMarks Void
+markGroups :: AroundMilestone Around.InitialMarks Void
   (([(Letter :* Case :* Final) :+ Mark] :* Elision) :* SentenceBoundary)
   (([(Letter :* Case :* Final) :* [Mark]] :* Elision) :* SentenceBoundary)
-around40 = Around
-  (milestoneContext . _1 . _1 $ aroundTo markGroups)
-  (milestoneContext . _1 . _1 $ aroundFrom markGroups)
+markGroups = Around
+  (milestoneContext . _1 . _1 $ aroundTo Around.markGroups)
+  (milestoneContext . _1 . _1 $ aroundFrom Around.markGroups)
 
-around50 :: AroundMilestone InvalidFinals Void
+final :: AroundMilestone Around.InvalidFinals Void
   (([(Letter :* Case :* Final) :* [Mark]] :* Elision) :* SentenceBoundary)
   (([(Letter :* Case) :* [Mark]] :* Elision) :* SentenceBoundary)
-around50 = Around
-  (milestoneContext . _1 . _1 $ aroundTo final)
-  (milestoneContext . _1 . _1 $ aroundFrom final)
+final = Around
+  (milestoneContext . _1 . _1 $ aroundTo Around.final)
+  (milestoneContext . _1 . _1 $ aroundFrom Around.final)
 
 stage = Stage allAround forget
   where
     allAround
-      = around0
-      <+> around10
-      <+> around20
-      <+> around30
-      <+> around40
-      <+> around50
-    (<+>) = joinAround'
-    infixr 6 <+>
+      = unicodeSymbol
+      <+> assocSymbolMark_WordPunctuation
+      <+> wordPunctuationElision
+      <+> symbolLetter
+      <+> markGroups
+      <+> final

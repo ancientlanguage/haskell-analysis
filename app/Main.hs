@@ -57,6 +57,16 @@ isElided :: (a, ((b, Elision), c)) -> Bool
 isElided (_, ((_, IsElided), _)) = True
 isElided _ = False
 
+elisionStage = Stage allAround forget
+  where
+  allAround
+    = unicodeSymbol
+    <+> assocSymbolMark_WordPunctuation
+    <+> wordPunctuationElision
+    <+> symbolLetter
+    <+> markGroups
+    <+> final
+
 queryStage
   :: Show e1
   => Stage
