@@ -34,10 +34,10 @@ start = over (traverse . _2 . traverse . _2) wordWithSentence . prepareGroups
 travList :: Applicative f => (a -> f b) -> [a] -> f [b]
 travList = traverse
 
-forget
+forgetSentenceBoundary
   :: [Milestone :* [a] :* SentenceBoundary]
   -> [Milestone :* [a]]
-forget = over (traverse . _2) fst
+forgetSentenceBoundary = over (traverse . _2) fst
 
 type AroundMilestone e1 e2 a b =
   Around
@@ -88,15 +88,13 @@ final = Around
   (milestoneContext . _1 . _1 $ aroundTo Around.final)
   (milestoneContext . _1 . _1 $ aroundFrom Around.final)
 
-aroundToElision
+toElision
   = unicodeSymbol
   <+> assocSymbolMark_WordPunctuation
   <+> wordPunctuationElision
 
-stage = Stage allAround forget
-  where
-    allAround
-      = aroundToElision
-      <+> symbolLetter
-      <+> markGroups
-      <+> final
+script 
+  = toElision
+  <+> symbolLetter
+  <+> markGroups
+  <+> final

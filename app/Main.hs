@@ -10,7 +10,7 @@ import Options.Applicative hiding (Failure, Success)
 import Grammar.Around
 import Grammar.CommonTypes
 import qualified Grammar.Greek.Script.Around as Around
-import Grammar.Greek.Stage
+import qualified Grammar.Greek.Stage as Stage
 import Grammar.Greek.Script.Types
 import Grammar.Prepare
 import Grammar.Pretty
@@ -57,22 +57,19 @@ isElided :: (a, ((b, Elision), c)) -> Bool
 isElided (_, ((_, IsElided), _)) = True
 isElided _ = False
 
-elisionStage = Stage aroundToElision forget
-
 queryStage
   :: Show e1
-  => Stage
+  => Around
     (Milestone :* e1)
     e2
     [Milestone :* (String :* SentenceBoundary)]
     [b]
-    [Milestone :* String]
   -> (b -> Bool)
   -> [Primary.Group]
   -> IO ()
-queryStage stg f gs = mapM_ goSource $ start gs
+queryStage stg f gs = mapM_ goSource $ Stage.start gs
   where
-  goSource (SourceId g s, ms) = case (aroundTo $ stageAround stg) ms of
+  goSource (SourceId g s, ms) = case (aroundTo stg) ms of
     Failure es -> Text.putStrLn $ Text.intercalate " "
       [ g
       , s
@@ -82,9 +79,9 @@ queryStage stg f gs = mapM_ goSource $ start gs
     Success y -> mapM_ (Text.putStrLn . Text.append (Text.concat [ g , " ", s, " " ])) (goBack . filter f $ y)
 
   showItems :: [Milestone :* (String :* SentenceBoundary)] -> [Text]
-  showItems = fmap prettyMilestonedString . stageForget stg
+  showItems = fmap prettyMilestonedString . Stage.forgetSentenceBoundary
 
-  goBack xs = case (aroundFrom $ stageAround stg) xs of
+  goBack xs = case (aroundFrom stg) xs of
     Success ys -> showItems ys
     Failure _ -> [ "Failure: aroundFrom" ]
 
@@ -97,7 +94,7 @@ handleGroups f = do
 
 runCommand :: Options -> IO ()
 runCommand (Options Words) = handleGroups showWordCounts
-runCommand (Options Elision) = handleGroups (queryStage elisionStage isElided)
+runCommand (Options Elision) = handleGroups (queryStage Stage.toElision isElided)
 
 main :: IO ()
 main = execParser opts >>= runCommand

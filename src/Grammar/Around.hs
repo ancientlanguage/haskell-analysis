@@ -18,11 +18,6 @@ type ParseAround e = Around e Void
 makeParseAround :: (a -> Validation [e] b) -> (b -> a) -> ParseAround e a b
 makeParseAround f g = Around f (Success . g)
 
-data Stage e1 e2 a b a' = Stage
-  { stageAround :: Around e1 e2 a b
-  , stageForget :: a -> a'
-  }
-
 joinValidation :: Validation [e1] (Validation [e2] a) -> Validation [e1 :+ e2] a
 joinValidation (Failure es) = Failure (fmap Left es)
 joinValidation (Success (Failure es)) = Failure (fmap Right es)

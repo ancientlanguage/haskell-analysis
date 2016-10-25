@@ -10,7 +10,7 @@ import qualified Data.Text.IO as Text
 import Grammar.Around
 import Grammar.CommonTypes
 import qualified Grammar.Greek.Script.Around as Around
-import Grammar.Greek.Stage
+import qualified Grammar.Greek.Stage as Stage
 import Grammar.Pretty
 import Grammar.Prepare
 import Grammar.Serialize
@@ -33,8 +33,8 @@ testDataLoss xs ys = check . filter (\(x, y) -> x /= y) $ zip xs ys
     ]
 
 testStages x = do
-  let stageTo = aroundTo $ stageAround stage
-  let stageFrom = aroundFrom $ stageAround stage
+  let stageTo = aroundTo Stage.script
+  let stageFrom = aroundFrom Stage.script
   case stageTo x of
     Failure es -> failMessage $ Text.concat
       [ "stage to failure:"
@@ -46,7 +46,9 @@ testStages x = do
           [ "stage from failure:"
           , Text.concat $ fmap (Text.append "\n" . prettyMilestoned) es'
           ]
-        Success z -> testDataLoss ((stageForget stage) x) ((stageForget stage) z)
+        Success z -> testDataLoss (forget x) (forget z)
+          where
+          forget = Stage.forgetSentenceBoundary
 
 testSourceStages (SourceId g s, ms) = do
   _ <- Text.putStrLn $ Text.intercalate " " [g, s]
@@ -57,7 +59,7 @@ testGroupStages = testCase "around stages" $ do
   result <- readGroups
   case result of
     Left x -> assertFailure $ "decode failure:\n" ++ x
-    Right gs -> mapM_ testSourceStages (start gs)
+    Right gs -> mapM_ testSourceStages (Stage.start gs)
 
 greekGroups =
   [ testGroup "Unicode-Symbol" $ concat
