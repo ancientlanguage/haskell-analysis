@@ -21,6 +21,8 @@ import qualified Primary
 data Command
   = Words
   | Elision
+  | LetterMarks
+  | Marks
 
 data Options = Options
   { optCommand :: Command
@@ -39,21 +41,34 @@ resultCount = option auto
   <> help "Output the first R results or 0 for all"
   )
 
-elisionOptions :: Parser Options
-elisionOptions = pure Options <*> pure Elision <*> resultCount
-
 options :: Parser Options
 options = subparser
   ( command "sources"
-    (info sourcesOptions $ progDesc "Show info for primary sources" )
+    ( info
+      (pure $ Options Words 0)
+      (progDesc "Show info for primary sources" )
+    )
   <> command "elision"
-    (info elisionOptions $ progDesc "Show words with elision" )
+    ( info
+      (pure Options <*> pure Elision <*> resultCount)
+      (progDesc "Show elision" )
+    )
+  <> command "letter-marks"
+    ( info
+      (pure Options <*> pure LetterMarks <*> resultCount)
+      (progDesc "Show letter/mark combos" )
+    )
+  <> command "marks"
+    ( info
+      (pure Options <*> pure Marks <*> resultCount)
+      (progDesc "Show mark combos" )
+    )
   )
 
 showWordCounts :: [Primary.Group] -> IO ()
 showWordCounts x = mapM_ showGroup x
   where
-  showGroup g = mapM_ (showSource (Primary.groupId g)) (Primary.groupSources g) 
+  showGroup g = mapM_ (showSource (Primary.groupId g)) (Primary.groupSources g)
   showSource g s = Text.putStrLn $ Text.intercalate " "
     [ g
     , Primary.sourceId s
@@ -64,8 +79,17 @@ showWordCounts x = mapM_ showGroup x
   filterWords (Primary.ContentWord w) = True
   filterWords _ = False
 
-getElision :: (a, ((b, Elision), c)) -> Elision
-getElision (_, ((_, x), _)) = x
+getElision = pure . snd . fst . snd
+
+getLetterMarks
+  :: Milestone :* ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
+  -> [Letter :* [Mark]]
+getLetterMarks = fst . fst . fst . snd
+
+getMarks
+  :: Milestone :* ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
+  -> [[Mark]]
+getMarks = over traverse snd . fst . fst . fst . snd
 
 groupPairs :: Ord k => [k :* v] -> [k :* [v]]
 groupPairs = Map.assocs . foldr go Map.empty
@@ -81,11 +105,11 @@ queryStage
     e2
     [Milestone :* (String :* SentenceBoundary)]
     [b]
-  -> (b -> c)
+  -> (b -> [c])
   -> Int
   -> [Primary.Group]
   -> IO ()
-queryStage stg f rc gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ Stage.start gs 
+queryStage stg f rc gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ Stage.start gs
   where
   goSource (SourceId g s, ms) = case (aroundTo stg) ms of
     Failure es -> do
@@ -104,7 +128,7 @@ queryStage stg f rc gs = showKeyValues . fmap ((over (traverse . _2) concat) . g
     case showAllResults of
       True -> putStrLn "Showing all results"
       False -> case rc == 0 of
-        True -> putStrLn "Showing no results" 
+        True -> putStrLn "Showing no results"
         False -> putStrLn $ "Showing the first " ++ show rc ++ " results"
     xs' <- xs
     mapM_ skv xs'
@@ -116,7 +140,7 @@ queryStage stg f rc gs = showKeyValues . fmap ((over (traverse . _2) concat) . g
       then putStrLn ""
       else return ()
 
-  prepareItems addPrefix = over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . fmap (\x -> (f x, x))
+  prepareItems addPrefix = over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . concatMap (\x -> fmap (\y -> (y, x)) (f x))
 
   takeResults = case showAllResults of
     True -> id
@@ -139,6 +163,8 @@ handleGroups f = do
 runCommand :: Options -> IO ()
 runCommand (Options Words _) = handleGroups showWordCounts
 runCommand (Options Elision rc) = handleGroups (queryStage Stage.toElision getElision rc)
+runCommand (Options LetterMarks rc) = handleGroups (queryStage Stage.toMarkGroups getLetterMarks rc)
+runCommand (Options Marks rc) = handleGroups (queryStage Stage.toMarkGroups getMarks rc)
 
 main :: IO ()
 main = execParser opts >>= runCommand
