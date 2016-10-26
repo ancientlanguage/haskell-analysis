@@ -114,6 +114,9 @@ toMarkGroups
   <+> final
   <+> capitalization
 
-script 
+toMarkSplit
   = toMarkGroups
   <+> markSplit
+
+script
+  = toMarkSplit

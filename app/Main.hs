@@ -18,12 +18,6 @@ import Grammar.Pretty
 import Grammar.Serialize
 import qualified Primary
 
-data Command
-  = Words
-  | Elision
-  | LetterMarks
-  | Marks
-
 data Options = Options
   { optCommand :: Command
   , optResults :: Int
@@ -41,6 +35,13 @@ resultCount = option auto
   <> help "Output the first R results or 0 for all"
   )
 
+data Command
+  = Words
+  | Elision
+  | LetterMarks
+  | Marks
+  | LetterSyllabicMark
+
 options :: Parser Options
 options = subparser
   ( command "sources"
@@ -53,15 +54,20 @@ options = subparser
       (pure Options <*> pure Elision <*> resultCount)
       (progDesc "Show elision" )
     )
+  <> command "marks"
+    ( info
+      (pure Options <*> pure Marks <*> resultCount)
+      (progDesc "Show mark combos" )
+    )
   <> command "letter-marks"
     ( info
       (pure Options <*> pure LetterMarks <*> resultCount)
       (progDesc "Show letter/mark combos" )
     )
-  <> command "marks"
+  <> command "letter-syllabic-mark"
     ( info
-      (pure Options <*> pure Marks <*> resultCount)
-      (progDesc "Show mark combos" )
+      (pure Options <*> pure LetterSyllabicMark <*> resultCount)
+      (progDesc "Show letter/syllabic mark combos" )
     )
   )
 
@@ -78,18 +84,6 @@ showWordCounts x = mapM_ showGroup x
     ]
   filterWords (Primary.ContentWord w) = True
   filterWords _ = False
-
-getElision = pure . snd . fst . snd
-
-getLetterMarks
-  :: Milestone :* ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
-  -> [Letter :* [Mark]]
-getLetterMarks = fst . fst . fst . snd
-
-getMarks
-  :: Milestone :* ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
-  -> [[Mark]]
-getMarks = over traverse snd . fst . fst . fst . snd
 
 groupPairs :: Ord k => [k :* v] -> [k :* [v]]
 groupPairs = Map.assocs . foldr go Map.empty
@@ -160,11 +154,31 @@ handleGroups f = do
     Left x -> putStrLn x
     Right x -> f x
 
+doQuery x y z = handleGroups (queryStage x y z)
+
+getElision = pure . snd . fst . snd
+
+getLetterMarks
+  :: Milestone :* ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
+  -> [Letter :* [Mark]]
+getLetterMarks = fst . fst . fst . snd
+
+getMarks
+  :: Milestone :* ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
+  -> [[Mark]]
+getMarks = over traverse snd . fst . fst . fst . snd
+
+getLetterSyllabicMark
+  :: Milestone :* ((([Letter :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* SentenceBoundary)
+  -> [Letter :* Maybe SyllabicMark]
+getLetterSyllabicMark = over traverse (\(l, (_, (_, sm))) -> (l, sm)) . fst . fst . fst . snd
+
 runCommand :: Options -> IO ()
 runCommand (Options Words _) = handleGroups showWordCounts
 runCommand (Options Elision rc) = handleGroups (queryStage Stage.toElision getElision rc)
 runCommand (Options LetterMarks rc) = handleGroups (queryStage Stage.toMarkGroups getLetterMarks rc)
 runCommand (Options Marks rc) = handleGroups (queryStage Stage.toMarkGroups getMarks rc)
+runCommand (Options LetterSyllabicMark rc) = handleGroups (queryStage Stage.toMarkSplit getLetterSyllabicMark rc)
 
 main :: IO ()
 main = execParser opts >>= runCommand
