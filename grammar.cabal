@@ -23,6 +23,7 @@ library
     Grammar.Greek.Script.Around.SymbolLetter
     Grammar.Greek.Script.Around.UnicodeSymbol
     Grammar.Greek.Script.Around.WordPunctuationElision
+    Grammar.Greek.Script.Stage
     Grammar.Greek.Script.Types
     Grammar.Greek.Stage
     Grammar.Prepare
