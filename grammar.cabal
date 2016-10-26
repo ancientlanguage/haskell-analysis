@@ -53,6 +53,7 @@ executable query
     TypeOperators
   build-depends:
     base,
+    containers,
     text,
     either,
     lens,

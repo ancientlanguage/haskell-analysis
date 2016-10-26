@@ -97,7 +97,7 @@ capitalization = Around
 
 markSplit :: AroundMilestone Around.InvalidMarkCombo Void
   ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
-  ((([Letter :* (Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)] :* Capitalization) :* Elision) :* SentenceBoundary)
+  ((([Letter :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* SentenceBoundary)
 markSplit = Around
   (milestoneContext . _1 . _1 . _1 . travList . _2 $ aroundTo Around.markSplit)
   (milestoneContext . _1 . _1 . _1 . travList . _2 $ aroundFrom Around.markSplit)
@@ -107,10 +107,13 @@ toElision
   <+> assocSymbolMark_WordPunctuation
   <+> wordPunctuationElision
 
-script 
+toMarkGroups
   = toElision
   <+> symbolLetter
   <+> markGroups
   <+> final
   <+> capitalization
+
+script 
+  = toMarkGroups
   <+> markSplit
