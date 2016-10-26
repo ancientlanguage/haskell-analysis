@@ -17,6 +17,7 @@ library
     Grammar.Greek.Script.Around
     Grammar.Greek.Script.Around.Capitalization
     Grammar.Greek.Script.Around.Final
+    Grammar.Greek.Script.Around.LetterVowelConsonant
     Grammar.Greek.Script.Around.MarkGroups
     Grammar.Greek.Script.Around.MarkSplit
     Grammar.Greek.Script.Around.SymbolLetter
