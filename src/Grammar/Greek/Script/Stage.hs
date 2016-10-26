@@ -7,7 +7,8 @@ import Data.Text (Text)
 import qualified Data.Text as Text
 import Data.Void
 import qualified Primary
-import Grammar.Around
+import Grammar.Around (Around(..), (<+>))
+import qualified Grammar.Around as Around
 import Grammar.CommonTypes
 import Grammar.Prepare
 import qualified Grammar.Greek.Script.Around as Around
@@ -54,11 +55,11 @@ unicodeSymbol = Around
   (milestoneContext . _1 . travList $ aroundFrom Around.unicodeSymbol)
 
 assocSymbolMark_WordPunctuation :: AroundMilestone Void Void
-  ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary)
+  ([Symbol :+ (Mark :+ WordPunctuation)] :* SentenceBoundary)
   ([(Symbol :+ Mark) :+ WordPunctuation] :* SentenceBoundary)
 assocSymbolMark_WordPunctuation = Around
-  (milestoneContext . _1 . travList $ aroundTo aroundSumAssoc12_3)
-  (milestoneContext . _1 . travList $ aroundFrom aroundSumAssoc12_3)
+  (milestoneContext . _1 . travList $ aroundTo Around.sumAssocLeft)
+  (milestoneContext . _1 . travList $ aroundFrom Around.sumAssocLeft)
 
 wordPunctuationElision :: AroundMilestone Around.InvalidWordPunctuation Void
   ([(Symbol :+ Mark) :+ WordPunctuation] :* SentenceBoundary)

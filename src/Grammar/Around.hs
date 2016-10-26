@@ -54,8 +54,8 @@ joinAround' (Around a_b b_a) (Around b_c c_b) = Around a_c c_a
 (<+>) = joinAround'
 infixr 6 <+>
 
-aroundSumAssoc12_3 :: Around Void Void (a :+ (b :+ c)) ((a :+ b) :+ c)
-aroundSumAssoc12_3 = Around (Success . to) (Success . from)
+sumAssocLeft :: Around Void Void (a :+ (b :+ c)) ((a :+ b) :+ c)
+sumAssocLeft = makeIdAround to from
   where
   to (Left x) = Left (Left x)
   to (Right (Left y)) = Left (Right y)
@@ -65,8 +65,24 @@ aroundSumAssoc12_3 = Around (Success . to) (Success . from)
   from (Left (Right y)) = Right (Left y)
   from (Right z) = Right (Right z)
 
-aroundProdAssoc12_3 :: Around Void Void (a :* (b :* c)) ((a :* b) :* c)
-aroundProdAssoc12_3 = Around (Success . to) (Success . from)
+prodAssocLeft :: Around Void Void (a :* (b :* c)) ((a :* b) :* c)
+prodAssocLeft = makeIdAround to from
   where
   to (x, (y, z)) = ((x, y), z)
   from ((x, y), z) = (x, (y, z))
+
+distLeftSumOverProd :: Around Void Void ((a :+ b) :* c) ((a :* c) :+ (b :* c))
+distLeftSumOverProd = makeIdAround to from
+  where
+  to (Left a, c) = Left (a, c)
+  to (Right b, c) = Right (b, c)
+  from (Left (a, c)) = (Left a, c)
+  from (Right (b, c)) = (Right b, c)
+
+distRightSumOverProd :: Around Void Void (a :* (b :+ c)) ((a :* b) :+ (a :* c))
+distRightSumOverProd = makeIdAround to from
+  where
+  to (a, Left b) = Left (a, b)
+  to (a, Right c) = Right (a, c)
+  from (Left (a, b)) = (a, Left b)
+  from (Right (a, c)) = (a, Right c)
