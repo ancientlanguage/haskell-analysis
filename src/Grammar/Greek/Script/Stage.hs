@@ -149,8 +149,11 @@ toMarkSplit
   = toMarkGroups
   <+> markSplit
 
-script
+toConsonantMarks
   = toMarkSplit
   <+> letterVowelConsonant
   <+> distVowelConsonantMarks
   <+> consonantMarks
+
+script
+  = toConsonantMarks

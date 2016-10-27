@@ -1,6 +1,6 @@
 module Main where
 
-import Control.Lens (over, _1, _2)
+import Control.Lens (over, _1, _2, _Left, toListOf)
 import qualified Data.Map.Strict as Map
 import Data.Text (Text)
 import qualified Data.Text as Text
@@ -41,6 +41,7 @@ data Command
   | LetterMarks
   | Marks
   | LetterSyllabicMark
+  | VowelMarks
 
 options :: Parser Options
 options = subparser
@@ -68,6 +69,11 @@ options = subparser
     ( info
       (pure Options <*> pure LetterSyllabicMark <*> resultCount)
       (progDesc "Show letter/syllabic mark combos" )
+    )
+  <> command "vowel-marks"
+    ( info
+      (pure Options <*> pure VowelMarks <*> resultCount)
+      (progDesc "Show vowel mark combos" )
     )
   )
 
@@ -173,12 +179,20 @@ getLetterSyllabicMark
   -> [Letter :* Maybe SyllabicMark]
 getLetterSyllabicMark = over traverse (\(l, (_, (_, sm))) -> (l, sm)) . fst . fst . fst . snd
 
+getVowelMarks
+  :: Milestone
+    :* ((([ (Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark) :+ ConsonantRho ]
+      :* Capitalization) :* Elision) :* SentenceBoundary)
+  -> [Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]
+getVowelMarks = toListOf (_2 . _1 . _1 . _1 . traverse . _Left)
+
 runCommand :: Options -> IO ()
 runCommand (Options Words _) = handleGroups showWordCounts
 runCommand (Options Elision rc) = handleGroups (queryStage Stage.toElision getElision rc)
 runCommand (Options LetterMarks rc) = handleGroups (queryStage Stage.toMarkGroups getLetterMarks rc)
 runCommand (Options Marks rc) = handleGroups (queryStage Stage.toMarkGroups getMarks rc)
 runCommand (Options LetterSyllabicMark rc) = handleGroups (queryStage Stage.toMarkSplit getLetterSyllabicMark rc)
+runCommand (Options VowelMarks rc) = handleGroups (queryStage Stage.toConsonantMarks getVowelMarks rc)
 
 main :: IO ()
 main = execParser opts >>= runCommand
