@@ -42,6 +42,7 @@ data Command
   | Marks
   | LetterSyllabicMark
   | VowelMarks
+  | VowelMarkGroups
 
 options :: Parser Options
 options = subparser
@@ -74,6 +75,11 @@ options = subparser
     ( info
       (pure Options <*> pure VowelMarks <*> resultCount)
       (progDesc "Show vowel mark combos" )
+    )
+  <> command "vowel-mark-groups"
+    ( info
+      (pure Options <*> pure VowelMarkGroups <*> resultCount)
+      (progDesc "Show grouped vowel mark combos" )
     )
   )
 
@@ -186,6 +192,15 @@ getVowelMarks
   -> [Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]
 getVowelMarks = toListOf (_2 . _1 . _1 . _1 . traverse . _Left)
 
+getVowelMarkGroups
+  :: Milestone
+    :* ((([ [Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]
+      :+ [ConsonantRho]
+      ]
+      :* Capitalization) :* Elision) :* SentenceBoundary)
+  -> [[Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]]
+getVowelMarkGroups = toListOf (_2 . _1 . _1 . _1 . traverse . _Left)
+
 runCommand :: Options -> IO ()
 runCommand (Options Words _) = handleGroups showWordCounts
 runCommand (Options Elision rc) = handleGroups (queryStage Stage.toElision getElision rc)
@@ -193,6 +208,7 @@ runCommand (Options LetterMarks rc) = handleGroups (queryStage Stage.toMarkGroup
 runCommand (Options Marks rc) = handleGroups (queryStage Stage.toMarkGroups getMarks rc)
 runCommand (Options LetterSyllabicMark rc) = handleGroups (queryStage Stage.toMarkSplit getLetterSyllabicMark rc)
 runCommand (Options VowelMarks rc) = handleGroups (queryStage Stage.toConsonantMarks getVowelMarks rc)
+runCommand (Options VowelMarkGroups rc) = handleGroups (queryStage Stage.toGroupVowelConsonants getVowelMarkGroups rc)
 
 main :: IO ()
 main = execParser opts >>= runCommand

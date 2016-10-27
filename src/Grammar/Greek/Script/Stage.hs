@@ -169,6 +169,9 @@ toConsonantMarks
   <+> distVowelConsonantMarks
   <+> consonantMarks
 
-script
+toGroupVowelConsonants
   = toConsonantMarks
   <+> groupVowelConsonants
+
+script
+  = toGroupVowelConsonants
