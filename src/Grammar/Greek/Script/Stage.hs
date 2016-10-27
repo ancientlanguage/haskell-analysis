@@ -110,6 +110,16 @@ letterVowelConsonant = Around
   (milestoneContext . _1 . _1 . _1 . travList . _1 $ aroundTo Around.letterVowelConsonant)
   (milestoneContext . _1 . _1 . _1 . travList . _1 $ aroundFrom Around.letterVowelConsonant)
 
+distVowelConsonantMarks :: AroundMilestone Void Void
+  ((([(Vowel :+ Consonant) :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* SentenceBoundary)
+  ((([ (Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
+    :+ (Consonant :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
+    ]
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+distVowelConsonantMarks = Around
+  (milestoneContext . _1 . _1 . _1 . travList $ aroundTo Around.distLeftSumOverProd)
+  (milestoneContext . _1 . _1 . _1 . travList $ aroundFrom Around.distLeftSumOverProd)
+
 toElision
   = unicodeSymbol
   <+> assocSymbolMark_WordPunctuation
@@ -129,3 +139,4 @@ toMarkSplit
 script
   = toMarkSplit
   <+> letterVowelConsonant
+  <+> distVowelConsonantMarks
