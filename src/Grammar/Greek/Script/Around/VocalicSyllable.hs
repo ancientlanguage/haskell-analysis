@@ -29,12 +29,10 @@ vocalicSyllable defaultA = makeIdAround to from
   tryDiphthong V_ε V_ι = Just D_ει
   tryDiphthong V_ε V_υ = Just D_ευ
   tryDiphthong V_η V_υ = Just D_ηυ
-  tryDiphthong V_ι V_υ = Just D_ιυ
   tryDiphthong V_ο V_ι = Just D_οι
   tryDiphthong V_ο V_υ = Just D_ου
   tryDiphthong V_υ V_ι = Just D_υι
   tryDiphthong V_ω V_ι = Just D_ωι
-  tryDiphthong V_ω V_υ = Just D_ωυ
   tryDiphthong _ _ = Nothing
 
   tryImproperDiphthong :: Vowel -> Maybe ImproperDiphthong
@@ -45,38 +43,50 @@ vocalicSyllable defaultA = makeIdAround to from
 
   from = foldr fromFold []
 
-  -- double iota διϊσχυρίζετο
-  fromFold (VS_Vowel v1@V_ι, a1) ((v2@V_ι, (Nothing, a2)) : xs) = (v1, (Nothing, a1)) : (v2, (Just S_Diaeresis, a2)) : xs
-  -- no diaeresis when both vowel combos are diphthongs but latter one is taken, such as Δαυίδ vs Νινεϋῖται
-  fromFold (VS_Vowel v1, a1) ((v2, (Nothing, a2)) : (v3, (Nothing, a3)) : xs)
-    | Just _ <- tryDiphthong v1 v2
-    , Just _ <- tryDiphthong v2 v3
-    = (v1, (Nothing, a1)) : (v2, (Nothing, a2)) : (v3, (Nothing, a3)) : xs
+  fromFold (VS_Vowel v1, a1) ((v2, (Nothing, a2)) : (v3, (m3, a3)) : xs)
+    | isIotaUpsilon v2
+    , isIotaUpsilon v3
+    , isNothingDiaeresis m3
+    = (v1, (Nothing, a1)) : (v2, (m3, a2)) : (v3, (Nothing, a3)) : xs
   fromFold (VS_Vowel v1, a1) ((v2, (Nothing, a2)) : xs)
-    | Just _ <- tryDiphthong v1 v2
+    | isIotaUpsilon v2
     = (v1, (Nothing, a1)) : (v2, (Just S_Diaeresis, a2)) : xs
   fromFold (VS_Vowel v, a) xs = (v, (Nothing, a)) : xs
   fromFold (VS_ImproperDiphthong v, a) xs = (improperDiphthongVowel v, (Just S_IotaSubscript, a)) : xs
-  fromFold (VS_Diphthong d, a) xs = checkDoubleIota $ diphthongVowels (Nothing, defaultA) (Nothing, a) d ++ xs
+  fromFold (VS_Diphthong d, a) xs = consDiphthong (diphthongVowels (Nothing, defaultA) (Nothing, a) d) xs
 
-  -- double iota εὐποιΐας
-  checkDoubleIota (x0 : (v1@V_ι, (Nothing, a1)) : (v2@V_ι, (Nothing, a2)) : xs) = x0 : (v1, (Nothing, a1)) : (v2, (Just S_Diaeresis, a2)) : xs
-  checkDoubleIota xs = xs
+  isIotaUpsilon :: Vowel -> Bool
+  isIotaUpsilon V_ι = True
+  isIotaUpsilon V_υ = True
+  isIotaUpsilon _ = False
 
-  diphthongVowels :: q -> q -> Diphthong -> [Vowel :* q]
-  diphthongVowels a1 a2 D_αι = [(V_α, a1), (V_ι, a2)]
-  diphthongVowels a1 a2 D_αυ = [(V_α, a1), (V_υ, a2)]
-  diphthongVowels a1 a2 D_ει = [(V_ε, a1), (V_ι, a2)]
-  diphthongVowels a1 a2 D_ευ = [(V_ε, a1), (V_υ, a2)]
-  diphthongVowels a1 a2 D_ηυ = [(V_η, a1), (V_υ, a2)]
-  diphthongVowels a1 a2 D_ιυ = [(V_ι, a1), (V_υ, a2)]
-  diphthongVowels a1 a2 D_οι = [(V_ο, a1), (V_ι, a2)]
-  diphthongVowels a1 a2 D_ου = [(V_ο, a1), (V_υ, a2)]
-  diphthongVowels a1 a2 D_υι = [(V_υ, a1), (V_ι, a2)]
-  diphthongVowels a1 a2 D_ωι = [(V_ω, a1), (V_ι, a2)]
-  diphthongVowels a1 a2 D_ωυ = [(V_ω, a1), (V_υ, a2)]
+  isNothingDiaeresis :: Maybe SyllabicMark -> Bool
+  isNothingDiaeresis Nothing = True
+  isNothingDiaeresis (Just S_Diaeresis) = True
+  isNothingDiaeresis _ = False
+
+  diphthongVowels :: q -> q -> Diphthong -> (Vowel :* q, Vowel :* q)
+  diphthongVowels a1 a2 D_αι = ((V_α, a1), (V_ι, a2))
+  diphthongVowels a1 a2 D_αυ = ((V_α, a1), (V_υ, a2))
+  diphthongVowels a1 a2 D_ει = ((V_ε, a1), (V_ι, a2))
+  diphthongVowels a1 a2 D_ευ = ((V_ε, a1), (V_υ, a2))
+  diphthongVowels a1 a2 D_ηυ = ((V_η, a1), (V_υ, a2))
+  diphthongVowels a1 a2 D_οι = ((V_ο, a1), (V_ι, a2))
+  diphthongVowels a1 a2 D_ου = ((V_ο, a1), (V_υ, a2))
+  diphthongVowels a1 a2 D_υι = ((V_υ, a1), (V_ι, a2))
+  diphthongVowels a1 a2 D_ωι = ((V_ω, a1), (V_ι, a2))
 
   improperDiphthongVowel :: ImproperDiphthong -> Vowel
   improperDiphthongVowel I_α = V_α
   improperDiphthongVowel I_η = V_η
   improperDiphthongVowel I_ω = V_ω
+
+  consDiphthong
+    :: (Vowel :* Maybe SyllabicMark :* a, Vowel :* Maybe SyllabicMark :* a)
+    -> [Vowel :* Maybe SyllabicMark :* a]
+    -> [Vowel :* Maybe SyllabicMark :* a]
+  consDiphthong ((v1, q1), (v2, q2)) ((v3, (Nothing, a3)) : xs)
+    | isIotaUpsilon v3
+    = (v1, q1) : (v2, q2) : (v3, (Just S_Diaeresis, a3)) : xs
+  consDiphthong (x1, x2) xs = x1 : x2 : xs
+

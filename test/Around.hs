@@ -27,3 +27,19 @@ testAround label (Around f g) x = testCase label $ do
       case g y of
         Failure e2 -> assertFailure $ "from failure: " ++ show e2
         Success z -> assertEqual "data loss" x z
+
+testAroundDest
+  :: (Eq a, Show a, Eq b, Show b, Show e1, Show e2)
+  => String
+  -> Around e1 e2 a b
+  -> a
+  -> b
+  -> Test
+testAroundDest label (Around f g) x yInput = testCase label $ do
+  case f x of
+    Failure e1 -> assertFailure $ "to failure: " ++ show e1
+    Success y -> do
+      _ <- assertEqual "destination" yInput y
+      case g y of
+        Failure e2 -> assertFailure $ "from failure: " ++ show e2
+        Success z -> assertEqual "data loss" x z

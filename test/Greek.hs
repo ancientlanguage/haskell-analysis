@@ -67,15 +67,49 @@ unicodeSymbolTestGroup = testGroup "Unicode-Symbol" $ concat
   ]
 
 vocalicSyllableTestGroup = testGroup "vocalic syllables" $
-  [ testAround "Ἁλληλουϊά" (Around.vocalicSyllable ())
+  [ testAround "Μωϋσῆς" (Around.vocalicSyllable ())
+    [ (V_ω,(Nothing,()))
+    , (V_υ,(Just S_Diaeresis,()))
+    ]
+  , testAround "διϋλίζοντες" (Around.vocalicSyllable ())
+    [ (V_ι,(Nothing,()))
+    , (V_υ,(Just S_Diaeresis,()))
+    ]
+  , testAround "πρωῒ" (Around.vocalicSyllable ())
+    [ (V_ω,(Nothing,()))
+    , (V_ι,(Just S_Diaeresis,()))
+    ]
+  , testAround "διϊσχυρίζετο" (Around.vocalicSyllable ())
+    [ (V_ι,(Nothing,()))
+    , (V_ι,(Just S_Diaeresis,()))
+    ]
+  , testAroundDest "Ἁλληλουϊά" (Around.vocalicSyllable ())
     [ (V_ο,(Nothing,()))
     , (V_υ,(Nothing,()))
     , (V_ι,(Just S_Diaeresis,()))
     , (V_α,(Nothing,()))
     ]
-  , testAround "πρωῒ" (Around.vocalicSyllable ())
-    [ (V_ω,(Nothing,()))
+    [ (VS_Diphthong D_ου,())
+    , (VS_Vowel V_ι,())
+    , (VS_Vowel V_α,(()))
+    ]
+  , testAroundDest "Δαυίδ" (Around.vocalicSyllable ())
+    [ (V_α,(Nothing,()))
+    , (V_υ,(Nothing,()))
+    , (V_ι,(Nothing,()))
+    ]
+    [ (VS_Vowel V_α,())
+    , (VS_Diphthong D_υι,())
+    ]
+  , testAroundDest "εὐποιΐας" (Around.vocalicSyllable ())
+    [ (V_ο,(Nothing,()))
+    , (V_ι,(Nothing,()))
     , (V_ι,(Just S_Diaeresis,()))
+    , (V_α,(Nothing,()))
+    ]
+    [ (VS_Diphthong D_οι,())
+    , (VS_Vowel V_ι,())
+    , (VS_Vowel V_α,())
     ]
   ]
 
