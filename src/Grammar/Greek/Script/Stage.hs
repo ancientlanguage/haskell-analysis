@@ -82,15 +82,26 @@ markGroups = Around
   (milestoneContext . _1 . _1 $ aroundTo Around.markGroups)
   (milestoneContext . _1 . _1 $ aroundFrom Around.markGroups)
 
-final :: AroundMilestone Around.InvalidFinals Void
+assocLetterFinal :: AroundMilestone Void Void
   (([(Letter :* Case :* Final) :* [Mark]] :* Elision) :* SentenceBoundary)
-  (([(Letter :* Case) :* [Mark]] :* Elision) :* SentenceBoundary)
+  (([(Letter :* Final) :* Case :* [Mark]] :* Elision) :* SentenceBoundary)
+assocLetterFinal = Around
+  (milestoneContext . _1 . _1 . travList $ aroundTo around)
+  (milestoneContext . _1 . _1 . travList $ aroundFrom around)
+  where
+  around = Around.makeIdAround to from
+  to ((l, (c, f)), ms) = ((l, f), (c, ms))
+  from ((l, f), (c, ms)) = ((l, (c, f)), ms)
+
+final :: AroundMilestone Around.InvalidFinals Void
+  (([(Letter :* Final) :* Case :* [Mark]] :* Elision) :* SentenceBoundary)
+  (([Letter :* Case :* [Mark]] :* Elision) :* SentenceBoundary)
 final = Around
   (milestoneContext . _1 . _1 $ aroundTo Around.final)
   (milestoneContext . _1 . _1 $ aroundFrom Around.final)
 
 capitalization :: AroundMilestone Around.InvalidUppercase Void
-  (([(Letter :* Case) :* [Mark]] :* Elision) :* SentenceBoundary)
+  (([Letter :* Case :* [Mark]] :* Elision) :* SentenceBoundary)
   ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
 capitalization = Around
   (milestoneContext . _1 . _1 $ aroundTo Around.capitalization)
@@ -183,6 +194,7 @@ toMarkGroups
   = toElision
   <+> symbolLetter
   <+> markGroups
+  <+> assocLetterFinal
   <+> final
   <+> capitalization
 

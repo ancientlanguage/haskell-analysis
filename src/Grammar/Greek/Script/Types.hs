@@ -32,7 +32,7 @@ data Case = Lowercase | Uppercase
   deriving (Eq, Ord, Show, Generic)
 instance Serialize Case
 
-data Final = FinalNotSupported | IsFinal | NotFinal
+data Final = IsFinal | NotFinal
   deriving (Eq, Ord, Show, Generic)
 instance Serialize Final
 
