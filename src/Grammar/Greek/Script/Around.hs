@@ -1,5 +1,6 @@
 module Grammar.Greek.Script.Around
   ( module Grammar.Greek.Script.Around.Capitalization
+  , module Grammar.Greek.Script.Around.ConsonantMarks
   , module Grammar.Greek.Script.Around.Final
   , module Grammar.Greek.Script.Around.LetterVowelConsonant
   , module Grammar.Greek.Script.Around.MarkGroups
@@ -11,6 +12,7 @@ module Grammar.Greek.Script.Around
   where
 
 import Grammar.Greek.Script.Around.Capitalization
+import Grammar.Greek.Script.Around.ConsonantMarks
 import Grammar.Greek.Script.Around.Final
 import Grammar.Greek.Script.Around.LetterVowelConsonant
 import Grammar.Greek.Script.Around.MarkGroups

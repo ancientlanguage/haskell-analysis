@@ -11,7 +11,7 @@ data Symbol
   | S_α | S_β | S_γ | S_δ | S_ε | S_ζ | S_η | S_θ | S_ι | S_κ | S_λ | S_μ
   | S_ν | S_ξ | S_ο | S_π | S_ρ | S_σ | S_ς | S_τ | S_υ | S_φ | S_χ | S_ψ | S_ω
   deriving (Eq, Ord, Show, Generic)
-instance Serialize Symbol 
+instance Serialize Symbol
 
 -- this is in expected Unicode order
 data Mark = M_Diaeresis | M_Smooth | M_Rough | M_Acute | M_Grave | M_Circumflex | M_IotaSubscript
@@ -63,6 +63,10 @@ instance Serialize Breathing
 data SyllabicMark = S_IotaSubscript | S_Diaeresis
   deriving (Eq, Ord, Show, Generic)
 instance Serialize SyllabicMark
+
+data ConsonantRho = CR_β | CR_γ | CR_δ | CR_ζ | CR_θ | CR_κ | CR_λ | CR_μ | CR_ν | CR_ξ | CR_π | CR_ρ Breathing | CR_σ | CR_τ | CR_φ | CR_χ | CR_ψ
+  deriving (Eq, Ord, Show, Generic)
+instance Serialize ConsonantRho
 
 data Diphthong = D_αι | D_αυ | D_ει | D_ευ | D_ηυ | D_οι | D_ου | D_υι
   deriving (Eq, Ord, Show, Generic)
