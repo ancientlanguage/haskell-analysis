@@ -7,6 +7,7 @@ module Grammar.Greek.Script.Around
   , module Grammar.Greek.Script.Around.MarkSplit
   , module Grammar.Greek.Script.Around.SymbolLetter
   , module Grammar.Greek.Script.Around.UnicodeSymbol
+  , module Grammar.Greek.Script.Around.VocalicSyllable
   , module Grammar.Greek.Script.Around.WordPunctuationElision
   )
   where
@@ -19,4 +20,5 @@ import Grammar.Greek.Script.Around.MarkGroups
 import Grammar.Greek.Script.Around.MarkSplit
 import Grammar.Greek.Script.Around.SymbolLetter
 import Grammar.Greek.Script.Around.UnicodeSymbol
+import Grammar.Greek.Script.Around.VocalicSyllable
 import Grammar.Greek.Script.Around.WordPunctuationElision

@@ -2,13 +2,14 @@ module Greek where
 
 import Test.Framework
 import Test.Framework.Providers.HUnit
-import Test.HUnit hiding (Test)
-import Data.Either.Validation
+import Test.HUnit (assertFailure)
+import Data.Either.Validation (Validation(..))
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import Grammar.Around
 import Grammar.CommonTypes
+import Grammar.Greek.Script.Types
 import qualified Grammar.Greek.Script.Around as Around
 import qualified Grammar.Greek.Stage as Stage
 import Grammar.Pretty
@@ -60,10 +61,26 @@ testGroupStages = testCase "around stages" $ do
     Left x -> assertFailure $ "decode failure:\n" ++ x
     Right gs -> mapM_ testSourceStages (Stage.start gs)
 
-greekGroups =
-  [ testGroup "Unicode-Symbol" $ concat
-    [ testAround "unicodeSymbol letters" Around.unicodeSymbol "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρσςτυφχψω"
-    , testAround "unicodeSymbol marks" Around.unicodeSymbol "α\x0300\x0301\x0308\x0313\x0314\x0342\x0345\x2019"
+unicodeSymbolTestGroup = testGroup "Unicode-Symbol" $ concat
+  [ testAroundList "unicodeSymbol letters" Around.unicodeSymbol "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρσςτυφχψω"
+  , testAroundList "unicodeSymbol marks" Around.unicodeSymbol "α\x0300\x0301\x0308\x0313\x0314\x0342\x0345\x2019"
+  ]
+
+vocalicSyllableTestGroup = testGroup "vocalic syllables" $
+  [ testAround "Ἁλληλουϊά" (Around.vocalicSyllable ())
+    [ (V_ο,(Nothing,()))
+    , (V_υ,(Nothing,()))
+    , (V_ι,(Just S_Diaeresis,()))
+    , (V_α,(Nothing,()))
     ]
+  , testAround "πρωῒ" (Around.vocalicSyllable ())
+    [ (V_ω,(Nothing,()))
+    , (V_ι,(Just S_Diaeresis,()))
+    ]
+  ]
+
+greekGroups =
+  [ unicodeSymbolTestGroup
+  , vocalicSyllableTestGroup
   , testGroup "Script stages" [ testGroupStages ]
   ]

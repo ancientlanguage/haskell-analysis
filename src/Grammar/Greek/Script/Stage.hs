@@ -13,7 +13,7 @@ import Grammar.CommonTypes
 import Grammar.Prepare
 import qualified Grammar.Greek.Script.Around as Around
 import Grammar.Greek.Script.Types
-import Control.Lens
+import Control.Lens (over, _1, _2, _Left, _Right)
 
 suffixSentence :: Text -> SentenceBoundary
 suffixSentence x = go NotSentenceEnd $ Text.unpack x
@@ -146,6 +146,33 @@ groupVowelConsonants = Around
   (milestoneContext . _1 . _1 . _1 $ aroundTo Around.groupSums)
   (milestoneContext . _1 . _1 . _1 $ aroundFrom Around.groupSums)
 
+vowelSyllabicMark :: AroundMilestone Void Void
+  ((([ [Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]
+    :+ [ConsonantRho]
+    ]
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+  ((([ [Vowel :* Maybe SyllabicMark :* Maybe Accent :* Maybe Breathing]
+    :+ [ConsonantRho]
+    ]
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+vowelSyllabicMark = Around
+  (milestoneContext . _1 . _1 . _1 . travList . _Left . travList $ aroundTo around)
+  (milestoneContext . _1 . _1 . _1 . travList . _Left . travList $ aroundFrom around)
+  where
+  around = Around.makeIdAround to from
+  to (x, (y, (z, q))) = (x, (q, (y, z)))
+  from (x, (q, (y, z))) = (x, (y, (z, q)))
+
+vocalicSyllable :: AroundMilestone Void Void
+  ((([ [Vowel :* Maybe SyllabicMark :* Maybe Accent :* Maybe Breathing]
+    :+ [ConsonantRho]
+    ]
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+  ((([ [VocalicSyllable :* Maybe Accent :* Maybe Breathing] :+ [ConsonantRho] ]
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+vocalicSyllable = Around
+  (milestoneContext . _1 . _1 . _1 . travList . _Left $ aroundTo $ Around.vocalicSyllable (Nothing, Nothing))
+  (milestoneContext . _1 . _1 . _1 . travList . _Left $ aroundFrom $ Around.vocalicSyllable (Nothing, Nothing))
 
 toElision
   = unicodeSymbol
@@ -175,3 +202,5 @@ toGroupVowelConsonants
 
 script
   = toGroupVowelConsonants
+  <+> vowelSyllabicMark
+  <+> vocalicSyllable

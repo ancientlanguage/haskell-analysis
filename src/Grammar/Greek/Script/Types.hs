@@ -68,7 +68,7 @@ data ConsonantRho = CR_β | CR_γ | CR_δ | CR_ζ | CR_θ | CR_κ | CR_λ | CR_�
   deriving (Eq, Ord, Show, Generic)
 instance Serialize ConsonantRho
 
-data Diphthong = D_αι | D_αυ | D_ει | D_ευ | D_ηυ | D_οι | D_ου | D_υι
+data Diphthong = D_αι | D_αυ | D_ει | D_ευ | D_ηυ | D_ιυ | D_οι | D_ου | D_υι | D_ωι | D_ωυ
   deriving (Eq, Ord, Show, Generic)
 instance Serialize Diphthong
 
