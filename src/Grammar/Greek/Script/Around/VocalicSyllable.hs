@@ -55,6 +55,15 @@ vocalicSyllable defaultA = makeIdAround to from
   fromFold (VS_ImproperDiphthong v, a) xs = (improperDiphthongVowel v, (Just S_IotaSubscript, a)) : xs
   fromFold (VS_Diphthong d, a) xs = consDiphthong (diphthongVowels (Nothing, defaultA) (Nothing, a) d) xs
 
+  consDiphthong
+    :: (Vowel :* Maybe SyllabicMark :* a, Vowel :* Maybe SyllabicMark :* a)
+    -> [Vowel :* Maybe SyllabicMark :* a]
+    -> [Vowel :* Maybe SyllabicMark :* a]
+  consDiphthong ((v1, q1), (v2, q2)) ((v3, (Nothing, a3)) : xs)
+    | isIotaUpsilon v3
+    = (v1, q1) : (v2, q2) : (v3, (Just S_Diaeresis, a3)) : xs
+  consDiphthong (x1, x2) xs = x1 : x2 : xs
+
   isIotaUpsilon :: Vowel -> Bool
   isIotaUpsilon V_ι = True
   isIotaUpsilon V_υ = True
@@ -80,13 +89,3 @@ vocalicSyllable defaultA = makeIdAround to from
   improperDiphthongVowel I_α = V_α
   improperDiphthongVowel I_η = V_η
   improperDiphthongVowel I_ω = V_ω
-
-  consDiphthong
-    :: (Vowel :* Maybe SyllabicMark :* a, Vowel :* Maybe SyllabicMark :* a)
-    -> [Vowel :* Maybe SyllabicMark :* a]
-    -> [Vowel :* Maybe SyllabicMark :* a]
-  consDiphthong ((v1, q1), (v2, q2)) ((v3, (Nothing, a3)) : xs)
-    | isIotaUpsilon v3
-    = (v1, q1) : (v2, q2) : (v3, (Just S_Diaeresis, a3)) : xs
-  consDiphthong (x1, x2) xs = x1 : x2 : xs
-
