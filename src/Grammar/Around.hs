@@ -86,3 +86,18 @@ distRightSumOverProd = makeIdAround to from
   to (a, Right c) = Right (a, c)
   from (Left (a, b)) = (a, Left b)
   from (Right (a, c)) = (a, Right c)
+
+groupSums :: Around Void Void [a :+ b] [[a] :+ [b]]
+groupSums = makeIdAround to from
+  where
+  to = foldr go []
+    where
+    go (Left a) [] = [Left [a]]
+    go (Right b) [] = [Right [b]]
+    go (Left a) (Left as : xs) = Left (a : as) : xs
+    go (Left a) xs@(Right _ : _) = Left [a] : xs
+    go (Right b) xs@(Left _ : _) = Right [b] : xs
+    go (Right b) (Right bs : xs) = Right (b : bs) : xs
+  from = concatMap fromItem
+  fromItem (Left as) = fmap Left as
+  fromItem (Right bs) = fmap Right bs

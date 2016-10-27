@@ -133,6 +133,20 @@ consonantMarks = Around
   (milestoneContext . _1 . _1 . _1 . travList . _Right $ aroundTo Around.consonantMarks)
   (milestoneContext . _1 . _1 . _1 . travList . _Right $ aroundFrom Around.consonantMarks)
 
+groupVowelConsonants :: AroundMilestone Void Void
+  ((([ (Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
+    :+ ConsonantRho
+    ]
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+  ((([ [Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]
+    :+ [ConsonantRho]
+    ]
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+groupVowelConsonants = Around
+  (milestoneContext . _1 . _1 . _1 $ aroundTo Around.groupSums)
+  (milestoneContext . _1 . _1 . _1 $ aroundFrom Around.groupSums)
+
+
 toElision
   = unicodeSymbol
   <+> assocSymbolMark_WordPunctuation
@@ -157,3 +171,4 @@ toConsonantMarks
 
 script
   = toConsonantMarks
+  <+> groupVowelConsonants

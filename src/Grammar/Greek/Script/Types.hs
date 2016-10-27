@@ -76,6 +76,13 @@ data ImproperDiphthong = I_α | I_η | I_ω
   deriving (Eq, Ord, Show, Generic)
 instance Serialize ImproperDiphthong
 
+data VocalicSyllable
+  = VS_Vowel Vowel
+  | VS_Diphthong Diphthong
+  | VS_ImproperDiphthong ImproperDiphthong
+  deriving (Eq, Ord, Show, Generic)
+instance Serialize VocalicSyllable
+
 data Capitalization = IsCapitalized | NotCapitalized
   deriving (Eq, Ord, Show, Generic)
 instance Serialize Capitalization
