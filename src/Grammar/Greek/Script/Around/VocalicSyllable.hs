@@ -43,14 +43,17 @@ vocalicSyllable defaultA = makeIdAround to from
 
   from = foldr fromFold []
 
-  fromFold (VS_Vowel v1, a1) ((v2, (Nothing, a2)) : (v3, (m3, a3)) : xs)
+  -- Δαυίδ, Νινευῖται
+  fromFold (VS_Vowel v1, a1) ((v2, (Nothing, a2)) : (v3, (Nothing, a3)) : xs)
     | isIotaUpsilon v2
     , isIotaUpsilon v3
-    , isNothingDiaeresis m3
-    = (v1, (Nothing, a1)) : (v2, (m3, a2)) : (v3, (Nothing, a3)) : xs
+    = (v1, (Nothing, a1)) : (v2, (Nothing, a2)) : (v3, (Nothing, a3)) : xs
+
+  -- Μωϋσῆς, διϋλίζοντες, πρωῒ, διϊσχυρίζετο, Ἠσαΐου
   fromFold (VS_Vowel v1, a1) ((v2, (Nothing, a2)) : xs)
     | isIotaUpsilon v2
     = (v1, (Nothing, a1)) : (v2, (Just S_Diaeresis, a2)) : xs
+
   fromFold (VS_Vowel v, a) xs = (v, (Nothing, a)) : xs
   fromFold (VS_ImproperDiphthong v, a) xs = (improperDiphthongVowel v, (Just S_IotaSubscript, a)) : xs
   fromFold (VS_Diphthong d, a) xs = consDiphthong (diphthongVowels (Nothing, defaultA) (Nothing, a) d) xs
@@ -59,20 +62,18 @@ vocalicSyllable defaultA = makeIdAround to from
     :: (Vowel :* Maybe SyllabicMark :* a, Vowel :* Maybe SyllabicMark :* a)
     -> [Vowel :* Maybe SyllabicMark :* a]
     -> [Vowel :* Maybe SyllabicMark :* a]
+
+  -- Ἁλληλουϊά, εὐποιΐας
   consDiphthong ((v1, q1), (v2, q2)) ((v3, (Nothing, a3)) : xs)
     | isIotaUpsilon v3
     = (v1, q1) : (v2, q2) : (v3, (Just S_Diaeresis, a3)) : xs
+
   consDiphthong (x1, x2) xs = x1 : x2 : xs
 
   isIotaUpsilon :: Vowel -> Bool
   isIotaUpsilon V_ι = True
   isIotaUpsilon V_υ = True
   isIotaUpsilon _ = False
-
-  isNothingDiaeresis :: Maybe SyllabicMark -> Bool
-  isNothingDiaeresis Nothing = True
-  isNothingDiaeresis (Just S_Diaeresis) = True
-  isNothingDiaeresis _ = False
 
   diphthongVowels :: q -> q -> Diphthong -> (Vowel :* q, Vowel :* q)
   diphthongVowels a1 a2 D_αι = ((V_α, a1), (V_ι, a2))
