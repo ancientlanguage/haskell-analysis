@@ -7,23 +7,29 @@ import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
-data InvalidFinals = InvalidFinals [Letter :* Final]
+data InvalidFinals
+  = NonFinalSigmaAtEnd
+  | FinalInMedialPosition Letter
   deriving (Show)
 
-final :: Around InvalidFinals Void [(Letter :* Final) :* a] [Letter :* a]
-final = makeToValidationAround (fixTo . to) from
+final :: Around [InvalidFinals] Void [(Letter :* Final) :* a] [Letter :* a]
+final = makeToValidationAround to from
   where
-  fixTo
-    = over _Success reverse
-    . over _Failure InvalidFinals
-  to xs = case reverse xs of
+  to xs = over _Success reverse $ case reverse xs of
     [] -> Success []
-    (((l, f), a) : xs') -> pure (:) <*> pure (l, a) <*> ensureMedials xs'
+    ((q, a) : xs') -> pure (:) <*> pureFst a (checkFinal q) <*> ensureMedials xs'
+
+  pureFst a mq = pure (\x -> (x, a)) <*> mq
+
+  checkFinal (L_σ, NotFinal) = Failure [NonFinalSigmaAtEnd]
+  checkFinal (l@L_σ, IsFinal) = Success l
+  checkFinal (l, _) = Success l
+
   ensureMedials [] = Success []
-  ensureMedials (x : xs) = pure (:) <*> check x <*> ensureMedials xs
+  ensureMedials ((q, a) : xs) = pure (:) <*> pureFst a (check q) <*> ensureMedials xs
     where
-    check ((l, NotFinal), a) = Success (l, a)
-    check (x', _) = Failure [x']
+    check (l, NotFinal) = Success l
+    check (l, IsFinal) = Failure [FinalInMedialPosition l]
 
   from xs = reverse $ case reverse xs of
     [] -> []

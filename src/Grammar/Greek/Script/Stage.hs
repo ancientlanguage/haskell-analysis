@@ -93,7 +93,7 @@ assocLetterFinal = Around
   to ((l, (c, f)), ms) = ((l, f), (c, ms))
   from ((l, f), (c, ms)) = ((l, (c, f)), ms)
 
-final :: AroundMilestone Around.InvalidFinals Void
+final :: AroundMilestone [Around.InvalidFinals] Void
   (([(Letter :* Final) :* Case :* [Mark]] :* Elision) :* SentenceBoundary)
   (([Letter :* Case :* [Mark]] :* Elision) :* SentenceBoundary)
 final = Around
