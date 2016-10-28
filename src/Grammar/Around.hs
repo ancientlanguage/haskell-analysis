@@ -101,3 +101,22 @@ groupSums = makeIdAround to from
   from = concatMap fromItem
   fromItem (Left as) = fmap Left as
   fromItem (Right bs) = fmap Right bs
+
+groupRight :: Around Void Void [a :+ b] ([b] :* [a :* [b]])
+groupRight = makeIdAround to from
+  where
+  to = foldr go ([], [])
+  go (Left x) (ms, ys) = ([], (x, ms) : ys)
+  go (Right m) (ms, ys) = (m : ms, ys)
+
+  from (bs, xs) = fmap Right bs ++ concatMap (\(x, ms) -> Left x : fmap Right ms) xs
+
+groupLeft :: Around Void Void [a :+ b] ([[a] :* b] :* [a])
+groupLeft = makeIdAround to from
+  where
+  to = foldr go ([], [])
+  go (Left a) ([], as) = ([], a : as)
+  go (Left a) ((as', b) : xs, as) = ((a : as', b) : xs, as)
+  go (Right b) (xs, as) = (([], b) : xs, as)
+
+  from (xs, as) = concatMap (\(as', b) -> fmap Left as' ++ [Right b]) xs ++ fmap Left as
