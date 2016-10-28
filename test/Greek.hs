@@ -67,51 +67,56 @@ unicodeSymbolTestGroup = testGroup "Unicode-Symbol" $ concat
   ]
 
 vocalicSyllableTestGroup = testGroup "vocalic syllables" $
-  [ testAround "Μωϋσῆς" (Around.vocalicSyllable ())
-    [ (V_ω,(Nothing,()))
-    , (V_υ,(Just S_Diaeresis,()))
+  [ test "Μωϋσῆς"
+    [ (V_ω, Nothing)
+    , (V_υ, Just S_Diaeresis)
     ]
-  , testAround "διϋλίζοντες" (Around.vocalicSyllable ())
-    [ (V_ι,(Nothing,()))
-    , (V_υ,(Just S_Diaeresis,()))
+  , test "διϋλίζοντες"
+    [ (V_ι, Nothing)
+    , (V_υ, Just S_Diaeresis)
     ]
-  , testAround "πρωῒ" (Around.vocalicSyllable ())
-    [ (V_ω,(Nothing,()))
-    , (V_ι,(Just S_Diaeresis,()))
+  , test "πρωῒ"
+    [ (V_ω, Nothing)
+    , (V_ι, Just S_Diaeresis)
     ]
-  , testAround "διϊσχυρίζετο" (Around.vocalicSyllable ())
-    [ (V_ι,(Nothing,()))
-    , (V_ι,(Just S_Diaeresis,()))
+  , test "διϊσχυρίζετο"
+    [ (V_ι, Nothing)
+    , (V_ι, Just S_Diaeresis)
     ]
-  , testAroundDest "Ἁλληλουϊά" (Around.vocalicSyllable ())
-    [ (V_ο,(Nothing,()))
-    , (V_υ,(Nothing,()))
-    , (V_ι,(Just S_Diaeresis,()))
-    , (V_α,(Nothing,()))
+  , testDest "Ἁλληλουϊά"
+    [ (V_ο, Nothing)
+    , (V_υ, Nothing)
+    , (V_ι, Just S_Diaeresis)
+    , (V_α, Nothing)
     ]
-    [ (VS_Diphthong D_ου,())
-    , (VS_Vowel V_ι,())
-    , (VS_Vowel V_α,(()))
+    [ VS_Diphthong D_ου
+    , VS_Vowel V_ι
+    , VS_Vowel V_α
     ]
-  , testAroundDest "Δαυίδ" (Around.vocalicSyllable ())
-    [ (V_α,(Nothing,()))
-    , (V_υ,(Nothing,()))
-    , (V_ι,(Nothing,()))
+  , testDest "Δαυίδ"
+    [ (V_α, Nothing)
+    , (V_υ, Nothing)
+    , (V_ι, Nothing)
     ]
-    [ (VS_Vowel V_α,())
-    , (VS_Diphthong D_υι,())
+    [ VS_Vowel V_α
+    , VS_Diphthong D_υι
     ]
-  , testAroundDest "εὐποιΐας" (Around.vocalicSyllable ())
-    [ (V_ο,(Nothing,()))
-    , (V_ι,(Nothing,()))
-    , (V_ι,(Just S_Diaeresis,()))
-    , (V_α,(Nothing,()))
+  , testDest "εὐποιΐας"
+    [ (V_ο, Nothing)
+    , (V_ι, Nothing)
+    , (V_ι, Just S_Diaeresis)
+    , (V_α, Nothing)
     ]
-    [ (VS_Diphthong D_οι,())
-    , (VS_Vowel V_ι,())
-    , (VS_Vowel V_α,())
+    [ VS_Diphthong D_οι
+    , VS_Vowel V_ι
+    , VS_Vowel V_α
     ]
   ]
+  where
+  test n vs = testAround n (Around.vocalicSyllable ()) $ mapUnit3 vs
+  mapUnit3 = fmap (\(x, y) -> (x, (y, ())))
+  mapUnit2 = fmap (\x -> (x, ()))
+  testDest n vs ds = testAroundDest n (Around.vocalicSyllable ()) (mapUnit3 vs) (mapUnit2 ds)
 
 finalTestGroup = testGroup "final forms" $
   [ testAround "medial and final sigma" Around.final
