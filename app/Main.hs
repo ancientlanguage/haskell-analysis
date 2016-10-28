@@ -43,6 +43,8 @@ data Command
   | LetterSyllabicMark
   | VowelMarks
   | VowelMarkGroups
+  | Crasis
+  | MarkPreservation
 
 options :: Parser Options
 options = subparser
@@ -51,37 +53,21 @@ options = subparser
       (pure $ Options Words 0)
       (progDesc "Show info for primary sources" )
     )
-  <> command "elision"
-    ( info
-      (pure Options <*> pure Elision <*> resultCount)
-      (progDesc "Show elision" )
-    )
-  <> command "marks"
-    ( info
-      (pure Options <*> pure Marks <*> resultCount)
-      (progDesc "Show mark combos" )
-    )
-  <> command "letter-marks"
-    ( info
-      (pure Options <*> pure LetterMarks <*> resultCount)
-      (progDesc "Show letter/mark combos" )
-    )
-  <> command "letter-syllabic-mark"
-    ( info
-      (pure Options <*> pure LetterSyllabicMark <*> resultCount)
-      (progDesc "Show letter/syllabic mark combos" )
-    )
-  <> command "vowel-marks"
-    ( info
-      (pure Options <*> pure VowelMarks <*> resultCount)
-      (progDesc "Show vowel mark combos" )
-    )
-  <> command "vowel-mark-groups"
-    ( info
-      (pure Options <*> pure VowelMarkGroups <*> resultCount)
-      (progDesc "Show grouped vowel mark combos" )
-    )
+  <> commandQuery "elision" "Show elision" Elision
+  <> commandQuery "marks" "Show mark combos" Marks
+  <> commandQuery "letter-marks" "Show letter/mark combos" LetterMarks
+  <> commandQuery "letter-syllabic-mark" "Show letter/syllabic mark combos" LetterSyllabicMark
+  <> commandQuery "vowel-marks" "Show vowel mark combos" VowelMarks
+  <> commandQuery "vowel-mark-groups" "Show grouped vowel mark combos" VowelMarkGroups
+  <> commandQuery "crasis" "Show crasis" Crasis
+  <> commandQuery "mark-preservation" "Show unmarked/marked words" MarkPreservation
   )
+  where
+  commandQuery n d c = command n
+    ( info
+      (pure Options <*> pure c <*> resultCount)
+      (progDesc d)
+    )
 
 showWordCounts :: [Primary.Group] -> IO ()
 showWordCounts x = mapM_ showGroup x
@@ -201,6 +187,18 @@ getVowelMarkGroups
   -> [[Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]]
 getVowelMarkGroups = toListOf (_2 . _1 . _1 . _1 . traverse . _Left)
 
+getCrasis
+  :: Milestone :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
+    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* SentenceBoundary)
+  -> [Crasis]
+getCrasis = toListOf (_2 . _2 . _2 . _2 . _1)
+
+getMarkPreservation
+  :: Milestone :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
+    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* SentenceBoundary)
+  -> [MarkPreservation]
+getMarkPreservation = toListOf (_2 . _2 . _2 . _1)
+
 runCommand :: Options -> IO ()
 runCommand (Options Words _) = handleGroups showWordCounts
 runCommand (Options Elision rc) = handleGroups (queryStage Stage.toElision getElision rc)
@@ -209,6 +207,8 @@ runCommand (Options Marks rc) = handleGroups (queryStage Stage.toMarkGroups getM
 runCommand (Options LetterSyllabicMark rc) = handleGroups (queryStage Stage.toMarkSplit getLetterSyllabicMark rc)
 runCommand (Options VowelMarks rc) = handleGroups (queryStage Stage.toConsonantMarks getVowelMarks rc)
 runCommand (Options VowelMarkGroups rc) = handleGroups (queryStage Stage.toGroupVowelConsonants getVowelMarkGroups rc)
+runCommand (Options Crasis rc) = handleGroups (queryStage Stage.toBreathing getCrasis rc)
+runCommand (Options MarkPreservation rc) = handleGroups (queryStage Stage.toBreathing getMarkPreservation rc)
 
 main :: IO ()
 main = execParser opts >>= runCommand

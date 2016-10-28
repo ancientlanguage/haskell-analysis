@@ -221,6 +221,19 @@ breathing = Around
   (milestoneContext . _1 . _1 . _1 . _1 $ aroundTo Around.breathing)
   (milestoneContext . _1 . _1 . _1 . _1 $ aroundFrom Around.breathing)
 
+reorderWordProps :: AroundMilestone Void Void
+  ((((([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* MarkPreservation :* Crasis :* InitialAspiration) :* [ConsonantRho])
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+  ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
+    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* SentenceBoundary)
+reorderWordProps = Around
+  (milestoneContext $ aroundTo around)
+  (milestoneContext $ aroundFrom around)
+  where
+  around = Around.makeIdAround to from
+  to (((((x1, (x2, (x3, x4))), x5), x6), x7), x8) = (x1, (x5, (x2, (x3, (x4, (x6, (x7, x8)))))))
+  from (x1, (x5, (x2, (x3, (x4, (x6, (x7, x8))))))) = (((((x1, (x2, (x3, x4))), x5), x6), x7), x8)
+
 toElision
   = unicodeSymbol
   <+> assocSymbolMark_WordPunctuation
@@ -248,7 +261,7 @@ toGroupVowelConsonants
   = toConsonantMarks
   <+> groupVowelConsonants
 
-script
+toBreathing
   = toGroupVowelConsonants
   <+> vowelSyllabicMark
   <+> vocalicSyllable
@@ -256,3 +269,7 @@ script
   <+> ungroupConsonantVocalicSyllables
   <+> groupLeftConsonantVocalicSyllables
   <+> breathing
+  <+> reorderWordProps
+
+script
+  = toBreathing
