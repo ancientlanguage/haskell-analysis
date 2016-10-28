@@ -56,6 +56,27 @@ data Accent = A_Acute | A_Grave | A_Circumflex
   deriving (Eq, Ord, Show, Generic)
 instance Serialize Accent
 
+data BasicAccent = AB_Acute | AB_Circumflex
+  deriving (Eq, Ord, Show, Generic)
+instance Serialize BasicAccent
+
+data WordAccent
+  = NoWordAccent
+  | AcuteUltima
+  | AcutePenult
+  | AcuteAntepenult
+  | CircumflexUltima
+  | CircumflexPenult
+  deriving (Eq, Ord, Show, Generic)
+instance Serialize WordAccent
+
+data ExtraAccents
+  = NoExtraAccents
+  | SingleExtraAccent
+  | DoubleExtraAccent
+  deriving (Eq, Ord, Show, Generic)
+instance Serialize ExtraAccents
+
 data Breathing = B_Smooth | B_Rough
   deriving (Eq, Ord, Show, Generic)
 instance Serialize Breathing
