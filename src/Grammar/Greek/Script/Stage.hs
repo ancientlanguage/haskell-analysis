@@ -185,6 +185,42 @@ vocalicSyllable = Around
   (milestoneContext . _1 . _1 . _1 . travList . _Left $ aroundTo $ Around.vocalicSyllable (Nothing, Nothing))
   (milestoneContext . _1 . _1 . _1 . travList . _Left $ aroundFrom $ Around.vocalicSyllable (Nothing, Nothing))
 
+swapConsonantVocalicSyllables :: AroundMilestone Void Void
+  ((([ [VocalicSyllable :* Maybe Accent :* Maybe Breathing] :+ [ConsonantRho] ]
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+  ((([ [ConsonantRho] :+ [VocalicSyllable :* Maybe Accent :* Maybe Breathing] ]
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+swapConsonantVocalicSyllables = Around
+  (milestoneContext . _1 . _1 . _1 . travList $ aroundTo Around.swapSum)
+  (milestoneContext . _1 . _1 . _1 . travList $ aroundFrom Around.swapSum)
+
+ungroupConsonantVocalicSyllables :: AroundMilestone Void Void
+  ((([ [ConsonantRho] :+ [VocalicSyllable :* Maybe Accent :* Maybe Breathing] ]
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+  ((([ ConsonantRho :+ (VocalicSyllable :* Maybe Accent :* Maybe Breathing) ]
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+ungroupConsonantVocalicSyllables = Around
+  (milestoneContext . _1 . _1 . _1 $ aroundTo Around.ungroupSums)
+  (milestoneContext . _1 . _1 . _1 $ aroundFrom Around.ungroupSums)
+
+groupLeftConsonantVocalicSyllables :: AroundMilestone Void Void
+  ((([ ConsonantRho :+ (VocalicSyllable :* Maybe Accent :* Maybe Breathing) ]
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+  (((([ [ConsonantRho] :* (VocalicSyllable :* Maybe Accent :* Maybe Breathing) ] :* [ConsonantRho])
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+groupLeftConsonantVocalicSyllables = Around
+  (milestoneContext . _1 . _1 . _1 $ aroundTo Around.groupLeft)
+  (milestoneContext . _1 . _1 . _1 $ aroundFrom Around.groupLeft)
+
+breathing :: AroundMilestone [Around.InvalidBreathing ConsonantRho VocalicSyllable (Maybe Accent)] Void
+  (((([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent :* Maybe Breathing ] :* [ConsonantRho])
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+  ((((([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* MarkPreservation :* Crasis :* InitialAspiration) :* [ConsonantRho])
+    :* Capitalization) :* Elision) :* SentenceBoundary)
+breathing = Around
+  (milestoneContext . _1 . _1 . _1 . _1 $ aroundTo Around.breathing)
+  (milestoneContext . _1 . _1 . _1 . _1 $ aroundFrom Around.breathing)
+
 toElision
   = unicodeSymbol
   <+> assocSymbolMark_WordPunctuation
@@ -216,3 +252,7 @@ script
   = toGroupVowelConsonants
   <+> vowelSyllabicMark
   <+> vocalicSyllable
+  <+> swapConsonantVocalicSyllables
+  <+> ungroupConsonantVocalicSyllables
+  <+> groupLeftConsonantVocalicSyllables
+  <+> breathing

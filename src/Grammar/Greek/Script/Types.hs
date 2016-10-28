@@ -95,6 +95,10 @@ data InitialAspiration = HasInitialAspiration | NoInitialAspiration
   deriving (Eq, Ord, Show, Generic)
 instance Serialize InitialAspiration
 
+data MarkPreservation = PreserveMarks | Unmarked
+  deriving (Eq, Ord, Show, Generic)
+instance Serialize MarkPreservation
+
 data SentenceBoundary = NotSentenceEnd | SentenceEnd
   deriving (Eq, Ord, Show, Generic)
 instance Serialize SentenceBoundary

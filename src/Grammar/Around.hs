@@ -102,6 +102,9 @@ groupSums = makeIdAround to from
   fromItem (Left as) = fmap Left as
   fromItem (Right bs) = fmap Right bs
 
+ungroupSums :: Around Void Void [[a] :+ [b]] [a :+ b]
+ungroupSums = Around (aroundFrom groupSums) (aroundTo groupSums)
+
 groupRight :: Around Void Void [a :+ b] ([b] :* [a :* [b]])
 groupRight = makeIdAround to from
   where
@@ -120,3 +123,11 @@ groupLeft = makeIdAround to from
   go (Right b) (xs, as) = (([], b) : xs, as)
 
   from (xs, as) = concatMap (\(as', b) -> fmap Left as' ++ [Right b]) xs ++ fmap Left as
+
+swapSum :: Around Void Void (a :+ b) (b :+ a)
+swapSum = makeIdAround to from
+  where
+  to (Left a) = Right a
+  to (Right b) = Left b
+  from (Left b) = Right b
+  from (Right a) = Left a
