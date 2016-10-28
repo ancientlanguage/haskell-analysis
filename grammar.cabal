@@ -80,6 +80,7 @@ test-suite verify
   build-depends:
     base,
     either,
+    lens,
     grammar,
     test-framework,
     test-framework-hunit,

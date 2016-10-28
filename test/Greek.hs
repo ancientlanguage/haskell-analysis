@@ -2,8 +2,10 @@ module Greek where
 
 import Test.Framework
 import Test.Framework.Providers.HUnit
-import Test.HUnit (assertFailure)
-import Data.Either.Validation (Validation(..))
+import Test.HUnit (assertFailure, assertEqual)
+import Control.Lens ((^?))
+import Data.Either.Validation (Validation(..), _Failure)
+import Data.Maybe (isJust)
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
@@ -127,7 +129,17 @@ finalTestGroup = testGroup "final forms" $
     [ ((L_σ, NotFinal), ())
     , ((L_α, IsFinal), ())
     ]
+  , nonFinalSigmaFailure
   ]
+  where
+  nonFinalSigmaFailure = testCase "non-final sigma failure" $ do
+    let
+      input =
+        [ ((L_α, NotFinal), ())
+        , ((L_σ, NotFinal), ())
+        ]
+    let x = (aroundTo Around.final) input
+    assertEqual "expect fail on non-final sigma in final position" True (isJust $ x ^? _Failure)
 
 greekGroups =
   [ unicodeSymbolTestGroup
