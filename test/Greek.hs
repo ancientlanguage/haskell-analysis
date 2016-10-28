@@ -113,8 +113,20 @@ vocalicSyllableTestGroup = testGroup "vocalic syllables" $
     ]
   ]
 
+finalTestGroup = testGroup "final forms" $
+  [ testAround "medial and final sigma" Around.final
+    [ ((L_σ, NotFinal), ())
+    , ((L_σ, IsFinal), ())
+    ]
+  , testAround "medial sigma, final alpha" Around.final
+    [ ((L_σ, NotFinal), ())
+    , ((L_α, IsFinal), ())
+    ]
+  ]
+
 greekGroups =
   [ unicodeSymbolTestGroup
   , vocalicSyllableTestGroup
+  , finalTestGroup
   , testGroup "Script stages" [ testGroupStages ]
   ]
