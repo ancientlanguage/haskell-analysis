@@ -1,6 +1,6 @@
 module Main where
 
-import Control.Lens (over, _1, _2, _Left, toListOf)
+import Control.Lens (over, _1, _2, _Left, toListOf, view)
 import qualified Data.Map.Strict as Map
 import Data.Text (Text)
 import qualified Data.Text as Text
@@ -21,18 +21,25 @@ import qualified Primary
 data Options = Options
   { optCommand :: Command
   , optResults :: Int
+  , optMatch :: String
   }
 
-sourcesOptions :: Parser Options
-sourcesOptions = pure $ Options Words 0
-
-resultCount :: Parser Int
-resultCount = option auto
+resultsParser :: Parser Int
+resultsParser = option auto
   ( long "results"
   <> short 'r'
   <> value 10
   <> metavar "R"
   <> help "Output the first R results or 0 for all"
+  )
+
+matchParser :: Parser String
+matchParser = strOption
+  ( long "match"
+  <> short 'm'
+  <> value ""
+  <> metavar "M"
+  <> help "Show output whose value matches M"
   )
 
 data Command
@@ -45,12 +52,13 @@ data Command
   | VowelMarkGroups
   | Crasis
   | MarkPreservation
+  | AccentReverseIndex
 
 options :: Parser Options
 options = subparser
   ( command "sources"
     ( info
-      (pure $ Options Words 0)
+      (pure $ Options Words 0 "")
       (progDesc "Show info for primary sources" )
     )
   <> commandQuery "elision" "Show elision" Elision
@@ -61,11 +69,12 @@ options = subparser
   <> commandQuery "vowel-mark-groups" "Show grouped vowel mark combos" VowelMarkGroups
   <> commandQuery "crasis" "Show crasis" Crasis
   <> commandQuery "mark-preservation" "Show unmarked/marked words" MarkPreservation
+  <> commandQuery "accent-reverse-index" "Show aceents with reverse syllable index" AccentReverseIndex
   )
   where
   commandQuery n d c = command n
     ( info
-      (pure Options <*> pure c <*> resultCount)
+      (pure Options <*> pure c <*> resultsParser <*> matchParser)
       (progDesc d)
     )
 
@@ -99,9 +108,10 @@ queryStage
     [b]
   -> (b -> [c])
   -> Int
+  -> String
   -> [Primary.Group]
   -> IO ()
-queryStage stg f rc gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ Stage.start gs
+queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ Stage.start gs
   where
   goSource (SourceId g s, ms) = case (aroundTo stg) ms of
     Failure es -> do
@@ -118,13 +128,14 @@ queryStage stg f rc gs = showKeyValues . fmap ((over (traverse . _2) concat) . g
 
   showKeyValues xs = do
     case showAllResults of
-      True -> putStrLn "Showing all results"
+      True -> putStrLn "Showing summary with all results"
       False -> case rc == 0 of
-        True -> putStrLn "Showing no results"
-        False -> putStrLn $ "Showing the first " ++ show rc ++ " results"
+        True -> putStrLn "Showing summary only"
+        False -> putStrLn $ "Showing summary with the first " ++ show rc ++ " results"
     xs' <- xs
-    mapM_ skv xs'
+    mapM_ skv (filterKeyMatches xs')
     where
+    filterKeyMatches = filter (\(k, _) -> show k == keyMatch)
     skv (k, vs) = do
       _ <- putStrLn $ show k ++ " " ++ show (length vs)
       _ <- mapM_ Text.putStrLn (takeResults vs)
@@ -151,8 +162,6 @@ handleGroups f = do
   case result of
     Left x -> putStrLn x
     Right x -> f x
-
-doQuery x y z = handleGroups (queryStage x y z)
 
 getElision = pure . snd . fst . snd
 
@@ -199,16 +208,36 @@ getMarkPreservation
   -> [MarkPreservation]
 getMarkPreservation = toListOf (_2 . _2 . _2 . _1)
 
+getAccentReverseIndex
+  :: Milestone :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
+    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* SentenceBoundary)
+  -> [[(Int, Accent)]]
+getAccentReverseIndex = pure . goAll . view (_2 . _1)
+  where
+  goAll = onlyAccents . addReverseIndex . getAccents
+  getAccents :: [ a :* b :* Maybe Accent ] -> [Maybe Accent]
+  getAccents = over traverse (view (_2 . _2))
+  addReverseIndex :: [a] -> [(Int, a)]
+  addReverseIndex = snd . foldr go (0, [])
+    where
+    go x (i, xs) = (i + 1, (i, x) : xs)
+  onlyAccents :: [(Int, Maybe Accent)] -> [(Int, Accent)]
+  onlyAccents = concatMap go
+    where
+    go (i, Just x) = [(i, x)]
+    go _ = []
+
 runCommand :: Options -> IO ()
-runCommand (Options Words _) = handleGroups showWordCounts
-runCommand (Options Elision rc) = handleGroups (queryStage Stage.toElision getElision rc)
-runCommand (Options LetterMarks rc) = handleGroups (queryStage Stage.toMarkGroups getLetterMarks rc)
-runCommand (Options Marks rc) = handleGroups (queryStage Stage.toMarkGroups getMarks rc)
-runCommand (Options LetterSyllabicMark rc) = handleGroups (queryStage Stage.toMarkSplit getLetterSyllabicMark rc)
-runCommand (Options VowelMarks rc) = handleGroups (queryStage Stage.toConsonantMarks getVowelMarks rc)
-runCommand (Options VowelMarkGroups rc) = handleGroups (queryStage Stage.toGroupVowelConsonants getVowelMarkGroups rc)
-runCommand (Options Crasis rc) = handleGroups (queryStage Stage.toBreathing getCrasis rc)
-runCommand (Options MarkPreservation rc) = handleGroups (queryStage Stage.toBreathing getMarkPreservation rc)
+runCommand (Options Words _ _) = handleGroups showWordCounts
+runCommand (Options Elision rc m) = handleGroups (queryStage Stage.toElision getElision rc m)
+runCommand (Options LetterMarks rc m) = handleGroups (queryStage Stage.toMarkGroups getLetterMarks rc m)
+runCommand (Options Marks rc m) = handleGroups (queryStage Stage.toMarkGroups getMarks rc m)
+runCommand (Options LetterSyllabicMark rc m) = handleGroups (queryStage Stage.toMarkSplit getLetterSyllabicMark rc m)
+runCommand (Options VowelMarks rc m) = handleGroups (queryStage Stage.toConsonantMarks getVowelMarks rc m)
+runCommand (Options VowelMarkGroups rc m) = handleGroups (queryStage Stage.toGroupVowelConsonants getVowelMarkGroups rc m)
+runCommand (Options Crasis rc m) = handleGroups (queryStage Stage.toBreathing getCrasis rc m)
+runCommand (Options MarkPreservation rc m) = handleGroups (queryStage Stage.toBreathing getMarkPreservation rc m)
+runCommand (Options AccentReverseIndex rc m) = handleGroups (queryStage Stage.toBreathing getAccentReverseIndex rc m)
 
 main :: IO ()
 main = execParser opts >>= runCommand
