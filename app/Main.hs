@@ -211,10 +211,16 @@ getMarkPreservation = toListOf (_2 . _2 . _2 . _1)
 getAccentReverseIndex
   :: Milestone :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
     :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* SentenceBoundary)
-  -> [[(Int, Accent)]]
-getAccentReverseIndex = pure . goAll . view (_2 . _1)
+  -> [[Int :* Accent] :* SentenceBoundary]
+getAccentReverseIndex = pure . over _1 goAll . getPair
   where
   goAll = onlyAccents . addReverseIndex . getAccents
+
+  getPair
+    :: m :* [ a :* b :* Maybe Accent ] :* c :* d :* e :* f :* g :* h :* SentenceBoundary
+    -> [ a :* b :* Maybe Accent ] :* SentenceBoundary
+  getPair x = (view (_2 . _1) x, view (_2 . _2 . _2 . _2 . _2 . _2 . _2 . _2) x)
+
   getAccents :: [ a :* b :* Maybe Accent ] -> [Maybe Accent]
   getAccents = over traverse (view (_2 . _2))
   addReverseIndex :: [a] -> [(Int, a)]
