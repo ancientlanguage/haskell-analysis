@@ -135,7 +135,7 @@ queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) co
     xs' <- xs
     mapM_ skv (filterKeyMatches xs')
     where
-    filterKeyMatches = filter (\(k, _) -> show k == keyMatch)
+    filterKeyMatches = filter (\(k, _) -> null keyMatch || show k == keyMatch)
     skv (k, vs) = do
       _ <- putStrLn $ show k ++ " " ++ show (length vs)
       _ <- mapM_ Text.putStrLn (takeResults vs)
