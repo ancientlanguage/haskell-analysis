@@ -40,5 +40,5 @@ prettyMilestoneCtxString ((m, (w, (ls, rs))), _) =
   ( prettyMilestone m
   , Text.intercalate " " ls
   , w
-  , Text.intercalate " " ls
+  , Text.intercalate " " rs
   )
