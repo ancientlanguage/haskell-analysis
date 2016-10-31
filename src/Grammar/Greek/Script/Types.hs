@@ -70,7 +70,7 @@ data ExtraAccents
   deriving (Eq, Ord, Show, Generic)
 instance Serialize ExtraAccents
 
-data ForceAcute = NoForceAcute | UseForceAcute
+data ForceAcute = NoForceAcute | DoForceAcute
   deriving (Eq, Ord, Show, Generic)
 instance Serialize ForceAcute
 
