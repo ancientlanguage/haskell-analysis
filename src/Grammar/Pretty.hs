@@ -35,15 +35,10 @@ prettyMilestonedString (m, x) = Text.intercalate " " $
   , Text.pack x
   ]
 
-prettyMilestoneCtxString :: (Milestone :* [String] :* [String]) :* String -> Text
-prettyMilestoneCtxString ((m, (ls, rs)), x) = Text.intercalate " " $
-  [ prettyMilestone m
-  , "--"
-  , "["
+prettyMilestoneCtxString :: (Milestone :* [String] :* [String]) :* String -> (Text, Text, Text, Text)
+prettyMilestoneCtxString ((m, (ls, rs)), x) =
+  ( prettyMilestone m
   , Text.intercalate " " (fmap Text.pack ls)
-  , "]__"
   , Text.pack x
-  , "__["
   , Text.intercalate " " (fmap Text.pack rs)
-  , "]"
-  ]
+  )

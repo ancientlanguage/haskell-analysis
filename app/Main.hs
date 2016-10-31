@@ -1,6 +1,7 @@
 module Main where
 
 import Control.Lens (over, _1, _2, _Left, toListOf, view)
+import qualified Data.Char as Char
 import Data.List (foldl')
 import qualified Data.Map.Strict as Map
 import Data.Text (Text)
@@ -146,7 +147,7 @@ queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) co
         , Text.intercalate "\n" $ fmap prettyMilestoned $ over (traverse . _1) fst es
         ]
       return []
-    Success y -> return $ prepareItems (Text.append (Text.concat [ "  ", g , " ", s, " " ])) y
+    Success y -> return $ prepareItems (\(x1,x2,x3,x4) -> (Text.concat [ "  ", g , " ", s, " " ] `Text.append` x1,x2,x3,x4)) y
 
   showAllResults = rc < 0
 
@@ -162,10 +163,26 @@ queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) co
     filterKeyMatches = filter (\(k, _) -> null keyMatch || show k == keyMatch)
     skv (k, vs) = do
       _ <- putStrLn $ show k ++ " " ++ show (length vs)
-      _ <- mapM_ Text.putStrLn (takeResults vs)
+      _ <- mapM_ Text.putStrLn . alignColumns . takeResults $ vs
       if rc /= 0
       then putStrLn ""
       else return ()
+
+  alignColumns :: [(Text, Text, Text, Text)] -> [Text]
+  alignColumns xs = fmap (padCombine (maxes xs)) xs
+    where
+    padCombine (l1,l2,l3,l4) (x1,x2,x3,x4) = Text.intercalate " " $
+      [ Text.append x1 (pad x1 l1)
+      , Text.concat [pad x2 l2, x2, "  "]
+      , Text.append x3 (pad x3 l3)
+      , Text.append x4 (pad x4 l4)
+      ]
+    pad x n = Text.replicate (n - (baseLength x)) " "
+    maxes = foldr go (0,0,0,0)
+      where
+      go (x1,x2,x3,x4) (l1,l2,l3,l4) =
+        (max (baseLength x1) l1,max (baseLength x2) l2,max (baseLength x3) l3,max (baseLength x4) l4)
+    baseLength = Text.length . Text.filter (not . Char.isMark)
 
   prepareItems addPrefix = over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . concatMap (\x -> fmap (\y -> (y, x)) (f x))
 
@@ -173,12 +190,13 @@ queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) co
     True -> id
     False -> take rc
 
-  showItems :: [(Milestone :* [String] :* [String]) :* (String :* SentenceBoundary)] -> [Text]
+  showItems :: [(Milestone :* [String] :* [String]) :* (String :* SentenceBoundary)]
+    -> [(Text, Text, Text, Text)]
   showItems = fmap prettyMilestoneCtxString . Stage.forgetSentenceBoundary
 
   goBack xs = case (aroundFrom stg) xs of
     Success ys -> showItems ys
-    Failure _ -> [ "Failure: aroundFrom" ]
+    Failure _ -> [ ("Failure: aroundFrom","","","") ]
 
 handleGroups :: ([Primary.Group] -> IO ()) -> IO ()
 handleGroups f = do
