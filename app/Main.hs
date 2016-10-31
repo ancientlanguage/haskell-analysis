@@ -103,7 +103,7 @@ groupPairs = Map.assocs . foldr go Map.empty
     Just vs -> Map.insert k (v : vs) m
     Nothing -> Map.insert k [v] m
 
-type MilestoneCtx = Milestone :* [String] :* [String]
+type MilestoneCtx = Milestone :* Text :* [Text] :* [Text]
 
 queryStage
   :: (Show e1, Ord c, Show c)
@@ -117,20 +117,26 @@ queryStage
   -> String
   -> [Primary.Group]
   -> IO ()
-queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ startGroups
+queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ prepareGroups gs
   where
-  startGroups = Stage.start gs
-
   addCtx
     :: Int
-    -> [Milestone :* String :* SentenceBoundary]
+    -> [Milestone :* Primary.Word]
     -> [MilestoneCtx :* String :* SentenceBoundary]
   addCtx n xs = zipWith3 addContextZip xs lefts rights
     where
-    addContextZip (m, (t, sb)) ls rs = ((m, (ls, rs)), (t, sb))
+    addContextZip (m, w) ls rs = ((m, (fullWordText w, (ls, rs))), basicWord w)
+
     lefts = leftContext n (onlyText xs)
     rights = rightContext n (onlyText xs)
-    onlyText = fmap (fst . snd)
+
+    fullWordText :: Primary.Word -> Text
+    fullWordText (Primary.Word p t s) = Text.concat [p, t, s]
+
+    basicWord :: Primary.Word -> String :* SentenceBoundary
+    basicWord (Primary.Word p t s) = (Text.unpack t, Stage.suffixSentence s)
+
+    onlyText = fmap (fullWordText . snd)
     rightContext n = snd . foldr go ([], [])
       where
       go x (ctx, xs) = (take n (x : ctx), ctx : xs)
@@ -190,7 +196,7 @@ queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) co
     True -> id
     False -> take rc
 
-  showItems :: [(Milestone :* [String] :* [String]) :* (String :* SentenceBoundary)]
+  showItems :: [(Milestone :* Text :* [Text] :* [Text]) :* (String :* SentenceBoundary)]
     -> [(Text, Text, Text, Text)]
   showItems = fmap prettyMilestoneCtxString . Stage.forgetSentenceBoundary
 
