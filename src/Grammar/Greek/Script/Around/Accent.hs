@@ -25,9 +25,9 @@ accent = makeToValidationAround to from
   -- handlePair ([(0,A_Circumflex)], _) = Success
   -- handlePair ([(1,A_Acute)], _) = Success
   -- handlePair ([(1,A_Circumflex)], _) = Success
-  -- handlePair ([(1,A_Circumflex),(0,A_Acute)], _) = Success
+  -- handlePair ([(1,A_Circumflex),(0,A_Acute)], NoWordPunctuation) = Success
   -- handlePair ([(2,A_Acute)], _) = Success
-  -- handlePair ([(2,A_Acute),(0,A_Acute)], _) = Success
+  -- handlePair ([(2,A_Acute),(0,A_Acute)], NoWordPunctuation) = Success
   -- handlePair x = Failure $ InvalidAccent x
 
 getAccents :: [ c :* v :* Maybe Accent ] -> [Maybe Accent]
