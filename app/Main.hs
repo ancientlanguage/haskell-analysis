@@ -53,6 +53,7 @@ data Command
   | Crasis
   | MarkPreservation
   | AccentReverseIndex
+  | AccentReverseIndexSentence
 
 options :: Parser Options
 options = subparser
@@ -70,6 +71,7 @@ options = subparser
   <> commandQuery "crasis" "Show crasis" Crasis
   <> commandQuery "mark-preservation" "Show unmarked/marked words" MarkPreservation
   <> commandQuery "accent-reverse-index" "Show aceents with reverse syllable index" AccentReverseIndex
+  <> commandQuery "accent-reverse-index-sentence" "Show aceents with reverse syllable index and sentence boundary" AccentReverseIndex
   )
   where
   commandQuery n d c = command n
@@ -208,13 +210,22 @@ getMarkPreservation
   -> [MarkPreservation]
 getMarkPreservation = toListOf (_2 . _2 . _2 . _1)
 
-getAccentReverseIndex
+toAccentReverseIndex :: [Maybe Accent] -> [(Int, Accent)]
+toAccentReverseIndex = onlyAccents . addReverseIndex
+  where
+  onlyAccents :: [(Int, Maybe Accent)] -> [(Int, Accent)]
+  onlyAccents = concatMap go
+    where
+    go (i, Just x) = [(i, x)]
+    go _ = []
+
+getAccentReverseIndexSentence
   :: Milestone :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
     :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* SentenceBoundary)
   -> [[Int :* Accent] :* SentenceBoundary]
-getAccentReverseIndex = pure . over _1 goAll . getPair
+getAccentReverseIndexSentence = pure . over _1 goAll . getPair
   where
-  goAll = onlyAccents . addReverseIndex . getAccents
+  goAll = toAccentReverseIndex . getAccents
 
   getPair
     :: m :* [ a :* b :* Maybe Accent ] :* c :* d :* e :* f :* g :* h :* SentenceBoundary
@@ -223,15 +234,19 @@ getAccentReverseIndex = pure . over _1 goAll . getPair
 
   getAccents :: [ a :* b :* Maybe Accent ] -> [Maybe Accent]
   getAccents = over traverse (view (_2 . _2))
-  addReverseIndex :: [a] -> [(Int, a)]
-  addReverseIndex = snd . foldr go (0, [])
-    where
-    go x (i, xs) = (i + 1, (i, x) : xs)
-  onlyAccents :: [(Int, Maybe Accent)] -> [(Int, Accent)]
-  onlyAccents = concatMap go
-    where
-    go (i, Just x) = [(i, x)]
-    go _ = []
+
+getAccentReverseIndex
+  :: Milestone :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* a)
+  -> [[Int :* Accent]]
+getAccentReverseIndex = pure . toAccentReverseIndex . fmap (view (_2 . _2)) . view (_2 . _1)
+
+addIndex :: [a] -> [(Int, a)]
+addIndex = zip [0..]
+
+addReverseIndex :: [a] -> [(Int, a)]
+addReverseIndex = snd . foldr go (0, [])
+  where
+  go x (i, xs) = (i + 1, (i, x) : xs)
 
 runCommand :: Options -> IO ()
 runCommand (Options Words _ _) = handleGroups showWordCounts
@@ -243,7 +258,8 @@ runCommand (Options VowelMarks rc m) = handleGroups (queryStage Stage.toConsonan
 runCommand (Options VowelMarkGroups rc m) = handleGroups (queryStage Stage.toGroupVowelConsonants getVowelMarkGroups rc m)
 runCommand (Options Crasis rc m) = handleGroups (queryStage Stage.toBreathing getCrasis rc m)
 runCommand (Options MarkPreservation rc m) = handleGroups (queryStage Stage.toBreathing getMarkPreservation rc m)
-runCommand (Options AccentReverseIndex rc m) = handleGroups (queryStage Stage.toBreathing getAccentReverseIndex rc m)
+runCommand (Options AccentReverseIndex rc m) = handleGroups (queryStage Stage.toBreathing getAccentReverseIndexSentence rc m)
+runCommand (Options AccentReverseIndexSentence rc m) = handleGroups (queryStage Stage.toBreathing getAccentReverseIndex rc m)
 
 main :: IO ()
 main = execParser opts >>= runCommand
