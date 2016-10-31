@@ -2,7 +2,6 @@ module Main where
 
 import Control.Lens (over, _1, _2, _Left, toListOf, view)
 import qualified Data.Char as Char
-import Data.List (foldl')
 import qualified Data.Map.Strict as Map
 import Data.Text (Text)
 import qualified Data.Text as Text
@@ -285,14 +284,6 @@ getAccentReverseIndex
   :: ctx :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* a)
   -> [[Int :* Accent]]
 getAccentReverseIndex = pure . toAccentReverseIndex . fmap (view (_2 . _2)) . view (_2 . _1)
-
-addIndex :: [a] -> [(Int, a)]
-addIndex = zip [0..]
-
-addReverseIndex :: [a] -> [(Int, a)]
-addReverseIndex = snd . foldr go (0, [])
-  where
-  go x (i, xs) = (i + 1, (i, x) : xs)
 
 runCommand :: Options -> IO ()
 runCommand (Options Words _ _) = handleGroups showWordCounts

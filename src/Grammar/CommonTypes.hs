@@ -37,3 +37,11 @@ data Verse = Verse
   }
   deriving (Eq, Show, Ord, Generic)
 instance Serialize Verse
+
+addIndex :: [a] -> [(Int, a)]
+addIndex = zip [0..]
+
+addReverseIndex :: [a] -> [(Int, a)]
+addReverseIndex = snd . foldr go (0, [])
+  where
+  go x (i, xs) = (i + 1, (i, x) : xs)

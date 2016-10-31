@@ -15,6 +15,7 @@ library
     Grammar.Around
     Grammar.CommonTypes
     Grammar.Greek.Script.Around
+    Grammar.Greek.Script.Around.Accent
     Grammar.Greek.Script.Around.Breathing
     Grammar.Greek.Script.Around.Capitalization
     Grammar.Greek.Script.Around.ConsonantMarks

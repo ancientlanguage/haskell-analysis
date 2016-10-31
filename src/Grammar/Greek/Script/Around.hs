@@ -1,5 +1,6 @@
 module Grammar.Greek.Script.Around
-  ( module Grammar.Greek.Script.Around.Breathing
+  ( module Grammar.Greek.Script.Around.Accent
+  , module Grammar.Greek.Script.Around.Breathing
   , module Grammar.Greek.Script.Around.Capitalization
   , module Grammar.Greek.Script.Around.ConsonantMarks
   , module Grammar.Greek.Script.Around.Final
@@ -13,6 +14,7 @@ module Grammar.Greek.Script.Around
   )
   where
 
+import Grammar.Greek.Script.Around.Accent
 import Grammar.Greek.Script.Around.Breathing
 import Grammar.Greek.Script.Around.Capitalization
 import Grammar.Greek.Script.Around.ConsonantMarks
