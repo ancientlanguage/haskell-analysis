@@ -1,6 +1,6 @@
 module Grammar.Greek.Script.Around.Accent where
 
-import Control.Lens (toListOf, _2, _Just)
+import Control.Lens (over, view, _2)
 import Data.Either.Validation
 import Data.Void
 import Grammar.Around
@@ -18,17 +18,17 @@ accent = makeToValidationAround to from
   to = undefined
   from = undefined
 
-  handlePair ([], _) = Success Nothing
-  handlePair ([(0,A_Acute)], HasWordPunctuation) = Success $ (AW_Acute, (Ultima, ()))
-  handlePair ([(0,A_Acute)], NoWordPunctuation) = Success $ (AW_Acute, (Ultima, ()))
-  handlePair ([(0,A_Grave)], NoWordPunctuation) = Success
-  handlePair ([(0,A_Circumflex)], _) = Success
-  handlePair ([(1,A_Acute)], _) = Success
-  handlePair ([(1,A_Circumflex)], _) = Success
-  handlePair ([(1,A_Circumflex),(0,A_Acute)], _) = Success
-  handlePair ([(2,A_Acute)], _) = Success
-  handlePair ([(2,A_Acute),(0,A_Acute)], _) = Success
-  handlePair x = Failure $ InvalidAccent x
+  -- handlePair ([], _) = Success Nothing
+  -- handlePair ([(0,A_Acute)], HasWordPunctuation) = Success $ (AW_Acute, (Ultima, ()))
+  -- handlePair ([(0,A_Acute)], NoWordPunctuation) = Success $ (AW_Acute, (Ultima, ()))
+  -- handlePair ([(0,A_Grave)], NoWordPunctuation) = Success
+  -- handlePair ([(0,A_Circumflex)], _) = Success
+  -- handlePair ([(1,A_Acute)], _) = Success
+  -- handlePair ([(1,A_Circumflex)], _) = Success
+  -- handlePair ([(1,A_Circumflex),(0,A_Acute)], _) = Success
+  -- handlePair ([(2,A_Acute)], _) = Success
+  -- handlePair ([(2,A_Acute),(0,A_Acute)], _) = Success
+  -- handlePair x = Failure $ InvalidAccent x
 
 getAccents :: [ c :* v :* Maybe Accent ] -> [Maybe Accent]
 getAccents = over traverse (view (_2 . _2))

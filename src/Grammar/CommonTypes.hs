@@ -6,6 +6,8 @@ module Grammar.CommonTypes
   , SourceId(..)
   , Paragraph(..)
   , Verse(..)
+  , addIndex
+  , addReverseIndex
   )
   where
 
