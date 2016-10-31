@@ -2,6 +2,7 @@ module Main where
 
 import Control.Lens (over, _1, _2, _Left, toListOf, view)
 import qualified Data.Char as Char
+import Data.List (foldl')
 import qualified Data.Map.Strict as Map
 import Data.Text (Text)
 import qualified Data.Text as Text
