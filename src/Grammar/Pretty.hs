@@ -41,9 +41,9 @@ prettyMilestoneCtxString ((m, (ls, rs)), x) = Text.intercalate " " $
   , "--"
   , "["
   , Text.intercalate " " (fmap Text.pack ls)
-  , "]"
+  , "]__"
   , Text.pack x
-  , "["
+  , "__["
   , Text.intercalate " " (fmap Text.pack rs)
   , "]"
   ]

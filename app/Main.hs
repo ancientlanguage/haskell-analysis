@@ -1,6 +1,7 @@
 module Main where
 
 import Control.Lens (over, _1, _2, _Left, toListOf, view)
+import Data.List (foldl')
 import qualified Data.Map.Strict as Map
 import Data.Text (Text)
 import qualified Data.Text as Text
@@ -123,12 +124,18 @@ queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) co
     :: Int
     -> [Milestone :* String :* SentenceBoundary]
     -> [MilestoneCtx :* String :* SentenceBoundary]
-  addCtx n xs = zipWith (\(m, (t, sb)) rs -> ((m, ([], rs)), (t, sb))) xs (rightContext n (onlyText xs))
+  addCtx n xs = zipWith3 addContextZip xs lefts rights
     where
+    addContextZip (m, (t, sb)) ls rs = ((m, (ls, rs)), (t, sb))
+    lefts = leftContext n (onlyText xs)
+    rights = rightContext n (onlyText xs)
     onlyText = fmap (fst . snd)
     rightContext n = snd . foldr go ([], [])
       where
       go x (ctx, xs) = (take n (x : ctx), ctx : xs)
+    leftContext n = reverse . fmap reverse . snd . foldl' go ([], [])
+      where
+      go (ctx, xs) x = (take n (x : ctx), ctx : xs)
 
   goSource (SourceId g s, ms) = case aroundTo stg . addCtx 5 $ ms of
     Failure es -> do
