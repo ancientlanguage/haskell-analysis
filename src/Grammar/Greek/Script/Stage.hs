@@ -40,98 +40,98 @@ forgetSentenceBoundary
   -> [Milestone :* [a]]
 forgetSentenceBoundary = over (traverse . _2) fst
 
-type AroundMilestone e1 e2 a b =
+type AroundContext ctx e1 e2 a b =
   Around
-  (Milestone :* a :* e1)
-  (Milestone :* b :* e2)
-  [Milestone :* a]
-  [Milestone :* b]
+  (ctx :* a :* e1)
+  (ctx :* b :* e2)
+  [ctx :* a]
+  [ctx :* b]
 
-unicodeSymbol :: AroundMilestone Around.InvalidChar Void
+unicodeSymbol :: AroundContext ctx Around.InvalidChar Void
   ([Char] :* SentenceBoundary)
   ([Symbol :+ Mark :+ WordPunctuation] :* SentenceBoundary)
 unicodeSymbol = Around
-  (milestoneContext . _1 . travList $ aroundTo Around.unicodeSymbol)
-  (milestoneContext . _1 . travList $ aroundFrom Around.unicodeSymbol)
+  (traverseWithItemContext . _1 . travList $ aroundTo Around.unicodeSymbol)
+  (traverseWithItemContext . _1 . travList $ aroundFrom Around.unicodeSymbol)
 
-assocSymbolMark_WordPunctuation :: AroundMilestone Void Void
+assocSymbolMark_WordPunctuation :: AroundContext ctx Void Void
   ([Symbol :+ (Mark :+ WordPunctuation)] :* SentenceBoundary)
   ([(Symbol :+ Mark) :+ WordPunctuation] :* SentenceBoundary)
 assocSymbolMark_WordPunctuation = Around
-  (milestoneContext . _1 . travList $ aroundTo Around.sumAssocLeft)
-  (milestoneContext . _1 . travList $ aroundFrom Around.sumAssocLeft)
+  (traverseWithItemContext . _1 . travList $ aroundTo Around.sumAssocLeft)
+  (traverseWithItemContext . _1 . travList $ aroundFrom Around.sumAssocLeft)
 
-wordPunctuationElision :: AroundMilestone Around.InvalidWordPunctuation Void
+wordPunctuationElision :: AroundContext ctx Around.InvalidWordPunctuation Void
   ([(Symbol :+ Mark) :+ WordPunctuation] :* SentenceBoundary)
   (([Symbol :+ Mark] :* Elision) :* SentenceBoundary)
 wordPunctuationElision = Around
-  (milestoneContext . _1 $ aroundTo Around.wordPunctuationElision)
-  (milestoneContext . _1 $ aroundFrom Around.wordPunctuationElision)
+  (traverseWithItemContext . _1 $ aroundTo Around.wordPunctuationElision)
+  (traverseWithItemContext . _1 $ aroundFrom Around.wordPunctuationElision)
 
-symbolLetter :: AroundMilestone Void Void
+symbolLetter :: AroundContext ctx Void Void
   (([Symbol :+ Mark] :* Elision) :* SentenceBoundary)
   (([(Letter :* Case :* Final) :+ Mark] :* Elision) :* SentenceBoundary)
 symbolLetter = Around
-  (milestoneContext . _1 . _1 . travList . _Left $ aroundTo Around.symbolLetter)
-  (milestoneContext . _1 . _1 . travList . _Left $ aroundFrom Around.symbolLetter)
+  (traverseWithItemContext . _1 . _1 . travList . _Left $ aroundTo Around.symbolLetter)
+  (traverseWithItemContext . _1 . _1 . travList . _Left $ aroundFrom Around.symbolLetter)
 
-markGroups :: AroundMilestone Around.InitialMarks Void
+markGroups :: AroundContext ctx Around.InitialMarks Void
   (([(Letter :* Case :* Final) :+ Mark] :* Elision) :* SentenceBoundary)
   (([(Letter :* Case :* Final) :* [Mark]] :* Elision) :* SentenceBoundary)
 markGroups = Around
-  (milestoneContext . _1 . _1 $ aroundTo Around.markGroups)
-  (milestoneContext . _1 . _1 $ aroundFrom Around.markGroups)
+  (traverseWithItemContext . _1 . _1 $ aroundTo Around.markGroups)
+  (traverseWithItemContext . _1 . _1 $ aroundFrom Around.markGroups)
 
-assocLetterFinal :: AroundMilestone Void Void
+assocLetterFinal :: AroundContext ctx Void Void
   (([(Letter :* Case :* Final) :* [Mark]] :* Elision) :* SentenceBoundary)
   (([(Letter :* Final) :* Case :* [Mark]] :* Elision) :* SentenceBoundary)
 assocLetterFinal = Around
-  (milestoneContext . _1 . _1 . travList $ aroundTo around)
-  (milestoneContext . _1 . _1 . travList $ aroundFrom around)
+  (traverseWithItemContext . _1 . _1 . travList $ aroundTo around)
+  (traverseWithItemContext . _1 . _1 . travList $ aroundFrom around)
   where
   around = Around.makeIdAround to from
   to ((l, (c, f)), ms) = ((l, f), (c, ms))
   from ((l, f), (c, ms)) = ((l, (c, f)), ms)
 
-final :: AroundMilestone [Around.InvalidFinals] Void
+final :: AroundContext ctx [Around.InvalidFinals] Void
   (([(Letter :* Final) :* Case :* [Mark]] :* Elision) :* SentenceBoundary)
   (([Letter :* Case :* [Mark]] :* Elision) :* SentenceBoundary)
 final = Around
-  (milestoneContext . _1 . _1 $ aroundTo Around.final)
-  (milestoneContext . _1 . _1 $ aroundFrom Around.final)
+  (traverseWithItemContext . _1 . _1 $ aroundTo Around.final)
+  (traverseWithItemContext . _1 . _1 $ aroundFrom Around.final)
 
-capitalization :: AroundMilestone Around.InvalidUppercase Void
+capitalization :: AroundContext ctx Around.InvalidUppercase Void
   (([Letter :* Case :* [Mark]] :* Elision) :* SentenceBoundary)
   ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
 capitalization = Around
-  (milestoneContext . _1 . _1 $ aroundTo Around.capitalization)
-  (milestoneContext . _1 . _1 $ aroundFrom Around.capitalization)
+  (traverseWithItemContext . _1 . _1 $ aroundTo Around.capitalization)
+  (traverseWithItemContext . _1 . _1 $ aroundFrom Around.capitalization)
 
-markSplit :: AroundMilestone Around.InvalidMarkCombo Void
+markSplit :: AroundContext ctx Around.InvalidMarkCombo Void
   ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
   ((([Letter :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* SentenceBoundary)
 markSplit = Around
-  (milestoneContext . _1 . _1 . _1 . travList . _2 $ aroundTo Around.markSplit)
-  (milestoneContext . _1 . _1 . _1 . travList . _2 $ aroundFrom Around.markSplit)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _2 $ aroundTo Around.markSplit)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _2 $ aroundFrom Around.markSplit)
 
-letterVowelConsonant :: AroundMilestone Void Void
+letterVowelConsonant :: AroundContext ctx Void Void
   ((([Letter :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* SentenceBoundary)
   ((([(Vowel :+ Consonant) :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* SentenceBoundary)
 letterVowelConsonant = Around
-  (milestoneContext . _1 . _1 . _1 . travList . _1 $ aroundTo Around.letterVowelConsonant)
-  (milestoneContext . _1 . _1 . _1 . travList . _1 $ aroundFrom Around.letterVowelConsonant)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _1 $ aroundTo Around.letterVowelConsonant)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _1 $ aroundFrom Around.letterVowelConsonant)
 
-distVowelConsonantMarks :: AroundMilestone Void Void
+distVowelConsonantMarks :: AroundContext ctx Void Void
   ((([(Vowel :+ Consonant) :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* SentenceBoundary)
   ((([ (Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
     :+ (Consonant :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
     ]
     :* Capitalization) :* Elision) :* SentenceBoundary)
 distVowelConsonantMarks = Around
-  (milestoneContext . _1 . _1 . _1 . travList $ aroundTo Around.distLeftSumOverProd)
-  (milestoneContext . _1 . _1 . _1 . travList $ aroundFrom Around.distLeftSumOverProd)
+  (traverseWithItemContext . _1 . _1 . _1 . travList $ aroundTo Around.distLeftSumOverProd)
+  (traverseWithItemContext . _1 . _1 . _1 . travList $ aroundFrom Around.distLeftSumOverProd)
 
-consonantMarks :: AroundMilestone Around.InvalidConsonantMarks Void
+consonantMarks :: AroundContext ctx Around.InvalidConsonantMarks Void
   ((([ (Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
     :+ (Consonant :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
     ]
@@ -141,10 +141,10 @@ consonantMarks :: AroundMilestone Around.InvalidConsonantMarks Void
     ]
     :* Capitalization) :* Elision) :* SentenceBoundary)
 consonantMarks = Around
-  (milestoneContext . _1 . _1 . _1 . travList . _Right $ aroundTo Around.consonantMarks)
-  (milestoneContext . _1 . _1 . _1 . travList . _Right $ aroundFrom Around.consonantMarks)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _Right $ aroundTo Around.consonantMarks)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _Right $ aroundFrom Around.consonantMarks)
 
-groupVowelConsonants :: AroundMilestone Void Void
+groupVowelConsonants :: AroundContext ctx Void Void
   ((([ (Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
     :+ ConsonantRho
     ]
@@ -154,10 +154,10 @@ groupVowelConsonants :: AroundMilestone Void Void
     ]
     :* Capitalization) :* Elision) :* SentenceBoundary)
 groupVowelConsonants = Around
-  (milestoneContext . _1 . _1 . _1 $ aroundTo Around.groupSums)
-  (milestoneContext . _1 . _1 . _1 $ aroundFrom Around.groupSums)
+  (traverseWithItemContext . _1 . _1 . _1 $ aroundTo Around.groupSums)
+  (traverseWithItemContext . _1 . _1 . _1 $ aroundFrom Around.groupSums)
 
-vowelSyllabicMark :: AroundMilestone Void Void
+vowelSyllabicMark :: AroundContext ctx Void Void
   ((([ [Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]
     :+ [ConsonantRho]
     ]
@@ -167,14 +167,14 @@ vowelSyllabicMark :: AroundMilestone Void Void
     ]
     :* Capitalization) :* Elision) :* SentenceBoundary)
 vowelSyllabicMark = Around
-  (milestoneContext . _1 . _1 . _1 . travList . _Left . travList $ aroundTo around)
-  (milestoneContext . _1 . _1 . _1 . travList . _Left . travList $ aroundFrom around)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left . travList $ aroundTo around)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left . travList $ aroundFrom around)
   where
   around = Around.makeIdAround to from
   to (x, (y, (z, q))) = (x, (q, (y, z)))
   from (x, (q, (y, z))) = (x, (y, (z, q)))
 
-vocalicSyllable :: AroundMilestone Void Void
+vocalicSyllable :: AroundContext ctx Void Void
   ((([ [Vowel :* Maybe SyllabicMark :* Maybe Accent :* Maybe Breathing]
     :+ [ConsonantRho]
     ]
@@ -182,53 +182,53 @@ vocalicSyllable :: AroundMilestone Void Void
   ((([ [VocalicSyllable :* Maybe Accent :* Maybe Breathing] :+ [ConsonantRho] ]
     :* Capitalization) :* Elision) :* SentenceBoundary)
 vocalicSyllable = Around
-  (milestoneContext . _1 . _1 . _1 . travList . _Left $ aroundTo $ Around.vocalicSyllable (Nothing, Nothing))
-  (milestoneContext . _1 . _1 . _1 . travList . _Left $ aroundFrom $ Around.vocalicSyllable (Nothing, Nothing))
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left $ aroundTo $ Around.vocalicSyllable (Nothing, Nothing))
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left $ aroundFrom $ Around.vocalicSyllable (Nothing, Nothing))
 
-swapConsonantVocalicSyllables :: AroundMilestone Void Void
+swapConsonantVocalicSyllables :: AroundContext ctx Void Void
   ((([ [VocalicSyllable :* Maybe Accent :* Maybe Breathing] :+ [ConsonantRho] ]
     :* Capitalization) :* Elision) :* SentenceBoundary)
   ((([ [ConsonantRho] :+ [VocalicSyllable :* Maybe Accent :* Maybe Breathing] ]
     :* Capitalization) :* Elision) :* SentenceBoundary)
 swapConsonantVocalicSyllables = Around
-  (milestoneContext . _1 . _1 . _1 . travList $ aroundTo Around.swapSum)
-  (milestoneContext . _1 . _1 . _1 . travList $ aroundFrom Around.swapSum)
+  (traverseWithItemContext . _1 . _1 . _1 . travList $ aroundTo Around.swapSum)
+  (traverseWithItemContext . _1 . _1 . _1 . travList $ aroundFrom Around.swapSum)
 
-ungroupConsonantVocalicSyllables :: AroundMilestone Void Void
+ungroupConsonantVocalicSyllables :: AroundContext ctx Void Void
   ((([ [ConsonantRho] :+ [VocalicSyllable :* Maybe Accent :* Maybe Breathing] ]
     :* Capitalization) :* Elision) :* SentenceBoundary)
   ((([ ConsonantRho :+ (VocalicSyllable :* Maybe Accent :* Maybe Breathing) ]
     :* Capitalization) :* Elision) :* SentenceBoundary)
 ungroupConsonantVocalicSyllables = Around
-  (milestoneContext . _1 . _1 . _1 $ aroundTo Around.ungroupSums)
-  (milestoneContext . _1 . _1 . _1 $ aroundFrom Around.ungroupSums)
+  (traverseWithItemContext . _1 . _1 . _1 $ aroundTo Around.ungroupSums)
+  (traverseWithItemContext . _1 . _1 . _1 $ aroundFrom Around.ungroupSums)
 
-groupLeftConsonantVocalicSyllables :: AroundMilestone Void Void
+groupLeftConsonantVocalicSyllables :: AroundContext ctx Void Void
   ((([ ConsonantRho :+ (VocalicSyllable :* Maybe Accent :* Maybe Breathing) ]
     :* Capitalization) :* Elision) :* SentenceBoundary)
   (((([ [ConsonantRho] :* (VocalicSyllable :* Maybe Accent :* Maybe Breathing) ] :* [ConsonantRho])
     :* Capitalization) :* Elision) :* SentenceBoundary)
 groupLeftConsonantVocalicSyllables = Around
-  (milestoneContext . _1 . _1 . _1 $ aroundTo Around.groupLeft)
-  (milestoneContext . _1 . _1 . _1 $ aroundFrom Around.groupLeft)
+  (traverseWithItemContext . _1 . _1 . _1 $ aroundTo Around.groupLeft)
+  (traverseWithItemContext . _1 . _1 . _1 $ aroundFrom Around.groupLeft)
 
-breathing :: AroundMilestone [Around.InvalidBreathing ConsonantRho VocalicSyllable (Maybe Accent)] Void
+breathing :: AroundContext ctx [Around.InvalidBreathing ConsonantRho VocalicSyllable (Maybe Accent)] Void
   (((([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent :* Maybe Breathing ] :* [ConsonantRho])
     :* Capitalization) :* Elision) :* SentenceBoundary)
   ((((([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* MarkPreservation :* Crasis :* InitialAspiration) :* [ConsonantRho])
     :* Capitalization) :* Elision) :* SentenceBoundary)
 breathing = Around
-  (milestoneContext . _1 . _1 . _1 . _1 $ aroundTo Around.breathing)
-  (milestoneContext . _1 . _1 . _1 . _1 $ aroundFrom Around.breathing)
+  (traverseWithItemContext . _1 . _1 . _1 . _1 $ aroundTo Around.breathing)
+  (traverseWithItemContext . _1 . _1 . _1 . _1 $ aroundFrom Around.breathing)
 
-reorderWordProps :: AroundMilestone Void Void
+reorderWordProps :: AroundContext ctx Void Void
   ((((([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* MarkPreservation :* Crasis :* InitialAspiration) :* [ConsonantRho])
     :* Capitalization) :* Elision) :* SentenceBoundary)
   ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
     :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* SentenceBoundary)
 reorderWordProps = Around
-  (milestoneContext $ aroundTo around)
-  (milestoneContext $ aroundFrom around)
+  (traverseWithItemContext $ aroundTo around)
+  (traverseWithItemContext $ aroundFrom around)
   where
   around = Around.makeIdAround to from
   to (((((x1, (x2, (x3, x4))), x5), x6), x7), x8) = (x1, (x5, (x2, (x3, (x4, (x6, (x7, x8)))))))

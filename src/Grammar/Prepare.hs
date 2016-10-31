@@ -28,14 +28,14 @@ withItemContext f (ctx , a) =
     Failure es -> Failure (fmap (\x -> (ctx , (a , x))) es)
     Success b -> Success (ctx , b)
 
-milestoneContext
-  :: forall a b c
+traverseWithItemContext
+  :: forall a b c ctx
   . (a -> Validation [c] b)
-  -> [Milestone :* a]
+  -> [ctx :* a]
   -> Validation
-    [Milestone :* a :* c]
-    [Milestone :* b]
-milestoneContext f = traverse (withItemContext f)
+    [ctx :* a :* c]
+    [ctx :* b]
+traverseWithItemContext f = traverse (withItemContext f)
 
 prepareContents :: [Primary.Content] -> [Milestone :* Primary.Word]
 prepareContents = go emptyMilestone
@@ -43,7 +43,7 @@ prepareContents = go emptyMilestone
   go :: Milestone -> [Primary.Content] -> [Milestone :* Primary.Word]
   go _ [] = []
   go m (Primary.ContentMilestone (Primary.MilestoneVerse x) : xs) = go (over _1 (const (Just (toLocalVerse x))) m) xs
-  go m (Primary.ContentMilestone Primary.MilestoneParagraph : xs) = go (over _2 nextParagraph m) xs 
+  go m (Primary.ContentMilestone Primary.MilestoneParagraph : xs) = go (over _2 nextParagraph m) xs
   go m (Primary.ContentWord w : xs) = (m , w) : go m xs
 
 prepareSource :: Text -> Primary.Source -> SourceId :* [Milestone :* Primary.Word]
