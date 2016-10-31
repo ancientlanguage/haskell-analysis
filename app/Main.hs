@@ -55,7 +55,7 @@ data Command
   | Crasis
   | MarkPreservation
   | AccentReverseIndex
-  | AccentReverseIndexSentence
+  | AccentReverseIndexPunctuation
 
 options :: Parser Options
 options = subparser
@@ -73,7 +73,7 @@ options = subparser
   <> commandQuery "crasis" "Show crasis" Crasis
   <> commandQuery "mark-preservation" "Show unmarked/marked words" MarkPreservation
   <> commandQuery "accent-reverse-index" "Show aceents with reverse syllable index" AccentReverseIndex
-  <> commandQuery "accent-reverse-index-sentence" "Show aceents with reverse syllable index and sentence boundary" AccentReverseIndex
+  <> commandQuery "accent-reverse-index-punctuation" "Show aceents with reverse syllable index and word punctuation" AccentReverseIndexPunctuation
   )
   where
   commandQuery n d c = command n
@@ -110,7 +110,7 @@ queryStage
   => Around
     (MilestoneCtx :* e1)
     e2
-    [MilestoneCtx :* (String :* SentenceBoundary)]
+    [MilestoneCtx :* (String :* HasWordPunctuation)]
     [b]
   -> (b -> [c])
   -> Int
@@ -122,7 +122,7 @@ queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) co
   addCtx
     :: Int
     -> [Milestone :* Primary.Word]
-    -> [MilestoneCtx :* String :* SentenceBoundary]
+    -> [MilestoneCtx :* String :* HasWordPunctuation]
   addCtx n xs = zipWith3 addContextZip xs lefts rights
     where
     addContextZip (m, w) ls rs = ((m, (fullWordText w, (ls, rs))), basicWord w)
@@ -133,8 +133,8 @@ queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) co
     fullWordText :: Primary.Word -> Text
     fullWordText (Primary.Word p t s) = Text.concat [p, t, s]
 
-    basicWord :: Primary.Word -> String :* SentenceBoundary
-    basicWord (Primary.Word p t s) = (Text.unpack t, Stage.suffixSentence s)
+    basicWord :: Primary.Word -> String :* HasWordPunctuation
+    basicWord (Primary.Word p t s) = (Text.unpack t, Stage.suffixHasPunctuation s)
 
     onlyText = fmap (fullWordText . snd)
     rightContext n = snd . foldr go ([], [])
@@ -196,9 +196,9 @@ queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) co
     True -> id
     False -> take rc
 
-  showItems :: [(Milestone :* Text :* [Text] :* [Text]) :* (String :* SentenceBoundary)]
+  showItems :: [(Milestone :* Text :* [Text] :* [Text]) :* (String :* HasWordPunctuation)]
     -> [(Text, Text, Text, Text)]
-  showItems = fmap prettyMilestoneCtxString . Stage.forgetSentenceBoundary
+  showItems = fmap prettyMilestoneCtxString . Stage.forgetHasWordPunctuation
 
   goBack xs = case (aroundFrom stg) xs of
     Success ys -> showItems ys
@@ -214,24 +214,24 @@ handleGroups f = do
 getElision = pure . snd . fst . snd
 
 getLetterMarks
-  :: ctx :* ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
+  :: ctx :* ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* HasWordPunctuation)
   -> [Letter :* [Mark]]
 getLetterMarks = fst . fst . fst . snd
 
 getMarks
-  :: ctx :* ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
+  :: ctx :* ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* HasWordPunctuation)
   -> [[Mark]]
 getMarks = over traverse snd . fst . fst . fst . snd
 
 getLetterSyllabicMark
-  :: ctx :* ((([Letter :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* SentenceBoundary)
+  :: ctx :* ((([Letter :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
   -> [Letter :* Maybe SyllabicMark]
 getLetterSyllabicMark = over traverse (\(l, (_, (_, sm))) -> (l, sm)) . fst . fst . fst . snd
 
 getVowelMarks
   :: ctx
     :* ((([ (Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark) :+ ConsonantRho ]
-      :* Capitalization) :* Elision) :* SentenceBoundary)
+      :* Capitalization) :* Elision) :* HasWordPunctuation)
   -> [Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]
 getVowelMarks = toListOf (_2 . _1 . _1 . _1 . traverse . _Left)
 
@@ -240,19 +240,19 @@ getVowelMarkGroups
     :* ((([ [Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]
       :+ [ConsonantRho]
       ]
-      :* Capitalization) :* Elision) :* SentenceBoundary)
+      :* Capitalization) :* Elision) :* HasWordPunctuation)
   -> [[Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]]
 getVowelMarkGroups = toListOf (_2 . _1 . _1 . _1 . traverse . _Left)
 
 getCrasis
   :: ctx :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
-    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* SentenceBoundary)
+    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* HasWordPunctuation)
   -> [Crasis]
 getCrasis = toListOf (_2 . _2 . _2 . _2 . _1)
 
 getMarkPreservation
   :: ctx :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
-    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* SentenceBoundary)
+    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* HasWordPunctuation)
   -> [MarkPreservation]
 getMarkPreservation = toListOf (_2 . _2 . _2 . _1)
 
@@ -265,17 +265,17 @@ toAccentReverseIndex = onlyAccents . addReverseIndex
     go (i, Just x) = [(i, x)]
     go _ = []
 
-getAccentReverseIndexSentence
+getAccentReverseIndexPunctuation
   :: ctxctx :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
-    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* SentenceBoundary)
-  -> [[Int :* Accent] :* SentenceBoundary]
-getAccentReverseIndexSentence = pure . over _1 goAll . getPair
+    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* HasWordPunctuation)
+  -> [[Int :* Accent] :* HasWordPunctuation]
+getAccentReverseIndexPunctuation = pure . over _1 goAll . getPair
   where
   goAll = toAccentReverseIndex . getAccents
 
   getPair
-    :: m :* [ a :* b :* Maybe Accent ] :* c :* d :* e :* f :* g :* h :* SentenceBoundary
-    -> [ a :* b :* Maybe Accent ] :* SentenceBoundary
+    :: m :* [ a :* b :* Maybe Accent ] :* c :* d :* e :* f :* g :* h :* HasWordPunctuation
+    -> [ a :* b :* Maybe Accent ] :* HasWordPunctuation
   getPair x = (view (_2 . _1) x, view (_2 . _2 . _2 . _2 . _2 . _2 . _2 . _2) x)
 
   getAccents :: [ a :* b :* Maybe Accent ] -> [Maybe Accent]
@@ -304,8 +304,8 @@ runCommand (Options VowelMarks rc m) = handleGroups (queryStage Stage.toConsonan
 runCommand (Options VowelMarkGroups rc m) = handleGroups (queryStage Stage.toGroupVowelConsonants getVowelMarkGroups rc m)
 runCommand (Options Crasis rc m) = handleGroups (queryStage Stage.toBreathing getCrasis rc m)
 runCommand (Options MarkPreservation rc m) = handleGroups (queryStage Stage.toBreathing getMarkPreservation rc m)
-runCommand (Options AccentReverseIndex rc m) = handleGroups (queryStage Stage.toBreathing getAccentReverseIndexSentence rc m)
-runCommand (Options AccentReverseIndexSentence rc m) = handleGroups (queryStage Stage.toBreathing getAccentReverseIndex rc m)
+runCommand (Options AccentReverseIndex rc m) = handleGroups (queryStage Stage.toBreathing getAccentReverseIndex rc m)
+runCommand (Options AccentReverseIndexPunctuation rc m) = handleGroups (queryStage Stage.toBreathing getAccentReverseIndexPunctuation rc m)
 
 main :: IO ()
 main = execParser opts >>= runCommand

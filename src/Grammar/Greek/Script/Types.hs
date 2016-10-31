@@ -120,6 +120,6 @@ data MarkPreservation = PreserveMarks | Unmarked
   deriving (Eq, Ord, Show, Generic)
 instance Serialize MarkPreservation
 
-data SentenceBoundary = NotSentenceEnd | SentenceEnd
+data HasWordPunctuation = HasWordPunctuation | NoWordPunctuation
   deriving (Eq, Ord, Show, Generic)
-instance Serialize SentenceBoundary
+instance Serialize HasWordPunctuation

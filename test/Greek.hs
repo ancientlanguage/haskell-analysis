@@ -50,7 +50,7 @@ testStages x = do
           ]
         Success z -> testDataLoss (forget x) (forget z)
           where
-          forget = Stage.forgetSentenceBoundary
+          forget = Stage.forgetHasWordPunctuation
 
 testSourceStages (SourceId g s, ms) = do
   _ <- Text.putStrLn $ Text.intercalate " " [g, s]
