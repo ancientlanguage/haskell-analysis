@@ -119,10 +119,18 @@ queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) co
   where
   startGroups = Stage.start gs
 
-  addCtx :: [Milestone :* p] -> [MilestoneCtx :* p]
-  addCtx = over (traverse . _1) (\x -> (x, (["left"], ["right"])))
+  addCtx
+    :: Int
+    -> [Milestone :* String :* SentenceBoundary]
+    -> [MilestoneCtx :* String :* SentenceBoundary]
+  addCtx n xs = zipWith (\(m, (t, sb)) rs -> ((m, ([], rs)), (t, sb))) xs (rightContext n (onlyText xs))
+    where
+    onlyText = fmap (fst . snd)
+    rightContext n = snd . foldr go ([], [])
+      where
+      go x (ctx, xs) = (take n (x : ctx), ctx : xs)
 
-  goSource (SourceId g s, ms) = case aroundTo stg . addCtx $ ms of
+  goSource (SourceId g s, ms) = case aroundTo stg . addCtx 5 $ ms of
     Failure es -> do
       _ <- Text.putStrLn $ Text.intercalate " "
         [ g
