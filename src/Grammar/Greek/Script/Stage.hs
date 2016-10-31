@@ -36,8 +36,8 @@ travList :: Applicative f => (a -> f b) -> [a] -> f [b]
 travList = traverse
 
 forgetSentenceBoundary
-  :: [Milestone :* [a] :* SentenceBoundary]
-  -> [Milestone :* [a]]
+  :: [ctx :* [a] :* SentenceBoundary]
+  -> [ctx :* [a]]
 forgetSentenceBoundary = over (traverse . _2) fst
 
 type AroundContext ctx e1 e2 a b =

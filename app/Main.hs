@@ -101,27 +101,34 @@ groupPairs = Map.assocs . foldr go Map.empty
     Just vs -> Map.insert k (v : vs) m
     Nothing -> Map.insert k [v] m
 
+type MilestoneCtx = Milestone :* [String] :* [String]
+
 queryStage
   :: (Show e1, Ord c, Show c)
   => Around
-    (Milestone :* e1)
+    (MilestoneCtx :* e1)
     e2
-    [Milestone :* (String :* SentenceBoundary)]
+    [MilestoneCtx :* (String :* SentenceBoundary)]
     [b]
   -> (b -> [c])
   -> Int
   -> String
   -> [Primary.Group]
   -> IO ()
-queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ Stage.start gs
+queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ startGroups
   where
-  goSource (SourceId g s, ms) = case (aroundTo stg) ms of
+  startGroups = Stage.start gs
+
+  addCtx :: [Milestone :* p] -> [MilestoneCtx :* p]
+  addCtx = over (traverse . _1) (\x -> (x, (["left"], ["right"])))
+
+  goSource (SourceId g s, ms) = case aroundTo stg . addCtx $ ms of
     Failure es -> do
       _ <- Text.putStrLn $ Text.intercalate " "
         [ g
         , s
         , "Failure: aroundTo --"
-        , Text.intercalate "\n" $ fmap prettyMilestoned es
+        , Text.intercalate "\n" $ fmap prettyMilestoned $ over (traverse . _1) fst es
         ]
       return []
     Success y -> return $ prepareItems (Text.append (Text.concat [ "  ", g , " ", s, " " ])) y
@@ -151,8 +158,8 @@ queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) co
     True -> id
     False -> take rc
 
-  showItems :: [Milestone :* (String :* SentenceBoundary)] -> [Text]
-  showItems = fmap prettyMilestonedString . Stage.forgetSentenceBoundary
+  showItems :: [(Milestone :* [String] :* [String]) :* (String :* SentenceBoundary)] -> [Text]
+  showItems = fmap prettyMilestoneCtxString . Stage.forgetSentenceBoundary
 
   goBack xs = case (aroundFrom stg) xs of
     Success ys -> showItems ys
@@ -168,29 +175,29 @@ handleGroups f = do
 getElision = pure . snd . fst . snd
 
 getLetterMarks
-  :: Milestone :* ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
+  :: ctx :* ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
   -> [Letter :* [Mark]]
 getLetterMarks = fst . fst . fst . snd
 
 getMarks
-  :: Milestone :* ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
+  :: ctx :* ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* SentenceBoundary)
   -> [[Mark]]
 getMarks = over traverse snd . fst . fst . fst . snd
 
 getLetterSyllabicMark
-  :: Milestone :* ((([Letter :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* SentenceBoundary)
+  :: ctx :* ((([Letter :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* SentenceBoundary)
   -> [Letter :* Maybe SyllabicMark]
 getLetterSyllabicMark = over traverse (\(l, (_, (_, sm))) -> (l, sm)) . fst . fst . fst . snd
 
 getVowelMarks
-  :: Milestone
+  :: ctx
     :* ((([ (Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark) :+ ConsonantRho ]
       :* Capitalization) :* Elision) :* SentenceBoundary)
   -> [Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]
 getVowelMarks = toListOf (_2 . _1 . _1 . _1 . traverse . _Left)
 
 getVowelMarkGroups
-  :: Milestone
+  :: ctx
     :* ((([ [Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]
       :+ [ConsonantRho]
       ]
@@ -199,13 +206,13 @@ getVowelMarkGroups
 getVowelMarkGroups = toListOf (_2 . _1 . _1 . _1 . traverse . _Left)
 
 getCrasis
-  :: Milestone :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
+  :: ctx :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
     :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* SentenceBoundary)
   -> [Crasis]
 getCrasis = toListOf (_2 . _2 . _2 . _2 . _1)
 
 getMarkPreservation
-  :: Milestone :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
+  :: ctx :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
     :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* SentenceBoundary)
   -> [MarkPreservation]
 getMarkPreservation = toListOf (_2 . _2 . _2 . _1)
@@ -220,7 +227,7 @@ toAccentReverseIndex = onlyAccents . addReverseIndex
     go _ = []
 
 getAccentReverseIndexSentence
-  :: Milestone :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
+  :: ctxctx :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
     :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* SentenceBoundary)
   -> [[Int :* Accent] :* SentenceBoundary]
 getAccentReverseIndexSentence = pure . over _1 goAll . getPair
@@ -236,7 +243,7 @@ getAccentReverseIndexSentence = pure . over _1 goAll . getPair
   getAccents = over traverse (view (_2 . _2))
 
 getAccentReverseIndex
-  :: Milestone :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* a)
+  :: ctx :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* a)
   -> [[Int :* Accent]]
 getAccentReverseIndex = pure . toAccentReverseIndex . fmap (view (_2 . _2)) . view (_2 . _1)
 
