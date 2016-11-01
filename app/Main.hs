@@ -57,6 +57,7 @@ data Command
   | AccentReverseIndex
   | AccentReverseIndexPunctuation
   | ForceAcute
+  | AccentPosition
 
 options :: Parser Options
 options = subparser
@@ -76,6 +77,7 @@ options = subparser
   <> commandQuery "accent-reverse-index" "Show aceents with reverse syllable index" AccentReverseIndex
   <> commandQuery "accent-reverse-index-punctuation" "Show accents with reverse syllable index and word punctuation" AccentReverseIndexPunctuation
   <> commandQuery "force-acute" "Show occurences where the accent is forced to be acute" ForceAcute
+  <> commandQuery "accent-position" "Show decontextualized accents and positions" AccentPosition
   )
   where
   commandQuery n d c = command n
@@ -291,6 +293,11 @@ getForceAcute
   -> [ForceAcute]
 getForceAcute = toListOf (_2 . _1 . _2 . _1 . _Just . _2 . _2 . _1)
 
+getAccentPosition
+  :: ctx :* (a :* Maybe (WordAccent :* AccentPosition :* b :* c) :* d) :* e
+  -> [Maybe (WordAccent :* AccentPosition)]
+getAccentPosition = pure . over (_Just . _2) fst . view (_2 . _1 . _2 . _1)
+
 runCommand :: Options -> IO ()
 runCommand (Options Words _ _) = handleGroups showWordCounts
 runCommand (Options Elision rc m) = handleGroups (queryStage Stage.toElision getElision rc m)
@@ -304,6 +311,7 @@ runCommand (Options MarkPreservation rc m) = handleGroups (queryStage Stage.toBr
 runCommand (Options AccentReverseIndex rc m) = handleGroups (queryStage Stage.toBreathing getAccentReverseIndex rc m)
 runCommand (Options AccentReverseIndexPunctuation rc m) = handleGroups (queryStage Stage.toBreathing getAccentReverseIndexPunctuation rc m)
 runCommand (Options ForceAcute rc m) = handleGroups (queryStage Stage.script getForceAcute rc m)
+runCommand (Options AccentPosition rc m) = handleGroups (queryStage Stage.script getAccentPosition rc m)
 
 main :: IO ()
 main = execParser opts >>= runCommand
