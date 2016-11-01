@@ -27,6 +27,12 @@ groupPairs = Map.assocs . foldr go Map.empty
     Just vs -> Map.insert k (v : vs) m
     Nothing -> Map.insert k [v] m
 
+data QueryOptions = QueryOptions
+  { queryResultCount :: Int
+  , queryMatch :: String
+  }
+  deriving (Show)
+
 type MilestoneCtx = Milestone :* Text :* [Text] :* [Text]
 
 queryStage
@@ -37,11 +43,10 @@ queryStage
     [MilestoneCtx :* (String :* HasWordPunctuation)]
     [b]
   -> (b -> [c])
-  -> Int
-  -> String
+  -> QueryOptions
   -> [Primary.Group]
   -> IO ()
-queryStage stg f rc keyMatch gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ prepareGroups gs
+queryStage stg f (QueryOptions rc keyMatch) gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ prepareGroups gs
   where
   addCtx
     :: Int
