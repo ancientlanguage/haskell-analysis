@@ -37,17 +37,17 @@ accent = Around (over _Failure pure . to) (over _Failure pure . from)
   toPair ([(2,A_Acute),(0,A_Acute)], NoWordPunctuation) = extraTo AW_Acute Antepenult
   toPair x = Failure $ InvalidAccent x
 
-  from = fromTriple . over (_1 . traverse) (\x -> (x, Nothing))
+  from = over (_Success . _1) reverse . fromTriple . over _1 (reverse . fmap (\x -> (x, Nothing)))
 
   fromTriple (xs, (Nothing, hp)) = Success (xs, hp)
   fromTriple ((s, _) : xs, (Just (AW_Acute, (Ultima, (NoForceAcute, NoExtraAccents))), hp@HasWordPunctuation)) = Success ((s, Just A_Acute) : xs, hp)
   fromTriple ((s, _) : xs, (Just (AW_Acute, (Ultima, (DoForceAcute, NoExtraAccents))), hp@NoWordPunctuation)) = Success ((s, Just A_Acute) : xs, hp)
   fromTriple ((s, _) : xs, (Just (AW_Acute, (Ultima, (NoForceAcute, NoExtraAccents))), hp@NoWordPunctuation)) = Success ((s, Just A_Grave) : xs, hp)
-  fromTriple ((s, _) : xs, (Just (AW_Circumflex, (Ultima, (NoForceAcute, NoExtraAccents))), hp@NoWordPunctuation)) = Success ((s, Just A_Circumflex) : xs, hp)
-  fromTriple ((s, _) : xs@(_ : _), (Just (AW_Acute, (Penult, (NoForceAcute, NoExtraAccents))), hp)) = Success ((s, Just A_Acute) : xs, hp)
-  fromTriple ((s, _) : xs@(_ : _), (Just (AW_Circumflex, (Penult, (NoForceAcute, NoExtraAccents))), hp)) = Success ((s, Just A_Circumflex) : xs, hp)
-  fromTriple ((s1, _) : (s2, _) : xs, (Just (AW_Circumflex, (Penult, (NoForceAcute, SingleExtraAccent))), hp@NoWordPunctuation)) = Success ((s1, Just A_Circumflex) : (s2, Just A_Acute) : xs, hp)
-  fromTriple ((s, _) : xs@(_ : _ : _), (Just (AW_Acute, (Antepenult, (NoForceAcute, NoExtraAccents))), hp)) = Success ((s, Just A_Acute) : xs, hp)
+  fromTriple ((s, _) : xs, (Just (AW_Circumflex, (Ultima, (NoForceAcute, NoExtraAccents))), hp)) = Success ((s, Just A_Circumflex) : xs, hp)
+  fromTriple (x1 : (s2, _) : xs, (Just (AW_Acute, (Penult, (NoForceAcute, NoExtraAccents))), hp)) = Success (x1 : (s2, Just A_Acute) : xs, hp)
+  fromTriple (x1 : (s2, _) : xs, (Just (AW_Circumflex, (Penult, (NoForceAcute, NoExtraAccents))), hp)) = Success (x1 : (s2, Just A_Circumflex) : xs, hp)
+  fromTriple ((s1, _) : (s2, _) : xs, (Just (AW_Circumflex, (Penult, (NoForceAcute, SingleExtraAccent))), hp@NoWordPunctuation)) = Success ((s1, Just A_Acute) : (s2, Just A_Circumflex) : xs, hp)
+  fromTriple (x1 : x2 : (s3, _) : xs, (Just (AW_Acute, (Antepenult, (NoForceAcute, NoExtraAccents))), hp)) = Success (x1 : x2 : (s3, Just A_Acute) : xs, hp)
   fromTriple ((s1, _) : x2 : (s3, _) : xs, (Just (AW_Acute, (Antepenult, (NoForceAcute, SingleExtraAccent))), hp@NoWordPunctuation)) = Success ((s1, Just A_Acute) : x2 : (s3, Just A_Acute) : xs, hp)
   fromTriple (_, x) = Failure $ InvalidAccentProps x
 
