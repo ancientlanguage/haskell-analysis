@@ -1,6 +1,6 @@
 module Grammar.Greek.Script.Around.Accent where
 
-import Control.Lens (over)
+import Control.Lens (over, _1)
 import Data.Either.Validation
 import Grammar.Around
 import Grammar.CommonTypes
@@ -15,7 +15,7 @@ data InvalidAccentProps = InvalidAccentProps (Maybe (WordAccent :* AccentPositio
 accent :: Around InvalidAccent InvalidAccentProps
   ([s :* Maybe Accent] :* HasWordPunctuation)
   ([s] :* Maybe (WordAccent :* AccentPosition :* ForceAcute :* ExtraAccents) :* HasWordPunctuation)
-accent = Around (over _Failure pure . to) from
+accent = Around (over _Failure pure . to) (over _Failure pure . from)
   where
   to (ss, hp) = (\a -> (fmap fst ss, (a, hp))) <$> acc
     where
@@ -37,19 +37,19 @@ accent = Around (over _Failure pure . to) from
   toPair ([(2,A_Acute),(0,A_Acute)], NoWordPunctuation) = extraTo AW_Acute Antepenult
   toPair x = Failure $ InvalidAccent x
 
-  from = undefined
+  from (ss, q) = fromTriple $ (fmap (\x -> (x, Nothing)) ss, q)
 
-  fromPair (xs, (Nothing, hp)) = Success (xs, hp)
-  fromPair ((s, _) : xs, (Just (AW_Acute, (Ultima, (NoForceAcute, NoExtraAccents))), hp@HasWordPunctuation)) = Success ((s, A_Acute) : xs, hp)
-  fromPair ((s, _) : xs, (Just (AW_Acute, (Ultima, (DoForceAcute, NoExtraAccents))), hp@NoWordPunctuation)) = Success ((s, A_Acute) : xs, hp)
-  fromPair ((s, _) : xs, (Just (AW_Acute, (Ultima, (NoForceAcute, NoExtraAccents))), hp@NoWordPunctuation)) = Success ((s, A_Grave) : xs, hp)
-  fromPair ((s, _) : xs, (Just (AW_Circumflex, (Ultima, (NoForceAcute, NoExtraAccents))), hp@NoWordPunctuation)) = Success ((s, A_Circumflex) : xs, hp)
-  fromPair ((s, _) : xs@(_ : _), (Just (AW_Acute, (Penult, (NoForceAcute, NoExtraAccents))), hp)) = Success ((s, A_Acute) : xs, hp)
-  fromPair ((s, _) : xs@(_ : _), (Just (AW_Circumflex, (Penult, (NoForceAcute, NoExtraAccents))), hp)) = Success ((s, A_Circumflex) : xs, hp)
-  fromPair ((s1, _) : (s2, _) : xs, (Just (AW_Circumflex, (Penult, (NoForceAcute, SingleExtraAccent))), hp@NoWordPunctuation)) = Success ((s1, A_Circumflex) : (s2, A_Acute) : xs, hp)
-  fromPair ((s, _) : xs@(_ : _ : _), (Just (AW_Acute, (Antepenult, (NoForceAcute, NoExtraAccents))), hp)) = Success ((s, A_Acute) : xs, hp)
-  fromPair ((s1, _) : x2 : (s3, _) : xs, (Just (AW_Acute, (Antepenult, (NoForceAcute, SingleExtraAccent))), hp@NoWordPunctuation)) = Success ((s1, A_Acute) : x2 : (s3, A_Acute) : xs, hp)
-  fromPair (_, x) = Failure $ InvalidAccentProps x
+  fromTriple (xs, (Nothing, hp)) = Success (xs, hp)
+  fromTriple ((s, _) : xs, (Just (AW_Acute, (Ultima, (NoForceAcute, NoExtraAccents))), hp@HasWordPunctuation)) = Success ((s, Just A_Acute) : xs, hp)
+  fromTriple ((s, _) : xs, (Just (AW_Acute, (Ultima, (DoForceAcute, NoExtraAccents))), hp@NoWordPunctuation)) = Success ((s, Just A_Acute) : xs, hp)
+  fromTriple ((s, _) : xs, (Just (AW_Acute, (Ultima, (NoForceAcute, NoExtraAccents))), hp@NoWordPunctuation)) = Success ((s, Just A_Grave) : xs, hp)
+  fromTriple ((s, _) : xs, (Just (AW_Circumflex, (Ultima, (NoForceAcute, NoExtraAccents))), hp@NoWordPunctuation)) = Success ((s, Just A_Circumflex) : xs, hp)
+  fromTriple ((s, _) : xs@(_ : _), (Just (AW_Acute, (Penult, (NoForceAcute, NoExtraAccents))), hp)) = Success ((s, Just A_Acute) : xs, hp)
+  fromTriple ((s, _) : xs@(_ : _), (Just (AW_Circumflex, (Penult, (NoForceAcute, NoExtraAccents))), hp)) = Success ((s, Just A_Circumflex) : xs, hp)
+  fromTriple ((s1, _) : (s2, _) : xs, (Just (AW_Circumflex, (Penult, (NoForceAcute, SingleExtraAccent))), hp@NoWordPunctuation)) = Success ((s1, Just A_Circumflex) : (s2, Just A_Acute) : xs, hp)
+  fromTriple ((s, _) : xs@(_ : _ : _), (Just (AW_Acute, (Antepenult, (NoForceAcute, NoExtraAccents))), hp)) = Success ((s, Just A_Acute) : xs, hp)
+  fromTriple ((s1, _) : x2 : (s3, _) : xs, (Just (AW_Acute, (Antepenult, (NoForceAcute, SingleExtraAccent))), hp@NoWordPunctuation)) = Success ((s1, Just A_Acute) : x2 : (s3, Just A_Acute) : xs, hp)
+  fromTriple (_, x) = Failure $ InvalidAccentProps x
 
 getAccents :: [ s :* Maybe Accent ] -> [Maybe Accent]
 getAccents = over traverse snd
