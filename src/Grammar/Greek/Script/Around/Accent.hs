@@ -37,7 +37,7 @@ accent = Around (over _Failure pure . to) (over _Failure pure . from)
   toPair ([(2,A_Acute),(0,A_Acute)], NoWordPunctuation) = extraTo AW_Acute Antepenult
   toPair x = Failure $ InvalidAccent x
 
-  from (ss, q) = fromTriple $ (fmap (\x -> (x, Nothing)) ss, q)
+  from = fromTriple . over (_1 . traverse) (\x -> (x, Nothing))
 
   fromTriple (xs, (Nothing, hp)) = Success (xs, hp)
   fromTriple ((s, _) : xs, (Just (AW_Acute, (Ultima, (NoForceAcute, NoExtraAccents))), hp@HasWordPunctuation)) = Success ((s, Just A_Acute) : xs, hp)
