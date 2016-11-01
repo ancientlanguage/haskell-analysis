@@ -39,6 +39,18 @@ accent = Around (over _Failure pure . to) from
 
   from = undefined
 
+  fromPair (xs, (Nothing, hp)) = Success (xs, hp)
+  fromPair ((s, _) : xs, (Just (AW_Acute, (Ultima, (NoForceAcute, NoExtraAccents))), hp@HasWordPunctuation)) = Success ((s, A_Acute) : xs, hp)
+  fromPair ((s, _) : xs, (Just (AW_Acute, (Ultima, (DoForceAcute, NoExtraAccents))), hp@NoWordPunctuation)) = Success ((s, A_Acute) : xs, hp)
+  fromPair ((s, _) : xs, (Just (AW_Acute, (Ultima, (NoForceAcute, NoExtraAccents))), hp@NoWordPunctuation)) = Success ((s, A_Grave) : xs, hp)
+  fromPair ((s, _) : xs, (Just (AW_Circumflex, (Ultima, (NoForceAcute, NoExtraAccents))), hp@NoWordPunctuation)) = Success ((s, A_Circumflex) : xs, hp)
+  fromPair ((s, _) : xs@(_ : _), (Just (AW_Acute, (Penult, (NoForceAcute, NoExtraAccents))), hp)) = Success ((s, A_Acute) : xs, hp)
+  fromPair ((s, _) : xs@(_ : _), (Just (AW_Circumflex, (Penult, (NoForceAcute, NoExtraAccents))), hp)) = Success ((s, A_Circumflex) : xs, hp)
+  fromPair ((s1, _) : (s2, _) : xs, (Just (AW_Circumflex, (Penult, (NoForceAcute, SingleExtraAccent))), hp@NoWordPunctuation)) = Success ((s1, A_Circumflex) : (s2, A_Acute) : xs, hp)
+  fromPair ((s, _) : xs@(_ : _ : _), (Just (AW_Acute, (Antepenult, (NoForceAcute, NoExtraAccents))), hp)) = Success ((s, A_Acute) : xs, hp)
+  fromPair ((s1, _) : x2 : (s3, _) : xs, (Just (AW_Acute, (Antepenult, (NoForceAcute, SingleExtraAccent))), hp@NoWordPunctuation)) = Success ((s1, A_Acute) : x2 : (s3, A_Acute) : xs, hp)
+  fromPair (_, x) = Failure $ InvalidAccentProps x
+
 getAccents :: [ s :* Maybe Accent ] -> [Maybe Accent]
 getAccents = over traverse snd
 
