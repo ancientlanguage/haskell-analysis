@@ -1,6 +1,6 @@
 module Main where
 
-import Control.Lens (over, _1, _2, _Left, toListOf, view)
+import Control.Lens (over, _1, _2, _Left, toListOf, view, _Just)
 import qualified Data.Char as Char
 import Data.List (foldl')
 import qualified Data.Map.Strict as Map
@@ -56,6 +56,7 @@ data Command
   | MarkPreservation
   | AccentReverseIndex
   | AccentReverseIndexPunctuation
+  | ForceAcute
 
 options :: Parser Options
 options = subparser
@@ -73,7 +74,8 @@ options = subparser
   <> commandQuery "crasis" "Show crasis" Crasis
   <> commandQuery "mark-preservation" "Show unmarked/marked words" MarkPreservation
   <> commandQuery "accent-reverse-index" "Show aceents with reverse syllable index" AccentReverseIndex
-  <> commandQuery "accent-reverse-index-punctuation" "Show aceents with reverse syllable index and word punctuation" AccentReverseIndexPunctuation
+  <> commandQuery "accent-reverse-index-punctuation" "Show accents with reverse syllable index and word punctuation" AccentReverseIndexPunctuation
+  <> commandQuery "force-acute" "Show occurences where the accent is forced to be acute" ForceAcute
   )
   where
   commandQuery n d c = command n
@@ -284,6 +286,11 @@ getAccentReverseIndex
   -> [[Int :* Accent]]
 getAccentReverseIndex = pure . toAccentReverseIndex . fmap snd . view (_2 . _1 . _1)
 
+getForceAcute
+  :: ctx :* (a :* Maybe (b :* c :* ForceAcute :* d) :* e) :* f
+  -> [ForceAcute]
+getForceAcute = toListOf (_2 . _1 . _2 . _1 . _Just . _2 . _2 . _1)
+
 runCommand :: Options -> IO ()
 runCommand (Options Words _ _) = handleGroups showWordCounts
 runCommand (Options Elision rc m) = handleGroups (queryStage Stage.toElision getElision rc m)
@@ -296,6 +303,7 @@ runCommand (Options Crasis rc m) = handleGroups (queryStage Stage.toBreathing ge
 runCommand (Options MarkPreservation rc m) = handleGroups (queryStage Stage.toBreathing getMarkPreservation rc m)
 runCommand (Options AccentReverseIndex rc m) = handleGroups (queryStage Stage.toBreathing getAccentReverseIndex rc m)
 runCommand (Options AccentReverseIndexPunctuation rc m) = handleGroups (queryStage Stage.toBreathing getAccentReverseIndexPunctuation rc m)
+runCommand (Options ForceAcute rc m) = handleGroups (queryStage Stage.script getForceAcute rc m)
 
 main :: IO ()
 main = execParser opts >>= runCommand
