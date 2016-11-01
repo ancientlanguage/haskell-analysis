@@ -5,6 +5,7 @@ module ScriptQueries where
 import Control.Lens (over, _1, _2, _Left, toListOf, view, _Just)
 import Data.Map (Map)
 import qualified Data.Map as Map
+import qualified Data.List as List
 
 import QueryStage
 import Grammar.CommonTypes
@@ -115,6 +116,17 @@ getElisionSyllables = result
   fin = view (_2 . _2 . _1)
   el = view (_2 . _2 . _2 . _2 . _2 . _2 . _2)
 
+getFinalSyllable
+  :: ctx
+    :* ([[ConsonantRho] :* VocalicSyllable] :* Maybe (WordAccent :* AccentPosition :* ForceAcute :* ExtraAccents) :* HasWordPunctuation)
+    :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision
+  -> [[[ConsonantRho] :* VocalicSyllable] :* [ConsonantRho]]
+getFinalSyllable = result
+  where
+  result x = pure (syll x, fin x)
+  syll = reverse . List.take 1 . reverse . view (_2 . _1 . _1)
+  fin = view (_2 . _2 . _1)
+
 queries :: Map String (QueryOptions -> [Primary.Group] -> IO ())
 queries = Map.fromList
   [ ("Elision", queryStage Stage.toElision getElision)
@@ -131,4 +143,5 @@ queries = Map.fromList
   , ("AccentPosition", queryStage Stage.script getAccentPosition)
   , ("FinalConsonants", queryStage Stage.script getFinalConsonants)
   , ("ElisionSyllables", queryStage Stage.script getElisionSyllables)
+  , ("FinalSyllable", queryStage Stage.script getFinalSyllable)
   ]
