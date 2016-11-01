@@ -12,11 +12,11 @@ data InvalidAccent = InvalidAccent ([Int :* Accent] :* HasWordPunctuation)
 data InvalidAccentProps = InvalidAccentProps (Maybe (WordAccent :* AccentPosition :* ForceAcute :* ExtraAccents) :* HasWordPunctuation)
   deriving (Show)
 
-pattern StandardAccent :: forall t t1. t -> t1 -> Maybe (t, (t1, (ForceAcute, ExtraAccents)))
+pattern StandardAccent :: a -> p -> Maybe (a :* p :* ForceAcute :* ExtraAccents)
 pattern StandardAccent a p = Just (a, (p, (NoForceAcute, NoExtraAccents)))
-pattern ExtraAccent :: forall t t1. t -> t1 -> Maybe (t, (t1, (ForceAcute, ExtraAccents)))
+pattern ExtraAccent :: a -> p -> Maybe (a :* p :* ForceAcute :* ExtraAccents)
 pattern ExtraAccent a p = Just (a, (p, (NoForceAcute, SingleExtraAccent)))
-pattern ForceAccent :: forall t t1. t -> t1 -> Maybe (t, (t1, (ForceAcute, ExtraAccents)))
+pattern ForceAccent :: a -> p -> Maybe (a :* p :* ForceAcute :* ExtraAccents)
 pattern ForceAccent a p = Just (a, (p, (DoForceAcute, NoExtraAccents)))
 
 accent :: Around InvalidAccent InvalidAccentProps
