@@ -220,15 +220,26 @@ breathing = Around
 reorderWordProps :: AroundContext ctx Void Void
   ((((([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* MarkPreservation :* Crasis :* InitialAspiration) :* [ConsonantRho])
     :* Capitalization) :* Elision) :* HasWordPunctuation)
-  ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
-    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* HasWordPunctuation)
+  (([ ([ConsonantRho] :* VocalicSyllable) :* Maybe Accent ] :* HasWordPunctuation) :* [ConsonantRho]
+    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision)
 reorderWordProps = Around
   (traverseWithItemContext $ aroundTo around)
   (traverseWithItemContext $ aroundFrom around)
   where
   around = Around.makeIdAround to from
-  to (((((x1, (x2, (x3, x4))), x5), x6), x7), x8) = (x1, (x5, (x2, (x3, (x4, (x6, (x7, x8)))))))
-  from (x1, (x5, (x2, (x3, (x4, (x6, (x7, x8))))))) = (((((x1, (x2, (x3, x4))), x5), x6), x7), x8)
+  to (((((x1, (x2, (x3, x4))), x5), x6), x7), x8) = ((fmap assocLeft x1, x8), (x5, (x2, (x3, (x4, (x6, x7))))))
+  from ((x1, x8), (x5, (x2, (x3, (x4, (x6, x7)))))) = (((((fmap assocRight x1, (x2, (x3, x4))), x5), x6), x7), x8)
+  assocLeft (x, (y, z)) = ((x, y), z)
+  assocRight ((x, y), z) = (x, (y, z))
+
+accent :: AroundContext ctx Around.InvalidAccent Around.InvalidAccentProps
+  (([ ([ConsonantRho] :* VocalicSyllable) :* Maybe Accent ] :* HasWordPunctuation)
+    :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision)
+  (([([ConsonantRho] :* VocalicSyllable)] :* Maybe (WordAccent :* AccentPosition :* ForceAcute :* ExtraAccents) :* HasWordPunctuation)
+    :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision)
+accent = Around
+  (traverseWithItemContext . _1 $ aroundTo Around.accent)
+  (traverseWithItemContext . _1 $ aroundFrom Around.accent)
 
 toElision
   = unicodeSymbol
@@ -269,3 +280,4 @@ toBreathing
 
 script
   = toBreathing
+  <+> accent

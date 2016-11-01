@@ -245,14 +245,12 @@ getVowelMarkGroups
 getVowelMarkGroups = toListOf (_2 . _1 . _1 . _1 . traverse . _Left)
 
 getCrasis
-  :: ctx :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
-    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* HasWordPunctuation)
+  :: ctx :* a :* b :* c :* Crasis :* d
   -> [Crasis]
 getCrasis = toListOf (_2 . _2 . _2 . _2 . _1)
 
 getMarkPreservation
-  :: ctx :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
-    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* HasWordPunctuation)
+  :: ctx :* a :* b :* MarkPreservation :* c
   -> [MarkPreservation]
 getMarkPreservation = toListOf (_2 . _2 . _2 . _1)
 
@@ -266,25 +264,25 @@ toAccentReverseIndex = onlyAccents . addReverseIndex
     go _ = []
 
 getAccentReverseIndexPunctuation
-  :: ctxctx :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* [ConsonantRho]
-    :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision :* HasWordPunctuation)
+  :: ctx :* ([ ([ConsonantRho] :* VocalicSyllable) :* Maybe Accent ] :* HasWordPunctuation)
+    :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision
   -> [[Int :* Accent] :* HasWordPunctuation]
 getAccentReverseIndexPunctuation = pure . over _1 goAll . getPair
   where
   goAll = toAccentReverseIndex . getAccents
 
   getPair
-    :: m :* [ a :* b :* Maybe Accent ] :* c :* d :* e :* f :* g :* h :* HasWordPunctuation
-    -> [ a :* b :* Maybe Accent ] :* HasWordPunctuation
-  getPair x = (view (_2 . _1) x, view (_2 . _2 . _2 . _2 . _2 . _2 . _2 . _2) x)
+    :: m :* ([ a :* Maybe Accent ] :* HasWordPunctuation) :* b
+    -> [ a :* Maybe Accent ] :* HasWordPunctuation
+  getPair x = (view (_2 . _1 . _1) x, view (_2 . _1 . _2) x)
 
-  getAccents :: [ a :* b :* Maybe Accent ] -> [Maybe Accent]
-  getAccents = over traverse (view (_2 . _2))
+  getAccents :: [ a :* Maybe Accent ] -> [Maybe Accent]
+  getAccents = over traverse snd
 
 getAccentReverseIndex
-  :: ctx :* ([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* a)
+  :: ctx :* ([ ([ConsonantRho] :* VocalicSyllable) :* Maybe Accent ] :* a) :* b
   -> [[Int :* Accent]]
-getAccentReverseIndex = pure . toAccentReverseIndex . fmap (view (_2 . _2)) . view (_2 . _1)
+getAccentReverseIndex = pure . toAccentReverseIndex . fmap snd . view (_2 . _1 . _1)
 
 runCommand :: Options -> IO ()
 runCommand (Options Words _ _) = handleGroups showWordCounts
