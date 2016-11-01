@@ -235,7 +235,7 @@ reorderWordProps = Around
 accent :: AroundContext ctx Around.InvalidAccent Around.InvalidAccentProps
   (([ ([ConsonantRho] :* VocalicSyllable) :* Maybe Accent ] :* HasWordPunctuation)
     :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision)
-  (([([ConsonantRho] :* VocalicSyllable)] :* Maybe (WordAccent :* AccentPosition :* ForceAcute :* ExtraAccents) :* HasWordPunctuation)
+  (([[ConsonantRho] :* VocalicSyllable] :* Maybe (WordAccent :* AccentPosition :* ForceAcute :* ExtraAccents) :* HasWordPunctuation)
     :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision)
 accent = Around
   (traverseWithItemContext . _1 $ aroundTo Around.accent)

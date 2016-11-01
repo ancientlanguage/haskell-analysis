@@ -100,6 +100,21 @@ getFinalConsonants
   -> [[ConsonantRho]]
 getFinalConsonants = pure . view (_2 . _2 . _1)
 
+getElisionSyllables
+  :: ctx
+    :* ([[ConsonantRho] :* VocalicSyllable] :* Maybe (WordAccent :* AccentPosition :* ForceAcute :* ExtraAccents) :* HasWordPunctuation)
+    :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision
+  -> [InitialAspiration :* [[ConsonantRho] :* VocalicSyllable] :* [ConsonantRho]]
+getElisionSyllables = result
+  where
+  result x = case el x of
+    IsElided -> [(asp x, (syll x, fin x))]
+    NotElided -> []
+  asp = view (_2 . _2 . _2 . _2 . _2 . _1)
+  syll = view (_2 . _1 . _1)
+  fin = view (_2 . _2 . _1)
+  el = view (_2 . _2 . _2 . _2 . _2 . _2 . _2)
+
 queries :: Map String (QueryOptions -> [Primary.Group] -> IO ())
 queries = Map.fromList
   [ ("Elision", queryStage Stage.toElision getElision)
@@ -115,4 +130,5 @@ queries = Map.fromList
   , ("ForceAcute", queryStage Stage.script getForceAcute)
   , ("AccentPosition", queryStage Stage.script getAccentPosition)
   , ("FinalConsonants", queryStage Stage.script getFinalConsonants)
+  , ("ElisionSyllables", queryStage Stage.script getElisionSyllables)
   ]
