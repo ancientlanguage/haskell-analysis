@@ -23,8 +23,17 @@ matchParser = strOption
   <> help "Show output whose value matches M"
   )
 
+resultOptionParser :: Parser ResultOption
+resultOptionParser = option auto
+  ( long "results"
+  <> short 'r'
+  <> value Summary
+  <> metavar "RESULT_OPTIONS"
+  <> help "Result options"
+  )
+
 queryOptionsParser :: Parser QueryOptions
-queryOptionsParser = QueryOptions <$> argument auto (metavar "RESULT_OPTIONS" <> help "Result options") <*> matchParser
+queryOptionsParser = QueryOptions <$> resultOptionParser <*> matchParser
 
 data Query = Query
   { queryName :: String

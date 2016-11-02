@@ -94,11 +94,12 @@ queryStage stg f (QueryOptions ro keyMatch) gs = showKeyValues . fmap ((over (tr
 
   showKeyValues xs = do
     case ro of
-      Summary -> putStrLn "Showing summary only"
+      Summary -> putStrLn "Showing summary"
       All -> putStrLn "Showing all results"
-      First rc -> putStrLn $ "Showing summary with the first " ++ show rc ++ " results"
-      Random rc -> putStrLn $ "Showing summary with " ++ show rc ++ " random results"
+      First rc -> putStrLn $ "Showing the first " ++ show rc ++ " results per heading"
+      Random rc -> putStrLn $ "Showing " ++ show rc ++ " random results per heading"
     xs' <- xs
+    _ <- putStrLn $ show (length xs') ++ " headings\n"
     mapM_ skv (filterKeyMatches xs')
     where
     filterKeyMatches = filter (\(k, _) -> null keyMatch || show k == keyMatch)
