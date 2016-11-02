@@ -71,6 +71,7 @@ executable query
     primary-type,
     random-fu,
     random-source,
+    array,
     optparse-applicative >=0.12
   default-language: Haskell2010
 
