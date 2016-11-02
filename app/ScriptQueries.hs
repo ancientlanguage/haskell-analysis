@@ -89,45 +89,41 @@ getAccentReverseIndex
 getAccentReverseIndex = pure . toAccentReverseIndex . fmap snd . view (_2 . _1 . _1)
 
 getForceAcute
-  :: ctx :* (a :* Maybe WordAccent :* e) :* f
+  :: ctx :* Word
   -> [ForceAcute]
-getForceAcute = toListOf (_2 . _1 . _2 . _1 . _Just . _accentForce)
+getForceAcute = toListOf (_2 . _wordAccent . _Just . _accentForce)
 
 getAccentPosition
-  :: ctx :* (a :* Maybe WordAccent :* d) :* e
+  :: ctx :* Word
   -> [Maybe (BasicAccent :* AccentPosition)]
-getAccentPosition = pure . over _Just (\x -> (accentValue x, accentPosition x)) . view (_2 . _1 . _2 . _1)
+getAccentPosition = pure . over _Just (\x -> (accentValue x, accentPosition x)) . view (_2 . _wordAccent)
 
 getFinalConsonants
-  :: ctx :* a :* [ConsonantRho] :* b
+  :: ctx :* Word
   -> [[ConsonantRho]]
-getFinalConsonants = pure . view (_2 . _2 . _1)
+getFinalConsonants = pure . view (_2 . _wordFinalConsonants)
 
 getElisionSyllables
-  :: ctx
-    :* ([[ConsonantRho] :* VocalicSyllable] :* Maybe WordAccent :* HasWordPunctuation)
-    :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision
-  -> [InitialAspiration :* [[ConsonantRho] :* VocalicSyllable] :* [ConsonantRho]]
+  :: ctx :* Word
+  -> [InitialAspiration :* [Syllable] :* [ConsonantRho]]
 getElisionSyllables = result
   where
   result x = case el x of
     IsElided -> [(asp x, (syll x, fin x))]
     NotElided -> []
-  asp = view (_2 . _2 . _2 . _2 . _2 . _1)
-  syll = view (_2 . _1 . _1)
-  fin = view (_2 . _2 . _1)
-  el = view (_2 . _2 . _2 . _2 . _2 . _2 . _2)
+  asp = view (_2 . _wordInitialAspiration)
+  syll = view (_2 . _wordSyllables)
+  fin = view (_2 . _wordFinalConsonants)
+  el = view (_2 . _wordElision)
 
 getFinalSyllable
-  :: ctx
-    :* ([[ConsonantRho] :* VocalicSyllable] :* Maybe WordAccent :* HasWordPunctuation)
-    :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision
-  -> [[[ConsonantRho] :* VocalicSyllable] :* [ConsonantRho]]
+  :: ctx :* Word
+  -> [[Syllable] :* [ConsonantRho]]
 getFinalSyllable = result
   where
   result x = pure (syll x, fin x)
-  syll = reverse . List.take 1 . reverse . view (_2 . _1 . _1)
-  fin = view (_2 . _2 . _1)
+  syll = reverse . List.take 1 . reverse . view (_2 . _wordSyllables)
+  fin = view (_2 . _wordFinalConsonants)
 
 queries :: Map String (QueryOptions -> [Primary.Group] -> IO ())
 queries = Map.fromList

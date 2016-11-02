@@ -242,6 +242,20 @@ accent = Around
   (traverseWithItemContext . _1 $ aroundTo Around.accent)
   (traverseWithItemContext . _1 $ aroundFrom Around.accent)
 
+word :: AroundContext ctx Void Void
+  (([[ConsonantRho] :* VocalicSyllable] :* Maybe WordAccent :* HasWordPunctuation)
+    :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision)
+  Word
+word = Around
+  (traverseWithItemContext $ aroundTo around)
+  (traverseWithItemContext $ aroundFrom around)
+  where
+  around = Around.makeIdAround to from
+  to ((ss, (mwa, hwp)), (fc, (mp, (cr, (ia, (cap, el)))))) = Word ia (toSyllables ss) fc mwa cr el mp cap hwp
+  toSyllables = fmap (\(c, v) -> Syllable c v)
+  from (Word ia ss fc mwa cr el mp cap hwp) = ((fromSyllables ss, (mwa, hwp)), (fc, (mp, (cr, (ia, (cap, el))))))
+  fromSyllables = fmap (\(Syllable c v) -> (c, v))
+
 toElision
   = unicodeSymbol
   <+> assocSymbolMark_WordPunctuation
@@ -282,3 +296,4 @@ toBreathing
 script
   = toBreathing
   <+> accent
+  <+> word
