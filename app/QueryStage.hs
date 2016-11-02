@@ -12,6 +12,7 @@ import Data.Either.Validation
 import RandomSample (randomSample)
 import Grammar.Around
 import Grammar.CommonTypes
+import Grammar.Contextualize
 import qualified Grammar.Greek.Stage as Stage
 import Grammar.Greek.Script.Types
 import Grammar.Prepare
@@ -79,7 +80,21 @@ queryStage
   -> QueryOptions
   -> [Primary.Group]
   -> IO ()
-queryStage stg f (QueryOptions ro keyMatch) gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ prepareGroups gs
+queryStage a f = queryStageContext a 0 (f . fst)
+
+queryStageContext
+  :: (Show e1, Ord c, Show c)
+  => Around
+    (MilestoneCtx :* e1)
+    e2
+    [MilestoneCtx :* (String :* HasWordPunctuation)]
+    [b]
+  -> Int
+  -> (b :* [b] :* [b] -> [c])
+  -> QueryOptions
+  -> [Primary.Group]
+  -> IO ()
+queryStageContext stg contextSize f (QueryOptions ro keyMatch) gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ prepareGroups gs
   where
   goSource (SourceId g s, ms) = case aroundTo stg . addCtx 5 $ ms of
     Failure es -> do
@@ -127,7 +142,7 @@ queryStage stg f (QueryOptions ro keyMatch) gs = showKeyValues . fmap ((over (tr
         (max (baseLength x1) l1,max (baseLength x2) l2,max (baseLength x3) l3,max (baseLength x4) l4)
     baseLength = Text.length . Text.filter (not . Char.isMark)
 
-  prepareItems addPrefix = over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . concatMap (\x -> fmap (\y -> (y, x)) (f x))
+  prepareItems addPrefix = over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . concatMap (\x -> fmap (\y -> (y, fst x)) (f x)) . contextualize contextSize
 
   sampleResults = case ro of
     Summary -> return . const []
