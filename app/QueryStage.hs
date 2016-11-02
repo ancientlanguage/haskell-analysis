@@ -9,6 +9,7 @@ import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import Data.Either.Validation
 
+import RandomSample (randomSample)
 import Grammar.Around
 import Grammar.CommonTypes
 import qualified Grammar.Greek.Stage as Stage
@@ -28,6 +29,7 @@ data ResultOption
   = Summary
   | All
   | First Int
+  | Random Int
   deriving (Read, Show)
 
 data QueryOptions = QueryOptions
@@ -95,13 +97,15 @@ queryStage stg f (QueryOptions ro keyMatch) gs = showKeyValues . fmap ((over (tr
       Summary -> putStrLn "Showing summary only"
       All -> putStrLn "Showing all results"
       First rc -> putStrLn $ "Showing summary with the first " ++ show rc ++ " results"
+      Random rc -> putStrLn $ "Showing summary with " ++ show rc ++ " random results"
     xs' <- xs
     mapM_ skv (filterKeyMatches xs')
     where
     filterKeyMatches = filter (\(k, _) -> null keyMatch || show k == keyMatch)
     skv (k, vs) = do
       _ <- putStrLn $ show k ++ " " ++ show (length vs)
-      _ <- mapM_ Text.putStrLn . alignColumns . filterResults $ vs
+      vs' <- sampleResults vs
+      _ <- mapM_ Text.putStrLn . alignColumns $ vs'
       case ro of
         Summary -> return ()
         _ -> putStrLn ""
@@ -124,10 +128,11 @@ queryStage stg f (QueryOptions ro keyMatch) gs = showKeyValues . fmap ((over (tr
 
   prepareItems addPrefix = over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . concatMap (\x -> fmap (\y -> (y, x)) (f x))
 
-  filterResults = case ro of
-    Summary -> const []
-    All -> id
-    First rc -> take rc
+  sampleResults = case ro of
+    Summary -> return . const []
+    All -> return . id
+    First rc -> return . take rc
+    Random rc -> randomSample rc
 
   showItems :: [(Milestone :* Text :* [Text] :* [Text]) :* (String :* HasWordPunctuation)]
     -> [(Text, Text, Text, Text)]
