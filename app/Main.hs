@@ -2,7 +2,7 @@
 
 module Main where
 
-import Control.Lens (over, _1, _2, _Left, toListOf, view, _Just)
+import Data.Map (Map)
 import qualified Data.Map as Map
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
@@ -10,9 +10,6 @@ import Options.Applicative hiding (Failure, Success)
 
 import qualified ScriptQueries
 import QueryStage
-import Grammar.CommonTypes
-import qualified Grammar.Greek.Stage as Stage
-import Grammar.Greek.Script.Types
 import Grammar.Pretty
 import Grammar.Serialize
 import qualified Primary
@@ -54,6 +51,7 @@ queryParser = Query <$> name <*> queryOptionsParser
 data Command
   = CommandSources
   | CommandScriptQuery Query
+  | CommandList String
 
 options :: Parser Command
 options = subparser
@@ -66,6 +64,11 @@ options = subparser
     ( info
       (CommandScriptQuery <$> queryParser)
       (progDesc "Query for script properties" )
+    )
+  <> command "list"
+    ( info
+      (CommandList <$> (strArgument (value "" <> metavar "C" <> help "Property category")))
+      (progDesc "List available queries" )
     )
   )
 
@@ -90,12 +93,26 @@ handleGroups f = do
     Left x -> putStrLn x
     Right x -> f x
 
+queryCategories :: Map String (Map String (QueryOptions -> [Primary.Group] -> IO ()))
+queryCategories = Map.fromList
+  [ ("script", ScriptQueries.queries)
+  ]
+
+showCategory :: String -> IO ()
+showCategory c = do
+  case Map.lookup c queryCategories of
+    Just m -> do
+      _ <- putStrLn $ c ++ " queries:"
+      mapM_ (\x -> putStrLn $ "  " ++ x) $ Map.keys m
+    Nothing -> putStrLn $ "Invalid query category: " ++ c
+
 runCommand :: Command -> IO ()
 runCommand (CommandSources) = handleGroups showWordCounts
-runCommand (CommandScriptQuery (Query n opt)) = do
-  case Map.lookup n ScriptQueries.queries of
-    Just f -> handleGroups (f opt)
-    Nothing -> putStrLn $ "Invalid query name: " ++ n
+runCommand (CommandScriptQuery (Query n opt)) = case Map.lookup n ScriptQueries.queries of
+  Just f -> handleGroups (f opt)
+  Nothing -> putStrLn $ "Invalid query name: " ++ n
+runCommand (CommandList "") = mapM_ showCategory $ Map.keys queryCategories
+runCommand (CommandList c) = showCategory c
 
 main :: IO ()
 main = execParser opts >>= runCommand
