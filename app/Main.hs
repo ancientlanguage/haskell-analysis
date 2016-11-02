@@ -19,8 +19,7 @@ matchParser = strOption
   ( long "match"
   <> short 'm'
   <> value ""
-  <> metavar "M"
-  <> help "Show output whose value matches M"
+  <> metavar "HEADING"
   )
 
 resultOptionParser :: Parser ResultOption
@@ -28,8 +27,7 @@ resultOptionParser = option auto
   ( long "results"
   <> short 'r'
   <> value Summary
-  <> metavar "RESULT_OPTIONS"
-  <> help "Result options"
+  <> metavar "{Summary | All | First N | Random N}"
   )
 
 queryOptionsParser :: Parser QueryOptions
