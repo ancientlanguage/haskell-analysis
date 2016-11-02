@@ -1,6 +1,6 @@
 module QueryStage where
 
-import Control.Lens (over, _1, _2, _Left, toListOf, view, _Just)
+import Control.Lens (over, _1, _2)
 import qualified Data.Char as Char
 import Data.List (foldl')
 import qualified Data.Map.Strict as Map
@@ -8,16 +8,13 @@ import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import Data.Either.Validation
-import Options.Applicative hiding (Failure, Success)
 
 import Grammar.Around
 import Grammar.CommonTypes
-import qualified Grammar.Greek.Script.Around as Around
 import qualified Grammar.Greek.Stage as Stage
 import Grammar.Greek.Script.Types
 import Grammar.Prepare
 import Grammar.Pretty
-import Grammar.Serialize
 import qualified Primary
 
 groupPairs :: Ord k => [k :* v] -> [k :* [v]]
@@ -27,13 +24,47 @@ groupPairs = Map.assocs . foldr go Map.empty
     Just vs -> Map.insert k (v : vs) m
     Nothing -> Map.insert k [v] m
 
+data ResultOption
+  = Summary
+  | All
+  | First Int
+  deriving (Read, Show)
+
 data QueryOptions = QueryOptions
-  { queryResultCount :: Int
+  { queryResultOption :: ResultOption
   , queryMatch :: String
   }
   deriving (Show)
 
 type MilestoneCtx = Milestone :* Text :* [Text] :* [Text]
+
+rightContext :: Foldable t => Int -> t a -> [[a]]
+rightContext n = snd . foldr go ([], [])
+  where
+  go x (ctx, xs) = (take n (x : ctx), ctx : xs)
+leftContext :: Foldable t => Int -> t a -> [[a]]
+leftContext n = reverse . fmap reverse . snd . foldl' go ([], [])
+  where
+  go (ctx, xs) x = (take n (x : ctx), ctx : xs)
+
+addCtx
+  :: Int
+  -> [Milestone :* Primary.Word]
+  -> [MilestoneCtx :* String :* HasWordPunctuation]
+addCtx n xs = zipWith3 addContextZip xs lefts rights
+  where
+  addContextZip (m, w) ls rs = ((m, (fullWordText w, (ls, rs))), basicWord w)
+
+  lefts = leftContext n (onlyText xs)
+  rights = rightContext n (onlyText xs)
+
+  fullWordText :: Primary.Word -> Text
+  fullWordText (Primary.Word p t s) = Text.concat [p, t, s]
+
+  basicWord :: Primary.Word -> String :* HasWordPunctuation
+  basicWord (Primary.Word _ t s) = (Text.unpack t, Stage.suffixHasPunctuation s)
+
+  onlyText = fmap (fullWordText . snd)
 
 queryStage
   :: (Show e1, Ord c, Show c)
@@ -46,33 +77,8 @@ queryStage
   -> QueryOptions
   -> [Primary.Group]
   -> IO ()
-queryStage stg f (QueryOptions rc keyMatch) gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ prepareGroups gs
+queryStage stg f (QueryOptions ro keyMatch) gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ prepareGroups gs
   where
-  addCtx
-    :: Int
-    -> [Milestone :* Primary.Word]
-    -> [MilestoneCtx :* String :* HasWordPunctuation]
-  addCtx n xs = zipWith3 addContextZip xs lefts rights
-    where
-    addContextZip (m, w) ls rs = ((m, (fullWordText w, (ls, rs))), basicWord w)
-
-    lefts = leftContext n (onlyText xs)
-    rights = rightContext n (onlyText xs)
-
-    fullWordText :: Primary.Word -> Text
-    fullWordText (Primary.Word p t s) = Text.concat [p, t, s]
-
-    basicWord :: Primary.Word -> String :* HasWordPunctuation
-    basicWord (Primary.Word p t s) = (Text.unpack t, Stage.suffixHasPunctuation s)
-
-    onlyText = fmap (fullWordText . snd)
-    rightContext n = snd . foldr go ([], [])
-      where
-      go x (ctx, xs) = (take n (x : ctx), ctx : xs)
-    leftContext n = reverse . fmap reverse . snd . foldl' go ([], [])
-      where
-      go (ctx, xs) x = (take n (x : ctx), ctx : xs)
-
   goSource (SourceId g s, ms) = case aroundTo stg . addCtx 5 $ ms of
     Failure es -> do
       _ <- Text.putStrLn $ Text.intercalate " "
@@ -84,24 +90,21 @@ queryStage stg f (QueryOptions rc keyMatch) gs = showKeyValues . fmap ((over (tr
       return []
     Success y -> return $ prepareItems (\(x1,x2,x3,x4) -> (Text.concat [ "  ", g , " ", s, " " ] `Text.append` x1,x2,x3,x4)) y
 
-  showAllResults = rc < 0
-
   showKeyValues xs = do
-    case showAllResults of
-      True -> putStrLn "Showing summary with all results"
-      False -> case rc == 0 of
-        True -> putStrLn "Showing summary only"
-        False -> putStrLn $ "Showing summary with the first " ++ show rc ++ " results"
+    case ro of
+      Summary -> putStrLn "Showing summary only"
+      All -> putStrLn "Showing all results"
+      First rc -> putStrLn $ "Showing summary with the first " ++ show rc ++ " results"
     xs' <- xs
     mapM_ skv (filterKeyMatches xs')
     where
     filterKeyMatches = filter (\(k, _) -> null keyMatch || show k == keyMatch)
     skv (k, vs) = do
       _ <- putStrLn $ show k ++ " " ++ show (length vs)
-      _ <- mapM_ Text.putStrLn . alignColumns . takeResults $ vs
-      if rc /= 0
-      then putStrLn ""
-      else return ()
+      _ <- mapM_ Text.putStrLn . alignColumns . filterResults $ vs
+      case ro of
+        Summary -> return ()
+        _ -> putStrLn ""
 
   alignColumns :: [(Text, Text, Text, Text)] -> [Text]
   alignColumns xs = fmap (padCombine (maxes xs)) xs
@@ -121,9 +124,10 @@ queryStage stg f (QueryOptions rc keyMatch) gs = showKeyValues . fmap ((over (tr
 
   prepareItems addPrefix = over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . concatMap (\x -> fmap (\y -> (y, x)) (f x))
 
-  takeResults = case showAllResults of
-    True -> id
-    False -> take rc
+  filterResults = case ro of
+    Summary -> const []
+    All -> id
+    First rc -> take rc
 
   showItems :: [(Milestone :* Text :* [Text] :* [Text]) :* (String :* HasWordPunctuation)]
     -> [(Text, Text, Text, Text)]

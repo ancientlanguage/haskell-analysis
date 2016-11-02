@@ -14,15 +14,6 @@ import Grammar.Pretty
 import Grammar.Serialize
 import qualified Primary
 
-resultsParser :: Parser Int
-resultsParser = option auto
-  ( long "results"
-  <> short 'r'
-  <> value 10
-  <> metavar "R"
-  <> help "Output the first R results or 0 for all"
-  )
-
 matchParser :: Parser String
 matchParser = strOption
   ( long "match"
@@ -33,7 +24,7 @@ matchParser = strOption
   )
 
 queryOptionsParser :: Parser QueryOptions
-queryOptionsParser = QueryOptions <$> resultsParser <*> matchParser
+queryOptionsParser = QueryOptions <$> argument auto (metavar "RESULT_OPTIONS" <> help "Result options") <*> matchParser
 
 data Query = Query
   { queryName :: String
@@ -44,7 +35,7 @@ queryParser :: Parser Query
 queryParser = Query <$> name <*> queryOptionsParser
   where
   name = strArgument
-    ( metavar "N"
+    ( metavar "NAME"
     <> help "Query name"
     )
 
@@ -102,8 +93,7 @@ showCategory :: String -> IO ()
 showCategory c = do
   case Map.lookup c queryCategories of
     Just m -> do
-      _ <- putStrLn $ c ++ " queries:"
-      mapM_ (\x -> putStrLn $ "  " ++ x) $ Map.keys m
+      mapM_ (\x -> putStrLn $ c ++ " " ++ x) $ Map.keys m
     Nothing -> putStrLn $ "Invalid query category: " ++ c
 
 runCommand :: Command -> IO ()
