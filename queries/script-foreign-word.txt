@@ -30,7 +30,7 @@ Sblgnt Matthew 1:8       Ἰωράμ, Ἰωρὰμ δὲ ἐγέννη�
 ([([],VS_Vowel V_η)],[CR_ρ B_Smooth]) 2
   Sblgnt Luke 3:28      τοῦ Κωσὰμ τοῦ Ἐλμαδὰμ τοῦ   Ἢρ    τοῦ Ἰησοῦ τοῦ Ἐλιέζερ τοῦ 
 
-resume at line 275
+##resume at line 275
 
         
     
