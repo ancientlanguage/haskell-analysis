@@ -6,10 +6,10 @@ import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
-data InvalidConsonantMarks = InvalidConsonantMarks (Consonant :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
+data InvalidConsonantMarks = InvalidConsonantMarks (Consonant :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
   deriving (Show)
 
-consonantMarks :: Around InvalidConsonantMarks Void (Consonant :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark) ConsonantRho
+consonantMarks :: Around InvalidConsonantMarks Void (Consonant :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark) ConsonantRho
 consonantMarks = makeToValidationAround to from
   where
   to (C_β, (Nothing, (Nothing, Nothing))) = Success CR_β

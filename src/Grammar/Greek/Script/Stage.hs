@@ -14,6 +14,7 @@ import Grammar.CommonTypes
 import Grammar.Prepare
 import qualified Grammar.Greek.Script.Around as Around
 import Grammar.Greek.Script.Types
+import Grammar.Greek.Script.Word
 import Control.Lens (over, _1, _2, _Left, _Right)
 
 suffixHasPunctuation :: Text -> HasWordPunctuation
@@ -105,22 +106,22 @@ capitalization = Around
 
 markSplit :: AroundContext ctx Around.InvalidMarkCombo Void
   ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* HasWordPunctuation)
-  ((([Letter :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
+  ((([Letter :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
 markSplit = Around
   (traverseWithItemContext . _1 . _1 . _1 . travList . _2 $ aroundTo Around.markSplit)
   (traverseWithItemContext . _1 . _1 . _1 . travList . _2 $ aroundFrom Around.markSplit)
 
 letterVowelConsonant :: AroundContext ctx Void Void
-  ((([Letter :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
-  ((([(Vowel :+ Consonant) :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
+  ((([Letter :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
+  ((([(Vowel :+ Consonant) :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
 letterVowelConsonant = Around
   (traverseWithItemContext . _1 . _1 . _1 . travList . _1 $ aroundTo Around.letterVowelConsonant)
   (traverseWithItemContext . _1 . _1 . _1 . travList . _1 $ aroundFrom Around.letterVowelConsonant)
 
 distVowelConsonantMarks :: AroundContext ctx Void Void
-  ((([(Vowel :+ Consonant) :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
-  ((([ (Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
-    :+ (Consonant :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
+  ((([(Vowel :+ Consonant) :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
+  ((([ (Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
+    :+ (Consonant :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
     ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 distVowelConsonantMarks = Around
@@ -128,11 +129,11 @@ distVowelConsonantMarks = Around
   (traverseWithItemContext . _1 . _1 . _1 . travList $ aroundFrom Around.distLeftSumOverProd)
 
 consonantMarks :: AroundContext ctx Around.InvalidConsonantMarks Void
-  ((([ (Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
-    :+ (Consonant :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
+  ((([ (Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
+    :+ (Consonant :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
     ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
-  ((([ (Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
+  ((([ (Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
     :+ ConsonantRho
     ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
@@ -141,11 +142,11 @@ consonantMarks = Around
   (traverseWithItemContext . _1 . _1 . _1 . travList . _Right $ aroundFrom Around.consonantMarks)
 
 groupVowelConsonants :: AroundContext ctx Void Void
-  ((([ (Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
+  ((([ (Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
     :+ ConsonantRho
     ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
-  ((([ [Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]
+  ((([ [Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark]
     :+ [ConsonantRho]
     ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
@@ -154,11 +155,11 @@ groupVowelConsonants = Around
   (traverseWithItemContext . _1 . _1 . _1 $ aroundFrom Around.groupSums)
 
 vowelSyllabicMark :: AroundContext ctx Void Void
-  ((([ [Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]
+  ((([ [Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark]
     :+ [ConsonantRho]
     ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
-  ((([ [Vowel :* Maybe SyllabicMark :* Maybe Accent :* Maybe Breathing]
+  ((([ [Vowel :* Maybe SyllabicMark :* Maybe ContextualAccent :* Maybe Breathing]
     :+ [ConsonantRho]
     ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
@@ -171,56 +172,56 @@ vowelSyllabicMark = Around
   from (x, (q, (y, z))) = (x, (y, (z, q)))
 
 vocalicSyllable :: AroundContext ctx Void Void
-  ((([ [Vowel :* Maybe SyllabicMark :* Maybe Accent :* Maybe Breathing]
+  ((([ [Vowel :* Maybe SyllabicMark :* Maybe ContextualAccent :* Maybe Breathing]
     :+ [ConsonantRho]
     ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
-  ((([ [VocalicSyllable :* Maybe Accent :* Maybe Breathing] :+ [ConsonantRho] ]
+  ((([ [VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] :+ [ConsonantRho] ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 vocalicSyllable = Around
   (traverseWithItemContext . _1 . _1 . _1 . travList . _Left $ aroundTo $ Around.vocalicSyllable (Nothing, Nothing))
   (traverseWithItemContext . _1 . _1 . _1 . travList . _Left $ aroundFrom $ Around.vocalicSyllable (Nothing, Nothing))
 
 swapConsonantVocalicSyllables :: AroundContext ctx Void Void
-  ((([ [VocalicSyllable :* Maybe Accent :* Maybe Breathing] :+ [ConsonantRho] ]
+  ((([ [VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] :+ [ConsonantRho] ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
-  ((([ [ConsonantRho] :+ [VocalicSyllable :* Maybe Accent :* Maybe Breathing] ]
+  ((([ [ConsonantRho] :+ [VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 swapConsonantVocalicSyllables = Around
   (traverseWithItemContext . _1 . _1 . _1 . travList $ aroundTo Around.swapSum)
   (traverseWithItemContext . _1 . _1 . _1 . travList $ aroundFrom Around.swapSum)
 
 ungroupConsonantVocalicSyllables :: AroundContext ctx Void Void
-  ((([ [ConsonantRho] :+ [VocalicSyllable :* Maybe Accent :* Maybe Breathing] ]
+  ((([ [ConsonantRho] :+ [VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
-  ((([ ConsonantRho :+ (VocalicSyllable :* Maybe Accent :* Maybe Breathing) ]
+  ((([ ConsonantRho :+ (VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing) ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 ungroupConsonantVocalicSyllables = Around
   (traverseWithItemContext . _1 . _1 . _1 $ aroundTo Around.ungroupSums)
   (traverseWithItemContext . _1 . _1 . _1 $ aroundFrom Around.ungroupSums)
 
 groupLeftConsonantVocalicSyllables :: AroundContext ctx Void Void
-  ((([ ConsonantRho :+ (VocalicSyllable :* Maybe Accent :* Maybe Breathing) ]
+  ((([ ConsonantRho :+ (VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing) ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
-  (((([ [ConsonantRho] :* (VocalicSyllable :* Maybe Accent :* Maybe Breathing) ] :* [ConsonantRho])
+  (((([ [ConsonantRho] :* (VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing) ] :* [ConsonantRho])
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 groupLeftConsonantVocalicSyllables = Around
   (traverseWithItemContext . _1 . _1 . _1 $ aroundTo Around.groupLeft)
   (traverseWithItemContext . _1 . _1 . _1 $ aroundFrom Around.groupLeft)
 
-breathing :: AroundContext ctx [Around.InvalidBreathing ConsonantRho VocalicSyllable (Maybe Accent)] Void
-  (((([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent :* Maybe Breathing ] :* [ConsonantRho])
+breathing :: AroundContext ctx [Around.InvalidBreathing ConsonantRho VocalicSyllable (Maybe ContextualAccent)] Void
+  (((([ [ConsonantRho] :* VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing ] :* [ConsonantRho])
     :* Capitalization) :* Elision) :* HasWordPunctuation)
-  ((((([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* MarkPreservation :* Crasis :* InitialAspiration) :* [ConsonantRho])
+  ((((([ [ConsonantRho] :* VocalicSyllable :* Maybe ContextualAccent ] :* MarkPreservation :* Crasis :* InitialAspiration) :* [ConsonantRho])
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 breathing = Around
   (traverseWithItemContext . _1 . _1 . _1 . _1 $ aroundTo Around.breathing)
   (traverseWithItemContext . _1 . _1 . _1 . _1 $ aroundFrom Around.breathing)
 
 reorderWordProps :: AroundContext ctx Void Void
-  ((((([ [ConsonantRho] :* VocalicSyllable :* Maybe Accent ] :* MarkPreservation :* Crasis :* InitialAspiration) :* [ConsonantRho])
+  ((((([ [ConsonantRho] :* VocalicSyllable :* Maybe ContextualAccent ] :* MarkPreservation :* Crasis :* InitialAspiration) :* [ConsonantRho])
     :* Capitalization) :* Elision) :* HasWordPunctuation)
-  (([ ([ConsonantRho] :* VocalicSyllable) :* Maybe Accent ] :* HasWordPunctuation) :* [ConsonantRho]
+  (([ ([ConsonantRho] :* VocalicSyllable) :* Maybe ContextualAccent ] :* HasWordPunctuation) :* [ConsonantRho]
     :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision)
 reorderWordProps = Around
   (traverseWithItemContext $ aroundTo around)
@@ -232,10 +233,10 @@ reorderWordProps = Around
   assocLeft (x, (y, z)) = ((x, y), z)
   assocRight ((x, y), z) = (x, (y, z))
 
-accent :: AroundContext ctx Around.InvalidAccent Around.InvalidAccentProps
-  (([ ([ConsonantRho] :* VocalicSyllable) :* Maybe Accent ] :* HasWordPunctuation)
+accent :: AroundContext ctx Around.InvalidContextualAccent Around.InvalidWordAccent
+  (([ ([ConsonantRho] :* VocalicSyllable) :* Maybe ContextualAccent ] :* HasWordPunctuation)
     :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision)
-  (([[ConsonantRho] :* VocalicSyllable] :* Maybe (WordAccent :* AccentPosition :* ForceAcute :* ExtraAccents) :* HasWordPunctuation)
+  (([[ConsonantRho] :* VocalicSyllable] :* Maybe WordAccent :* HasWordPunctuation)
     :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision)
 accent = Around
   (traverseWithItemContext . _1 $ aroundTo Around.accent)

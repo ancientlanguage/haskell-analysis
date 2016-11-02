@@ -9,18 +9,18 @@ import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
 data InvalidMarkCombo
-  = MultipleAccents [Accent]
+  = MultipleAccents [ContextualAccent]
   | MultipleBreathings [Breathing]
   | MultipleSyllabicMark [SyllabicMark]
   deriving (Show)
 
-markSplit :: Around InvalidMarkCombo Void [Mark] (Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
+markSplit :: Around InvalidMarkCombo Void [Mark] (Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
 markSplit = Around to (Success . from)
   where
   to = refineAll . start
 
-  refineAll :: [Accent] :* [[Breathing] :* [SyllabicMark]]
-    -> Validation [InvalidMarkCombo] (Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark)
+  refineAll :: [ContextualAccent] :* [[Breathing] :* [SyllabicMark]]
+    -> Validation [InvalidMarkCombo] (Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
   refineAll (as, ys) = pure (\x y z -> (x, (y, z))) <*> ras <*> rbs <*> rss
     where
     ras = over _Failure (pure . MultipleAccents) $ refine as
@@ -32,15 +32,15 @@ markSplit = Around to (Success . from)
   refine [x] = Success (Just x)
   refine xs = Failure xs
 
-  start :: [Mark] -> [Accent] :* [[Breathing] :* [SyllabicMark]]
+  start :: [Mark] -> [ContextualAccent] :* [[Breathing] :* [SyllabicMark]]
   start = traverse splitMark
 
-  splitMark :: Mark -> [Accent] :* [Breathing] :* [SyllabicMark]
+  splitMark :: Mark -> [ContextualAccent] :* [Breathing] :* [SyllabicMark]
   splitMark m = (markToAccent m, (markToBreathing m, markToSyllabicMark m))
 
-  markToAccent M_Acute = [A_Acute]
-  markToAccent M_Grave = [A_Grave]
-  markToAccent M_Circumflex = [A_Circumflex]
+  markToAccent M_Acute = [AC_Acute]
+  markToAccent M_Grave = [AC_Grave]
+  markToAccent M_Circumflex = [AC_Circumflex]
   markToAccent _ = []
 
   markToBreathing M_Smooth = [B_Smooth]
@@ -56,9 +56,9 @@ markSplit = Around to (Success . from)
   fill :: (a -> b) -> Maybe a -> [b]
   fill f = maybe [] (pure . f)
 
-  accentToMark A_Acute = M_Acute
-  accentToMark A_Grave = M_Grave
-  accentToMark A_Circumflex = M_Circumflex
+  accentToMark AC_Acute = M_Acute
+  accentToMark AC_Grave = M_Grave
+  accentToMark AC_Circumflex = M_Circumflex
 
   breathingToMark B_Smooth = M_Smooth
   breathingToMark B_Rough = M_Rough

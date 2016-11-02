@@ -52,13 +52,13 @@ data Elision = IsElided | NotElided
   deriving (Eq, Ord, Show, Generic)
 instance Serialize Elision
 
-data Accent = A_Acute | A_Grave | A_Circumflex
+data ContextualAccent = AC_Acute | AC_Grave | AC_Circumflex
   deriving (Eq, Ord, Show, Generic)
-instance Serialize Accent
+instance Serialize ContextualAccent
 
-data WordAccent = AW_Acute | AW_Circumflex
+data BasicAccent = AB_Acute | AB_Circumflex
   deriving (Eq, Ord, Show, Generic)
-instance Serialize WordAccent
+instance Serialize BasicAccent
 
 data AccentPosition = Ultima | Penult | Antepenult
   deriving (Eq, Ord, Show, Generic)

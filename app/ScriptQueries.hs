@@ -2,6 +2,7 @@
 
 module ScriptQueries where
 
+import Prelude hiding (Word)
 import Control.Lens (over, _1, _2, _Left, toListOf, view, _Just)
 import Data.Map (Map)
 import qualified Data.Map as Map
@@ -11,6 +12,7 @@ import QueryStage
 import Grammar.CommonTypes
 import qualified Grammar.Greek.Stage as Stage
 import Grammar.Greek.Script.Types
+import Grammar.Greek.Script.Word
 import qualified Primary
 
 getElision = pure . view (_2 . _1 . _2)
@@ -26,24 +28,24 @@ getMarks
 getMarks = over traverse snd . fst . fst . fst . snd
 
 getLetterSyllabicMark
-  :: ctx :* ((([Letter :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
+  :: ctx :* ((([Letter :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
   -> [Letter :* Maybe SyllabicMark]
 getLetterSyllabicMark = over traverse (\(l, (_, (_, sm))) -> (l, sm)) . fst . fst . fst . snd
 
 getVowelMarks
   :: ctx
-    :* ((([ (Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark) :+ ConsonantRho ]
+    :* ((([ (Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark) :+ ConsonantRho ]
       :* Capitalization) :* Elision) :* HasWordPunctuation)
-  -> [Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]
+  -> [Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark]
 getVowelMarks = toListOf (_2 . _1 . _1 . _1 . traverse . _Left)
 
 getVowelMarkGroups
   :: ctx
-    :* ((([ [Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]
+    :* ((([ [Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark]
       :+ [ConsonantRho]
       ]
       :* Capitalization) :* Elision) :* HasWordPunctuation)
-  -> [[Vowel :* Maybe Accent :* Maybe Breathing :* Maybe SyllabicMark]]
+  -> [[Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark]]
 getVowelMarkGroups = toListOf (_2 . _1 . _1 . _1 . traverse . _Left)
 
 getCrasis
@@ -56,45 +58,45 @@ getMarkPreservation
   -> [MarkPreservation]
 getMarkPreservation = toListOf (_2 . _2 . _2 . _1)
 
-toAccentReverseIndex :: [Maybe Accent] -> [(Int, Accent)]
+toAccentReverseIndex :: [Maybe ContextualAccent] -> [(Int, ContextualAccent)]
 toAccentReverseIndex = onlyAccents . addReverseIndex
   where
-  onlyAccents :: [(Int, Maybe Accent)] -> [(Int, Accent)]
+  onlyAccents :: [(Int, Maybe ContextualAccent)] -> [(Int, ContextualAccent)]
   onlyAccents = concatMap go
     where
     go (i, Just x) = [(i, x)]
     go _ = []
 
 getAccentReverseIndexPunctuation
-  :: ctx :* ([ ([ConsonantRho] :* VocalicSyllable) :* Maybe Accent ] :* HasWordPunctuation)
+  :: ctx :* ([ ([ConsonantRho] :* VocalicSyllable) :* Maybe ContextualAccent ] :* HasWordPunctuation)
     :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision
-  -> [[Int :* Accent] :* HasWordPunctuation]
+  -> [[Int :* ContextualAccent] :* HasWordPunctuation]
 getAccentReverseIndexPunctuation = pure . over _1 goAll . getPair
   where
   goAll = toAccentReverseIndex . getAccents
 
   getPair
-    :: m :* ([ a :* Maybe Accent ] :* HasWordPunctuation) :* b
-    -> [ a :* Maybe Accent ] :* HasWordPunctuation
+    :: m :* ([ a :* Maybe ContextualAccent ] :* HasWordPunctuation) :* b
+    -> [ a :* Maybe ContextualAccent ] :* HasWordPunctuation
   getPair x = (view (_2 . _1 . _1) x, view (_2 . _1 . _2) x)
 
-  getAccents :: [ a :* Maybe Accent ] -> [Maybe Accent]
+  getAccents :: [ a :* Maybe ContextualAccent ] -> [Maybe ContextualAccent]
   getAccents = over traverse snd
 
 getAccentReverseIndex
-  :: ctx :* ([ ([ConsonantRho] :* VocalicSyllable) :* Maybe Accent ] :* a) :* b
-  -> [[Int :* Accent]]
+  :: ctx :* ([ ([ConsonantRho] :* VocalicSyllable) :* Maybe ContextualAccent ] :* a) :* b
+  -> [[Int :* ContextualAccent]]
 getAccentReverseIndex = pure . toAccentReverseIndex . fmap snd . view (_2 . _1 . _1)
 
 getForceAcute
-  :: ctx :* (a :* Maybe (b :* c :* ForceAcute :* d) :* e) :* f
+  :: ctx :* (a :* Maybe WordAccent :* e) :* f
   -> [ForceAcute]
-getForceAcute = toListOf (_2 . _1 . _2 . _1 . _Just . _2 . _2 . _1)
+getForceAcute = toListOf (_2 . _1 . _2 . _1 . _Just . _accentForce)
 
 getAccentPosition
-  :: ctx :* (a :* Maybe (WordAccent :* AccentPosition :* b :* c) :* d) :* e
-  -> [Maybe (WordAccent :* AccentPosition)]
-getAccentPosition = pure . over (_Just . _2) fst . view (_2 . _1 . _2 . _1)
+  :: ctx :* (a :* Maybe WordAccent :* d) :* e
+  -> [Maybe (BasicAccent :* AccentPosition)]
+getAccentPosition = pure . over _Just (\x -> (accentValue x, accentPosition x)) . view (_2 . _1 . _2 . _1)
 
 getFinalConsonants
   :: ctx :* a :* [ConsonantRho] :* b
@@ -103,7 +105,7 @@ getFinalConsonants = pure . view (_2 . _2 . _1)
 
 getElisionSyllables
   :: ctx
-    :* ([[ConsonantRho] :* VocalicSyllable] :* Maybe (WordAccent :* AccentPosition :* ForceAcute :* ExtraAccents) :* HasWordPunctuation)
+    :* ([[ConsonantRho] :* VocalicSyllable] :* Maybe WordAccent :* HasWordPunctuation)
     :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision
   -> [InitialAspiration :* [[ConsonantRho] :* VocalicSyllable] :* [ConsonantRho]]
 getElisionSyllables = result
@@ -118,7 +120,7 @@ getElisionSyllables = result
 
 getFinalSyllable
   :: ctx
-    :* ([[ConsonantRho] :* VocalicSyllable] :* Maybe (WordAccent :* AccentPosition :* ForceAcute :* ExtraAccents) :* HasWordPunctuation)
+    :* ([[ConsonantRho] :* VocalicSyllable] :* Maybe WordAccent :* HasWordPunctuation)
     :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision
   -> [[[ConsonantRho] :* VocalicSyllable] :* [ConsonantRho]]
 getFinalSyllable = result
