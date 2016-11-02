@@ -125,6 +125,9 @@ getFinalSyllable = result
   syll = reverse . List.take 1 . reverse . view (_2 . _wordSyllables)
   fin = view (_2 . _wordFinalConsonants)
 
+getIndependentSyllables :: ctx :* Word -> [Syllable]
+getIndependentSyllables = toListOf (_2 . _wordSyllables . traverse)
+
 queries :: Map String (QueryOptions -> [Primary.Group] -> IO ())
 queries = Map.fromList
   [ ("elision", queryStage Stage.toElision getElision)
@@ -142,4 +145,5 @@ queries = Map.fromList
   , ("final-consonants", queryStage Stage.script getFinalConsonants)
   , ("elision-syllables", queryStage Stage.script getElisionSyllables)
   , ("final-syllable", queryStage Stage.script getFinalSyllable)
+  , ("independent-syllables", queryStage Stage.script getIndependentSyllables)
   ]
