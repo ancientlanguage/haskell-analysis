@@ -129,13 +129,21 @@ queryIndependentSyllables :: ctx :* Word -> [Syllable]
 queryIndependentSyllables = toListOf (_2 . _wordSyllables . traverse)
 
 getInitialSyllable :: Word -> InitialAspiration :* [Syllable]
-getInitialSyllable w = (wordInitialAspiration w, take 1 . wordSyllables$ w)
+getInitialSyllable w = (wordInitialAspiration w, take 1 . wordSyllables $ w)
 
 getFinalSyllable :: Word -> [Syllable] :* [ConsonantRho]
 getFinalSyllable w = (take 1 . reverse . wordSyllables $ w, wordFinalConsonants w)
 
 uncurrySyllable :: Syllable -> [ConsonantRho] :* VocalicSyllable
 uncurrySyllable (Syllable c v) = (c, v)
+
+getInitialVocalicSyllable :: Word -> [InitialAspiration :* VocalicSyllable]
+getInitialVocalicSyllable w = result
+  where
+  result = case ss of
+    (Syllable [] v : _) -> pure (asp, v)
+    _ -> []
+  (asp, ss) = getInitialSyllable w
 
 queryElisionNextSyllable
   :: (ctx :* Word) :* [ctx :* Word] :* [ctx :* Word]
@@ -149,6 +157,14 @@ queryElisionNextSyllable (w, (_, nws)) = ens
   mn = case nws of
     [] -> []
     (nw : _) -> pure (view (_2 . _wordInitialAspiration) nw, fmap (snd . uncurrySyllable) . take 1 . view (_2 . _wordSyllables) $ nw)
+
+queryDeNext
+  :: (ctx :* Word) :* [ctx :* Word] :* [ctx :* Word]
+  -> [() :* [InitialAspiration :* VocalicSyllable]]
+queryDeNext (w, (_, n)) =
+  case wordSyllables (snd w) of
+    [Syllable [CR_δ] (VS_Vowel V_ε)] -> pure ((), concatMap (getInitialVocalicSyllable . snd) . take 1 $ n)
+    _ -> []
 
 queries :: Map String (QueryOptions -> [Primary.Group] -> IO ())
 queries = Map.fromList
@@ -168,5 +184,6 @@ queries = Map.fromList
   , ("elision-syllables", queryStage Stage.script queryElisionSyllables)
   , ("final-syllable", queryStage Stage.script queryFinalSyllable)
   , ("independent-syllables", queryStage Stage.script queryIndependentSyllables)
-  , ("elision-next-syllable", queryStageContext Stage.script 1 queryElisionNextSyllable)
+  , ("elision-next-syllable", queryStageContext 1 Stage.script queryElisionNextSyllable)
+  , ("de-next", queryStageContext 1 Stage.script queryDeNext)
   ]

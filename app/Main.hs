@@ -14,24 +14,30 @@ import Grammar.Pretty
 import Grammar.Serialize
 import qualified Primary
 
-matchParser :: Parser String
-matchParser = strOption
-  ( long "match"
-  <> short 'm'
-  <> value ""
-  <> metavar "HEADING"
-  )
-
-resultOptionParser :: Parser ResultOption
-resultOptionParser = option auto
-  ( long "results"
-  <> short 'r'
-  <> value Summary
-  <> metavar "{Summary | All | First N | Random N}"
-  )
-
 queryOptionsParser :: Parser QueryOptions
-queryOptionsParser = QueryOptions <$> resultOptionParser <*> matchParser
+queryOptionsParser = QueryOptions <$> resultOptionParser <*> matchParser <*> omitParser
+  where
+  resultOptionParser :: Parser ResultOption
+  resultOptionParser = option auto
+    ( long "results"
+    <> short 'r'
+    <> value Summary
+    <> metavar "{Summary | All | First N | Random N}"
+    )
+
+  matchParser = strOption
+    ( long "match"
+    <> short 'm'
+    <> value ""
+    <> metavar "HEADING"
+    )
+
+  omitParser = strOption
+    ( long "omit"
+    <> short 'o'
+    <> value ""
+    <> metavar "HEADING"
+    )
 
 data Query = Query
   { queryName :: String

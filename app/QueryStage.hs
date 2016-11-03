@@ -36,6 +36,7 @@ data ResultOption
 data QueryOptions = QueryOptions
   { queryResultOption :: ResultOption
   , queryMatch :: String
+  , queryOmit :: String
   }
   deriving (Show)
 
@@ -80,21 +81,21 @@ queryStage
   -> QueryOptions
   -> [Primary.Group]
   -> IO ()
-queryStage a f = queryStageContext a 0 (f . fst)
+queryStage a f = queryStageContext 0 a (f . fst)
 
 queryStageContext
   :: (Show e1, Ord c, Show c)
-  => Around
+  => Int
+  -> Around
     (MilestoneCtx :* e1)
     e2
     [MilestoneCtx :* (String :* HasWordPunctuation)]
     [b]
-  -> Int
   -> (b :* [b] :* [b] -> [c])
   -> QueryOptions
   -> [Primary.Group]
   -> IO ()
-queryStageContext stg contextSize f (QueryOptions ro keyMatch) gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ prepareGroups gs
+queryStageContext contextSize stg f (QueryOptions ro keyMatch omitMatch) gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ prepareGroups gs
   where
   goSource (SourceId g s, ms) = case aroundTo stg . addCtx 5 $ ms of
     Failure es -> do
@@ -117,7 +118,7 @@ queryStageContext stg contextSize f (QueryOptions ro keyMatch) gs = showKeyValue
     _ <- putStrLn $ show (length xs') ++ " headings\n"
     mapM_ skv (filterKeyMatches xs')
     where
-    filterKeyMatches = filter (\(k, _) -> null keyMatch || show k == keyMatch)
+    filterKeyMatches = filter (\(k, _) -> (null keyMatch || show k == keyMatch) && (null omitMatch || show k /= omitMatch))
     skv (k, vs) = do
       _ <- putStrLn $ show k ++ " " ++ show (length vs)
       vs' <- sampleResults vs
