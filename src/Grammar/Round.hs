@@ -1,32 +1,32 @@
-module Grammar.Around where
+module Grammar.Round where
 
 import Data.Either.Validation
 import Data.Void
 import Grammar.CommonTypes
 import Control.Lens (over, _2)
 
-data Around e1 e2 a b = Around
-  { aroundTo :: a -> Validation [e1] b
-  , aroundFrom :: b -> Validation [e2] a
+data Round e1 e2 a b = Round
+  { roundTo :: a -> Validation [e1] b
+  , roundFrom :: b -> Validation [e2] a
   }
 
-makeIdAround :: (a -> b) -> (b -> a) -> Around Void Void a b
-makeIdAround f g = Around (Success . f) (Success . g)
+makeIdRound :: (a -> b) -> (b -> a) -> Round Void Void a b
+makeIdRound f g = Round (Success . f) (Success . g)
 
-type ParseAround e = Around e Void
-makeToValidationAround :: (a -> Validation e b) -> (b -> a) -> Around e Void a b
-makeToValidationAround f g = Around (over _Failure pure . f) (Success . g)
+type ParseRound e = Round e Void
+makeToValidationRound :: (a -> Validation e b) -> (b -> a) -> Round e Void a b
+makeToValidationRound f g = Round (over _Failure pure . f) (Success . g)
 
 joinValidation :: Validation [e1] (Validation [e2] a) -> Validation [e1 :+ e2] a
 joinValidation (Failure es) = Failure (fmap Left es)
 joinValidation (Success (Failure es)) = Failure (fmap Right es)
 joinValidation (Success (Success x)) = Success x
 
-joinAround
-  :: Around e1 e2 a b
-  -> Around e3 e4 b c
-  -> Around (e1 :+ e3) (e4 :+ e2) a c
-joinAround (Around a_b b_a) (Around b_c c_b) = Around a_c c_a
+joinRound
+  :: Round e1 e2 a b
+  -> Round e3 e4 b c
+  -> Round (e1 :+ e3) (e4 :+ e2) a c
+joinRound (Round a_b b_a) (Round b_c c_b) = Round a_c c_a
   where
   a_c = joinValidation . over _Success b_c . a_b
   c_a = joinValidation . over _Success b_a . c_b
@@ -38,24 +38,24 @@ joinValidation' (Failure es) = Failure (over (traverse . _2) Left es)
 joinValidation' (Success (Failure es)) = Failure (over (traverse . _2) Right es)
 joinValidation' (Success (Success x)) = Success x
 
-joinAround'
-  :: Around (q :* e1) (q :* e2) a b
-  -> Around (q :* e3) (q :* e4) b c
-  -> Around (q :* (e1 :+ e3)) (q :* (e4 :+ e2)) a c
-joinAround' (Around a_b b_a) (Around b_c c_b) = Around a_c c_a
+joinRound'
+  :: Round (q :* e1) (q :* e2) a b
+  -> Round (q :* e3) (q :* e4) b c
+  -> Round (q :* (e1 :+ e3)) (q :* (e4 :+ e2)) a c
+joinRound' (Round a_b b_a) (Round b_c c_b) = Round a_c c_a
   where
   a_c = joinValidation' . over _Success b_c . a_b
   c_a = joinValidation' . over _Success b_a . c_b
 
 (<+>)
-  :: Around (q :* e1) (q :* e2) a b
-  -> Around (q :* e3) (q :* e4) b c
-  -> Around (q :* (e1 :+ e3)) (q :* (e4 :+ e2)) a c
-(<+>) = joinAround'
+  :: Round (q :* e1) (q :* e2) a b
+  -> Round (q :* e3) (q :* e4) b c
+  -> Round (q :* (e1 :+ e3)) (q :* (e4 :+ e2)) a c
+(<+>) = joinRound'
 infixr 6 <+>
 
-sumAssocLeft :: Around Void Void (a :+ (b :+ c)) ((a :+ b) :+ c)
-sumAssocLeft = makeIdAround to from
+sumAssocLeft :: Round Void Void (a :+ (b :+ c)) ((a :+ b) :+ c)
+sumAssocLeft = makeIdRound to from
   where
   to (Left x) = Left (Left x)
   to (Right (Left y)) = Left (Right y)
@@ -65,30 +65,30 @@ sumAssocLeft = makeIdAround to from
   from (Left (Right y)) = Right (Left y)
   from (Right z) = Right (Right z)
 
-prodAssocLeft :: Around Void Void (a :* (b :* c)) ((a :* b) :* c)
-prodAssocLeft = makeIdAround to from
+prodAssocLeft :: Round Void Void (a :* (b :* c)) ((a :* b) :* c)
+prodAssocLeft = makeIdRound to from
   where
   to (x, (y, z)) = ((x, y), z)
   from ((x, y), z) = (x, (y, z))
 
-distLeftSumOverProd :: Around Void Void ((a :+ b) :* c) ((a :* c) :+ (b :* c))
-distLeftSumOverProd = makeIdAround to from
+distLeftSumOverProd :: Round Void Void ((a :+ b) :* c) ((a :* c) :+ (b :* c))
+distLeftSumOverProd = makeIdRound to from
   where
   to (Left a, c) = Left (a, c)
   to (Right b, c) = Right (b, c)
   from (Left (a, c)) = (Left a, c)
   from (Right (b, c)) = (Right b, c)
 
-distRightSumOverProd :: Around Void Void (a :* (b :+ c)) ((a :* b) :+ (a :* c))
-distRightSumOverProd = makeIdAround to from
+distRightSumOverProd :: Round Void Void (a :* (b :+ c)) ((a :* b) :+ (a :* c))
+distRightSumOverProd = makeIdRound to from
   where
   to (a, Left b) = Left (a, b)
   to (a, Right c) = Right (a, c)
   from (Left (a, b)) = (a, Left b)
   from (Right (a, c)) = (a, Right c)
 
-groupSums :: Around Void Void [a :+ b] [[a] :+ [b]]
-groupSums = makeIdAround to from
+groupSums :: Round Void Void [a :+ b] [[a] :+ [b]]
+groupSums = makeIdRound to from
   where
   to = foldr go []
     where
@@ -102,11 +102,11 @@ groupSums = makeIdAround to from
   fromItem (Left as) = fmap Left as
   fromItem (Right bs) = fmap Right bs
 
-ungroupSums :: Around Void Void [[a] :+ [b]] [a :+ b]
-ungroupSums = Around (aroundFrom groupSums) (aroundTo groupSums)
+ungroupSums :: Round Void Void [[a] :+ [b]] [a :+ b]
+ungroupSums = Round (roundFrom groupSums) (roundTo groupSums)
 
-groupRight :: Around Void Void [a :+ b] ([b] :* [a :* [b]])
-groupRight = makeIdAround to from
+groupRight :: Round Void Void [a :+ b] ([b] :* [a :* [b]])
+groupRight = makeIdRound to from
   where
   to = foldr go ([], [])
   go (Left x) (ms, ys) = ([], (x, ms) : ys)
@@ -114,8 +114,8 @@ groupRight = makeIdAround to from
 
   from (bs, xs) = fmap Right bs ++ concatMap (\(x, ms) -> Left x : fmap Right ms) xs
 
-groupLeft :: Around Void Void [a :+ b] ([[a] :* b] :* [a])
-groupLeft = makeIdAround to from
+groupLeft :: Round Void Void [a :+ b] ([[a] :* b] :* [a])
+groupLeft = makeIdRound to from
   where
   to = foldr go ([], [])
   go (Left a) ([], as) = ([], a : as)
@@ -124,8 +124,8 @@ groupLeft = makeIdAround to from
 
   from (xs, as) = concatMap (\(as', b) -> fmap Left as' ++ [Right b]) xs ++ fmap Left as
 
-swapSum :: Around Void Void (a :+ b) (b :+ a)
-swapSum = makeIdAround to from
+swapSum :: Round Void Void (a :+ b) (b :+ a)
+swapSum = makeIdRound to from
   where
   to (Left a) = Right a
   to (Right b) = Left b

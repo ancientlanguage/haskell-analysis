@@ -1,8 +1,8 @@
-module Grammar.Greek.Script.Around.Breathing where
+module Grammar.Greek.Script.Round.Breathing where
 
 import Data.Either.Validation
 import Data.Void
-import Grammar.Around
+import Grammar.Round
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
@@ -11,10 +11,10 @@ data InvalidBreathing c v a
   | InvalidMedialBreathing ([c] :* v :* a :* Maybe Breathing)
   deriving (Show)
 
-breathing :: Around [InvalidBreathing c v a] Void
+breathing :: Round [InvalidBreathing c v a] Void
   ([[c] :* v :* a :* Maybe Breathing])
   ([[c] :* v :* a] :* MarkPreservation :* Crasis :* InitialAspiration)
-breathing = makeToValidationAround to from
+breathing = makeToValidationRound to from
   where
   to [] = Success ([], (PreserveMarks, (NoCrasis, NoInitialAspiration)))
   to (x : xs) = (\(x', (v, a)) xs' -> (x' : xs', (v, a))) <$> checkInitial x <*> allMedial xs

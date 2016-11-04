@@ -1,12 +1,12 @@
-module Grammar.Greek.Script.Around.LetterVowelConsonant where
+module Grammar.Greek.Script.Round.LetterVowelConsonant where
 
 import Data.Void
-import Grammar.Around
+import Grammar.Round
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
-letterVowelConsonant :: Around Void Void Letter (Vowel :+ Consonant)
-letterVowelConsonant = makeIdAround to from
+letterVowelConsonant :: Round Void Void Letter (Vowel :+ Consonant)
+letterVowelConsonant = makeIdRound to from
   where
   to L_α = Left V_α
   to L_β = Right C_β

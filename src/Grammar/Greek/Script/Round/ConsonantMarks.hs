@@ -1,16 +1,16 @@
-module Grammar.Greek.Script.Around.ConsonantMarks where
+module Grammar.Greek.Script.Round.ConsonantMarks where
 
 import Data.Either.Validation
 import Data.Void
-import Grammar.Around
+import Grammar.Round
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
 data InvalidConsonantMarks = InvalidConsonantMarks (Consonant :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
   deriving (Show)
 
-consonantMarks :: Around InvalidConsonantMarks Void (Consonant :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark) ConsonantRho
-consonantMarks = makeToValidationAround to from
+consonantMarks :: Round InvalidConsonantMarks Void (Consonant :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark) ConsonantRho
+consonantMarks = makeToValidationRound to from
   where
   to (C_β, (Nothing, (Nothing, Nothing))) = Success CR_β
   to (C_γ, (Nothing, (Nothing, Nothing))) = Success CR_γ

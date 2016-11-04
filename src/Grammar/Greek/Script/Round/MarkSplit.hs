@@ -1,10 +1,10 @@
-module Grammar.Greek.Script.Around.MarkSplit where
+module Grammar.Greek.Script.Round.MarkSplit where
 
 import Control.Lens (over)
 import Data.Either.Validation
 import Data.List (sort)
 import Data.Void
-import Grammar.Around
+import Grammar.Round
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
@@ -14,8 +14,8 @@ data InvalidMarkCombo
   | MultipleSyllabicMark [SyllabicMark]
   deriving (Show)
 
-markSplit :: Around InvalidMarkCombo Void [Mark] (Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
-markSplit = Around to (Success . from)
+markSplit :: Round InvalidMarkCombo Void [Mark] (Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
+markSplit = Round to (Success . from)
   where
   to = refineAll . start
 

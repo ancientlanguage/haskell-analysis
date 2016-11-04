@@ -1,7 +1,7 @@
-module Grammar.Greek.Script.Around.UnicodeSymbol where
+module Grammar.Greek.Script.Round.UnicodeSymbol where
 
 import Data.Either.Validation
-import Grammar.Around
+import Grammar.Round
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
@@ -60,8 +60,8 @@ symbolToChar S_ψ = 'ψ'
 symbolToChar S_ω = 'ω'
 
 
-unicodeSymbol :: ParseAround InvalidChar Char (Symbol :+ Mark :+ WordPunctuation)
-unicodeSymbol = makeToValidationAround to from
+unicodeSymbol :: ParseRound InvalidChar Char (Symbol :+ Mark :+ WordPunctuation)
+unicodeSymbol = makeToValidationRound to from
   where
   validSymbol = Success . Left
   validMark = Success . Right . Left

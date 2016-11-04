@@ -1,17 +1,17 @@
-module Grammar.Greek.Script.Around.Capitalization where
+module Grammar.Greek.Script.Round.Capitalization where
 
 import Control.Lens (over)
 import Data.Either.Validation
 import Data.Void
-import Grammar.Around
+import Grammar.Round
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
 data InvalidUppercase = InvalidUppercase [Letter]
   deriving (Show)
 
-capitalization :: Around InvalidUppercase Void [Letter :* Case :* a] ([Letter :* a] :* Capitalization)
-capitalization = makeToValidationAround (over _Failure InvalidUppercase . to) from
+capitalization :: Round InvalidUppercase Void [Letter :* Case :* a] ([Letter :* a] :* Capitalization)
+capitalization = makeToValidationRound (over _Failure InvalidUppercase . to) from
   where
   to [] = Success ([], NotCapitalized)
   to ((l, (c, a)) : ls) = pure prefix <*> ensureLowercase ls

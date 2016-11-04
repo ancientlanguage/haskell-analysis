@@ -10,13 +10,13 @@ import qualified Data.Text.IO as Text
 import Data.Either.Validation
 
 import Grammar.IO.RandomSample (randomSample)
-import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Contextualize
 import qualified Grammar.Greek.Stage as Stage
 import Grammar.Greek.Script.Types
 import Grammar.Prepare
 import Grammar.Pretty
+import Grammar.Round
 import qualified Primary
 
 groupPairs :: Ord k => [k :* v] -> [k :* [v]]
@@ -72,7 +72,7 @@ addCtx n xs = zipWith3 addContextZip xs lefts rights
 
 queryStage
   :: (Show e1, Ord c, Show c)
-  => Around
+  => Round
     (MilestoneCtx :* e1)
     e2
     [MilestoneCtx :* (String :* HasWordPunctuation)]
@@ -86,7 +86,7 @@ queryStage a f = queryStageContext 0 a (f . fst)
 queryStageContext
   :: (Show e1, Ord c, Show c)
   => Int
-  -> Around
+  -> Round
     (MilestoneCtx :* e1)
     e2
     [MilestoneCtx :* (String :* HasWordPunctuation)]
@@ -97,12 +97,12 @@ queryStageContext
   -> IO ()
 queryStageContext contextSize stg f (QueryOptions ro keyMatch omitMatch) gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ prepareGroups gs
   where
-  goSource (SourceId g s, ms) = case aroundTo stg . addCtx 5 $ ms of
+  goSource (SourceId g s, ms) = case roundTo stg . addCtx 5 $ ms of
     Failure es -> do
       _ <- Text.putStrLn $ Text.intercalate " "
         [ g
         , s
-        , "Failure: aroundTo --"
+        , "Failure: roundTo --"
         , Text.intercalate "\n" $ fmap prettyMilestoned $ over (traverse . _1) fst es
         ]
       return []
@@ -155,6 +155,6 @@ queryStageContext contextSize stg f (QueryOptions ro keyMatch omitMatch) gs = sh
     -> [(Text, Text, Text, Text)]
   showItems = fmap prettyMilestoneCtxString . Stage.forgetHasWordPunctuation
 
-  goBack xs = case (aroundFrom stg) xs of
+  goBack xs = case (roundFrom stg) xs of
     Success ys -> showItems ys
-    Failure _ -> [ ("Failure: aroundFrom","","","") ]
+    Failure _ -> [ ("Failure: roundFrom","","","") ]

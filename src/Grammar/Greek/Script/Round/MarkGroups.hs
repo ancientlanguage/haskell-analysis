@@ -1,16 +1,16 @@
-module Grammar.Greek.Script.Around.MarkGroups where
+module Grammar.Greek.Script.Round.MarkGroups where
 
 import Data.Either.Validation
 import Data.Void
-import Grammar.Around
+import Grammar.Round
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
-data InitialMarks = InitialMarks [Mark] 
+data InitialMarks = InitialMarks [Mark]
   deriving (Show)
 
-markGroups :: Around InitialMarks Void [a :+ Mark] [a :* [Mark]]
-markGroups = makeToValidationAround to from
+markGroups :: Round InitialMarks Void [a :+ Mark] [a :* [Mark]]
+markGroups = makeToValidationRound to from
   where
   to xs = case foldr go ([], []) xs of
     ([], ys) -> Success ys

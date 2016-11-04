@@ -15,7 +15,7 @@ import Options.Applicative hiding (Failure, Success)
 
 import qualified ScriptQueries
 import Grammar.IO.QueryStage
-import Grammar.Around
+import Grammar.Round
 import Grammar.CommonTypes
 import qualified Grammar.Greek.Stage as Stage
 import Grammar.Greek.Script.Word (Word)
@@ -126,7 +126,7 @@ showCategory c = do
     Nothing -> putStrLn $ "Invalid query category: " ++ c
 
 saveScript :: [Primary.Group] -> IO ()
-saveScript gs = case (traverse . _2) (aroundTo Stage.script . over (traverse . _1) fst . addCtx 0) . prepareGroups $ gs of
+saveScript gs = case (traverse . _2) (roundTo Stage.script . over (traverse . _1) fst . addCtx 0) . prepareGroups $ gs of
   Failure es -> mapM_ (putStrLn . show) es
   Success (ss' :: [SourceId :* [Milestone :* Word]]) -> do
     let path = "../binary-greek-script/data/greek-script.data"

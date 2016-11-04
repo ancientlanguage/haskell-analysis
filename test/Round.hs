@@ -1,26 +1,26 @@
-module Around where
+module Round where
 
 import Test.Framework
 import Test.Framework.Providers.HUnit
 import Test.HUnit hiding (Test)
 import Data.Either.Validation
-import Grammar.Around
+import Grammar.Round
 
-testAroundList
+testRoundList
   :: (Eq a, Show a, Show e1, Show e2)
   => String
-  -> Around e1 e2 a b
+  -> Round e1 e2 a b
   -> [a]
   -> [Test]
-testAroundList label a = fmap (\x -> testAround (label ++ " -- to/from -- " ++ show x) a x)
+testRoundList label a = fmap (\x -> testRound (label ++ " -- to/from -- " ++ show x) a x)
 
-testAround
+testRound
   :: (Eq a, Show a, Show e1, Show e2)
   => String
-  -> Around e1 e2 a b
+  -> Round e1 e2 a b
   -> a
   -> Test
-testAround label (Around f g) x = testCase label $ do
+testRound label (Round f g) x = testCase label $ do
   case f x of
     Failure e1 -> assertFailure $ "to failure: " ++ show e1
     Success y ->
@@ -28,14 +28,14 @@ testAround label (Around f g) x = testCase label $ do
         Failure e2 -> assertFailure $ "from failure: " ++ show e2
         Success z -> assertEqual "data loss" x z
 
-testAroundDest
+testRoundDest
   :: (Eq a, Show a, Eq b, Show b, Show e1, Show e2)
   => String
-  -> Around e1 e2 a b
+  -> Round e1 e2 a b
   -> a
   -> b
   -> Test
-testAroundDest label (Around f g) x yInput = testCase label $ do
+testRoundDest label (Round f g) x yInput = testCase label $ do
   case f x of
     Failure e1 -> assertFailure $ "to failure: " ++ show e1
     Success y -> do

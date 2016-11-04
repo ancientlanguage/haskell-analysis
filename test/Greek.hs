@@ -9,15 +9,15 @@ import Data.Maybe (isJust)
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
-import Grammar.Around
+import Grammar.Round
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
-import qualified Grammar.Greek.Script.Around as Around
+import qualified Grammar.Greek.Script.Round as Round
 import qualified Grammar.Greek.Stage as Stage
 import Grammar.Pretty
 import Grammar.Prepare
 import Grammar.Serialize
-import Around
+import Round
 
 failMessage :: Text -> IO ()
 failMessage = assertFailure . Text.unpack
@@ -35,8 +35,8 @@ testDataLoss xs ys = check . filter (\(x, y) -> x /= y) $ zip xs ys
     ]
 
 testStages x = do
-  let stageTo = aroundTo Stage.script
-  let stageFrom = aroundFrom Stage.script
+  let stageTo = roundTo Stage.script
+  let stageFrom = roundFrom Stage.script
   case stageTo x of
     Failure es -> failMessage $ Text.concat
       [ "stage to failure:"
@@ -64,8 +64,8 @@ testGroupStages = testCase "around stages" $ do
     Right gs -> mapM_ testSourceStages (Stage.start gs)
 
 unicodeSymbolTestGroup = testGroup "Unicode-Symbol" $ concat
-  [ testAroundList "unicodeSymbol letters" Around.unicodeSymbol "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρσςτυφχψω"
-  , testAroundList "unicodeSymbol marks" Around.unicodeSymbol "α\x0300\x0301\x0308\x0313\x0314\x0342\x0345\x2019"
+  [ testRoundList "unicodeSymbol letters" Round.unicodeSymbol "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρσςτυφχψω"
+  , testRoundList "unicodeSymbol marks" Round.unicodeSymbol "α\x0300\x0301\x0308\x0313\x0314\x0342\x0345\x2019"
   ]
 
 vocalicSyllableTestGroup = testGroup "vocalic syllables" $
@@ -115,17 +115,17 @@ vocalicSyllableTestGroup = testGroup "vocalic syllables" $
     ]
   ]
   where
-  test n vs = testAround n (Around.vocalicSyllable ()) $ mapUnit3 vs
+  test n vs = testRound n (Round.vocalicSyllable ()) $ mapUnit3 vs
   mapUnit3 = fmap (\(x, y) -> (x, (y, ())))
   mapUnit2 = fmap (\x -> (x, ()))
-  testDest n vs ds = testAroundDest n (Around.vocalicSyllable ()) (mapUnit3 vs) (mapUnit2 ds)
+  testDest n vs ds = testRoundDest n (Round.vocalicSyllable ()) (mapUnit3 vs) (mapUnit2 ds)
 
 finalTestGroup = testGroup "final forms" $
-  [ testAround "medial and final sigma" Around.final
+  [ testRound "medial and final sigma" Round.final
     [ ((L_σ, NotFinal), ())
     , ((L_σ, IsFinal), ())
     ]
-  , testAround "medial sigma, final alpha" Around.final
+  , testRound "medial sigma, final alpha" Round.final
     [ ((L_σ, NotFinal), ())
     , ((L_α, IsFinal), ())
     ]
@@ -138,7 +138,7 @@ finalTestGroup = testGroup "final forms" $
         [ ((L_α, NotFinal), ())
         , ((L_σ, NotFinal), ())
         ]
-    let x = (aroundTo Around.final) input
+    let x = (roundTo Round.final) input
     assertEqual "expect fail on non-final sigma in final position" True (isJust $ x ^? _Failure)
 
 greekGroups =

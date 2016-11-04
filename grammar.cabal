@@ -12,22 +12,21 @@ cabal-version: >=1.10
 library
   hs-source-dirs: src
   exposed-modules:
-    Grammar.Around
     Grammar.CommonTypes
     Grammar.Contextualize
-    Grammar.Greek.Script.Around
-    Grammar.Greek.Script.Around.Accent
-    Grammar.Greek.Script.Around.Breathing
-    Grammar.Greek.Script.Around.Capitalization
-    Grammar.Greek.Script.Around.ConsonantMarks
-    Grammar.Greek.Script.Around.Final
-    Grammar.Greek.Script.Around.LetterVowelConsonant
-    Grammar.Greek.Script.Around.MarkGroups
-    Grammar.Greek.Script.Around.MarkSplit
-    Grammar.Greek.Script.Around.SymbolLetter
-    Grammar.Greek.Script.Around.UnicodeSymbol
-    Grammar.Greek.Script.Around.VocalicSyllable
-    Grammar.Greek.Script.Around.WordPunctuationElision
+    Grammar.Greek.Script.Round
+    Grammar.Greek.Script.Round.Accent
+    Grammar.Greek.Script.Round.Breathing
+    Grammar.Greek.Script.Round.Capitalization
+    Grammar.Greek.Script.Round.ConsonantMarks
+    Grammar.Greek.Script.Round.Final
+    Grammar.Greek.Script.Round.LetterVowelConsonant
+    Grammar.Greek.Script.Round.MarkGroups
+    Grammar.Greek.Script.Round.MarkSplit
+    Grammar.Greek.Script.Round.SymbolLetter
+    Grammar.Greek.Script.Round.UnicodeSymbol
+    Grammar.Greek.Script.Round.VocalicSyllable
+    Grammar.Greek.Script.Round.WordPunctuationElision
     Grammar.Greek.Script.Stage
     Grammar.Greek.Script.Types
     Grammar.Greek.Script.Word
@@ -36,6 +35,7 @@ library
     Grammar.IO.RandomSample,
     Grammar.Prepare
     Grammar.Pretty
+    Grammar.Round
     Grammar.Serialize
   ghc-options: -Wall -fwarn-tabs -O2
   default-extensions:
@@ -85,7 +85,7 @@ test-suite verify
   hs-source-dirs: test
   main-is: Spec.hs
   other-modules:
-    Around,
+    Round,
     Greek
   default-extensions:
     OverloadedStrings,

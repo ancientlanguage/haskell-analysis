@@ -1,8 +1,8 @@
-module Grammar.Greek.Script.Around.Accent where
+module Grammar.Greek.Script.Round.Accent where
 
 import Control.Lens (over, _1)
 import Data.Either.Validation
-import Grammar.Around
+import Grammar.Round
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 import Grammar.Greek.Script.Word
@@ -20,10 +20,10 @@ pattern ExtraAccent a p = Just (WordAccent a p NoForceAcute SingleExtraAccent)
 pattern ForceAccent :: BasicAccent -> AccentPosition -> Maybe WordAccent
 pattern ForceAccent a p = Just (WordAccent a p DoForceAcute NoExtraAccents)
 
-accent :: Around InvalidContextualAccent InvalidWordAccent
+accent :: Round InvalidContextualAccent InvalidWordAccent
   ([s :* Maybe ContextualAccent] :* HasWordPunctuation)
   ([s] :* Maybe WordAccent :* HasWordPunctuation)
-accent = Around (over _Failure pure . to) (over _Failure pure . from)
+accent = Round (over _Failure pure . to) (over _Failure pure . from)
   where
   to (ss, hp) = (\a -> (fmap fst ss, (a, hp))) <$> acc
     where
