@@ -1,4 +1,4 @@
-module Grammar.Greek.Script.Round.ConsonantMarks where
+module Grammar.Greek.Script.Rounds.ConsonantMarks where
 
 import Data.Either.Validation
 import Grammar.Round

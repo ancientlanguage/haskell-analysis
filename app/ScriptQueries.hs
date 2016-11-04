@@ -10,7 +10,7 @@ import qualified Data.List as List
 
 import Grammar.IO.QueryStage
 import Grammar.CommonTypes
-import qualified Grammar.Greek.Stage as Stage
+import qualified Grammar.Greek.Script.Stage as Stage
 import Grammar.Greek.Script.Types
 import Grammar.Greek.Script.Word
 import qualified Primary

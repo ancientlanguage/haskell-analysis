@@ -12,7 +12,7 @@ import Data.Either.Validation
 import Grammar.IO.RandomSample (randomSample)
 import Grammar.CommonTypes
 import Grammar.Contextualize
-import qualified Grammar.Greek.Stage as Stage
+import qualified Grammar.Greek.Script.Stage as Stage
 import Grammar.Greek.Script.Types
 import Grammar.Prepare
 import Grammar.Pretty

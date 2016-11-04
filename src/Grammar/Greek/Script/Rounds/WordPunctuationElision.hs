@@ -1,4 +1,4 @@
-module Grammar.Greek.Script.Round.WordPunctuationElision where
+module Grammar.Greek.Script.Rounds.WordPunctuationElision where
 
 import Data.Either
 import Data.Either.Validation

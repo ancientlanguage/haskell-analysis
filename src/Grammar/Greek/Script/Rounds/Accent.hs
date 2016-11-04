@@ -1,4 +1,4 @@
-module Grammar.Greek.Script.Round.Accent where
+module Grammar.Greek.Script.Rounds.Accent where
 
 import Control.Lens (over, _1)
 import Data.Either.Validation

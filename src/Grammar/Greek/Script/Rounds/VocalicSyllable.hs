@@ -1,4 +1,4 @@
-module Grammar.Greek.Script.Round.VocalicSyllable where
+module Grammar.Greek.Script.Rounds.VocalicSyllable where
 
 import Control.Lens (over, _2)
 import Grammar.Round

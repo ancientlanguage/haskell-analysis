@@ -1,4 +1,4 @@
-module Grammar.Greek.Script.Round.Final where
+module Grammar.Greek.Script.Rounds.Final where
 
 import Control.Lens (over)
 import Data.Either.Validation

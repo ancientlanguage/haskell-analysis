@@ -12,7 +12,7 @@ import Grammar.Round (Round(..), RoundFwd(..), liftRoundIdTo, liftRoundIdFrom, l
 import qualified Grammar.Round as Round
 import Grammar.CommonTypes
 import Grammar.Prepare
-import qualified Grammar.Greek.Script.Round as Round
+import qualified Grammar.Greek.Script.Rounds as Rounds
 import Grammar.Greek.Script.Types
 import Grammar.Greek.Script.Word
 import Control.Lens (over, _1, _2, _Left, _Right)
@@ -44,12 +44,12 @@ type RoundContext ctx e1 e2 a b =
   [ctx :* a]
   [ctx :* b]
 
-unicodeSymbol :: RoundContext ctx Round.InvalidChar Void
+unicodeSymbol :: RoundContext ctx Rounds.InvalidChar Void
   ([Char] :* HasWordPunctuation)
   ([Symbol :+ Mark :+ WordPunctuation] :* HasWordPunctuation)
 unicodeSymbol = Round
-  (traverseWithItemContext . _1 . travList $ roundFwdTo Round.unicodeSymbol)
-  (traverseWithItemContext . _1 . travList $ liftRoundFwdFrom Round.unicodeSymbol)
+  (traverseWithItemContext . _1 . travList $ roundFwdTo Rounds.unicodeSymbol)
+  (traverseWithItemContext . _1 . travList $ liftRoundFwdFrom Rounds.unicodeSymbol)
 
 assocSymbolMark_WordPunctuation :: RoundContext ctx Void Void
   ([Symbol :+ (Mark :+ WordPunctuation)] :* HasWordPunctuation)
@@ -58,26 +58,26 @@ assocSymbolMark_WordPunctuation = Round
   (traverseWithItemContext . _1 . travList $ liftRoundIdTo Round.sumAssocLeft)
   (traverseWithItemContext . _1 . travList $ liftRoundIdFrom Round.sumAssocLeft)
 
-wordPunctuationElision :: RoundContext ctx Round.InvalidWordPunctuation Void
+wordPunctuationElision :: RoundContext ctx Rounds.InvalidWordPunctuation Void
   ([(Symbol :+ Mark) :+ WordPunctuation] :* HasWordPunctuation)
   (([Symbol :+ Mark] :* Elision) :* HasWordPunctuation)
 wordPunctuationElision = Round
-  (traverseWithItemContext . _1 $ roundFwdTo Round.wordPunctuationElision)
-  (traverseWithItemContext . _1 $ liftRoundFwdFrom Round.wordPunctuationElision)
+  (traverseWithItemContext . _1 $ roundFwdTo Rounds.wordPunctuationElision)
+  (traverseWithItemContext . _1 $ liftRoundFwdFrom Rounds.wordPunctuationElision)
 
 symbolLetter :: RoundContext ctx Void Void
   (([Symbol :+ Mark] :* Elision) :* HasWordPunctuation)
   (([(Letter :* Case :* Final) :+ Mark] :* Elision) :* HasWordPunctuation)
 symbolLetter = Round
-  (traverseWithItemContext . _1 . _1 . travList . _Left $ liftRoundIdTo Round.symbolLetter)
-  (traverseWithItemContext . _1 . _1 . travList . _Left $ liftRoundIdFrom Round.symbolLetter)
+  (traverseWithItemContext . _1 . _1 . travList . _Left $ liftRoundIdTo Rounds.symbolLetter)
+  (traverseWithItemContext . _1 . _1 . travList . _Left $ liftRoundIdFrom Rounds.symbolLetter)
 
-markGroups :: RoundContext ctx Round.InitialMarks Void
+markGroups :: RoundContext ctx Rounds.InitialMarks Void
   (([(Letter :* Case :* Final) :+ Mark] :* Elision) :* HasWordPunctuation)
   (([(Letter :* Case :* Final) :* [Mark]] :* Elision) :* HasWordPunctuation)
 markGroups = Round
-  (traverseWithItemContext . _1 . _1 $ roundFwdTo Round.markGroups)
-  (traverseWithItemContext . _1 . _1 $ liftRoundFwdFrom Round.markGroups)
+  (traverseWithItemContext . _1 . _1 $ roundFwdTo Rounds.markGroups)
+  (traverseWithItemContext . _1 . _1 $ liftRoundFwdFrom Rounds.markGroups)
 
 assocLetterFinal :: RoundContext ctx Void Void
   (([(Letter :* Case :* Final) :* [Mark]] :* Elision) :* HasWordPunctuation)
@@ -90,33 +90,33 @@ assocLetterFinal = Round
   to ((l, (c, f)), ms) = ((l, f), (c, ms))
   from ((l, f), (c, ms)) = ((l, (c, f)), ms)
 
-final :: RoundContext ctx [Round.InvalidFinals] Void
+final :: RoundContext ctx [Rounds.InvalidFinals] Void
   (([(Letter :* Final) :* Case :* [Mark]] :* Elision) :* HasWordPunctuation)
   (([Letter :* Case :* [Mark]] :* Elision) :* HasWordPunctuation)
 final = Round
-  (traverseWithItemContext . _1 . _1 $ roundFwdTo Round.final)
-  (traverseWithItemContext . _1 . _1 $ liftRoundFwdFrom Round.final)
+  (traverseWithItemContext . _1 . _1 $ roundFwdTo Rounds.final)
+  (traverseWithItemContext . _1 . _1 $ liftRoundFwdFrom Rounds.final)
 
-capitalization :: RoundContext ctx Round.InvalidUppercase Void
+capitalization :: RoundContext ctx Rounds.InvalidUppercase Void
   (([Letter :* Case :* [Mark]] :* Elision) :* HasWordPunctuation)
   ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* HasWordPunctuation)
 capitalization = Round
-  (traverseWithItemContext . _1 . _1 $ roundFwdTo Round.capitalization)
-  (traverseWithItemContext . _1 . _1 $ liftRoundFwdFrom Round.capitalization)
+  (traverseWithItemContext . _1 . _1 $ roundFwdTo Rounds.capitalization)
+  (traverseWithItemContext . _1 . _1 $ liftRoundFwdFrom Rounds.capitalization)
 
-markSplit :: RoundContext ctx Round.InvalidMarkCombo Void
+markSplit :: RoundContext ctx Rounds.InvalidMarkCombo Void
   ((([Letter :* [Mark]] :* Capitalization) :* Elision) :* HasWordPunctuation)
   ((([Letter :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
 markSplit = Round
-  (traverseWithItemContext . _1 . _1 . _1 . travList . _2 $ roundFwdTo Round.markSplit)
-  (traverseWithItemContext . _1 . _1 . _1 . travList . _2 $ liftRoundFwdFrom Round.markSplit)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _2 $ roundFwdTo Rounds.markSplit)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _2 $ liftRoundFwdFrom Rounds.markSplit)
 
 letterVowelConsonant :: RoundContext ctx Void Void
   ((([Letter :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
   ((([(Vowel :+ Consonant) :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
 letterVowelConsonant = Round
-  (traverseWithItemContext . _1 . _1 . _1 . travList . _1 $ liftRoundIdTo Round.letterVowelConsonant)
-  (traverseWithItemContext . _1 . _1 . _1 . travList . _1 $ liftRoundIdFrom Round.letterVowelConsonant)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _1 $ liftRoundIdTo Rounds.letterVowelConsonant)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _1 $ liftRoundIdFrom Rounds.letterVowelConsonant)
 
 distVowelConsonantMarks :: RoundContext ctx Void Void
   ((([(Vowel :+ Consonant) :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark] :* Capitalization) :* Elision) :* HasWordPunctuation)
@@ -128,7 +128,7 @@ distVowelConsonantMarks = Round
   (traverseWithItemContext . _1 . _1 . _1 . travList $ liftRoundIdTo Round.distLeftSumOverProd)
   (traverseWithItemContext . _1 . _1 . _1 . travList $ liftRoundIdFrom Round.distLeftSumOverProd)
 
-consonantMarks :: RoundContext ctx Round.InvalidConsonantMarks Void
+consonantMarks :: RoundContext ctx Rounds.InvalidConsonantMarks Void
   ((([ (Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
     :+ (Consonant :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
     ]
@@ -138,8 +138,8 @@ consonantMarks :: RoundContext ctx Round.InvalidConsonantMarks Void
     ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 consonantMarks = Round
-  (traverseWithItemContext . _1 . _1 . _1 . travList . _Right $ roundFwdTo Round.consonantMarks)
-  (traverseWithItemContext . _1 . _1 . _1 . travList . _Right $ liftRoundFwdFrom Round.consonantMarks)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _Right $ roundFwdTo Rounds.consonantMarks)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _Right $ liftRoundFwdFrom Rounds.consonantMarks)
 
 groupVowelConsonants :: RoundContext ctx Void Void
   ((([ (Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
@@ -179,8 +179,8 @@ vocalicSyllable :: RoundContext ctx Void Void
   ((([ [VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] :+ [ConsonantRho] ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 vocalicSyllable = Round
-  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left $ liftRoundIdTo $ Round.vocalicSyllable (Nothing, Nothing))
-  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left $ liftRoundIdFrom $ Round.vocalicSyllable (Nothing, Nothing))
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left $ liftRoundIdTo $ Rounds.vocalicSyllable (Nothing, Nothing))
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left $ liftRoundIdFrom $ Rounds.vocalicSyllable (Nothing, Nothing))
 
 swapConsonantVocalicSyllables :: RoundContext ctx Void Void
   ((([ [VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] :+ [ConsonantRho] ]
@@ -209,14 +209,14 @@ groupLeftConsonantVocalicSyllables = Round
   (traverseWithItemContext . _1 . _1 . _1 $ liftRoundIdTo Round.groupLeft)
   (traverseWithItemContext . _1 . _1 . _1 $ liftRoundIdFrom Round.groupLeft)
 
-breathing :: RoundContext ctx [Round.InvalidBreathing ConsonantRho VocalicSyllable (Maybe ContextualAccent)] Void
+breathing :: RoundContext ctx [Rounds.InvalidBreathing ConsonantRho VocalicSyllable (Maybe ContextualAccent)] Void
   (((([ [ConsonantRho] :* VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing ] :* [ConsonantRho])
     :* Capitalization) :* Elision) :* HasWordPunctuation)
   ((((([ [ConsonantRho] :* VocalicSyllable :* Maybe ContextualAccent ] :* MarkPreservation :* Crasis :* InitialAspiration) :* [ConsonantRho])
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 breathing = Round
-  (traverseWithItemContext . _1 . _1 . _1 . _1 $ roundFwdTo Round.breathing)
-  (traverseWithItemContext . _1 . _1 . _1 . _1 $ liftRoundFwdFrom Round.breathing)
+  (traverseWithItemContext . _1 . _1 . _1 . _1 $ roundFwdTo Rounds.breathing)
+  (traverseWithItemContext . _1 . _1 . _1 . _1 $ liftRoundFwdFrom Rounds.breathing)
 
 reorderWordProps :: RoundContext ctx Void Void
   ((((([ [ConsonantRho] :* VocalicSyllable :* Maybe ContextualAccent ] :* MarkPreservation :* Crasis :* InitialAspiration) :* [ConsonantRho])
@@ -233,14 +233,14 @@ reorderWordProps = Round
   assocLeft (x, (y, z)) = ((x, y), z)
   assocRight ((x, y), z) = (x, (y, z))
 
-accent :: RoundContext ctx Round.InvalidContextualAccent Round.InvalidWordAccent
+accent :: RoundContext ctx Rounds.InvalidContextualAccent Rounds.InvalidWordAccent
   (([ ([ConsonantRho] :* VocalicSyllable) :* Maybe ContextualAccent ] :* HasWordPunctuation)
     :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision)
   (([[ConsonantRho] :* VocalicSyllable] :* Maybe WordAccent :* HasWordPunctuation)
     :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision)
 accent = Round
-  (traverseWithItemContext . _1 $ roundTo Round.accent)
-  (traverseWithItemContext . _1 $ roundFrom Round.accent)
+  (traverseWithItemContext . _1 $ roundTo Rounds.accent)
+  (traverseWithItemContext . _1 $ roundFrom Rounds.accent)
 
 word :: RoundContext ctx Void Void
   (([[ConsonantRho] :* VocalicSyllable] :* Maybe WordAccent :* HasWordPunctuation)

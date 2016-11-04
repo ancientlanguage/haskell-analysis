@@ -12,8 +12,8 @@ import qualified Data.Text.IO as Text
 import Grammar.Round
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
-import qualified Grammar.Greek.Script.Round as Round
-import qualified Grammar.Greek.Stage as Stage
+import qualified Grammar.Greek.Script.Rounds as Rounds
+import qualified Grammar.Greek.Script.Stage as Stage
 import Grammar.Pretty
 import Grammar.Prepare
 import Grammar.Serialize
@@ -68,7 +68,7 @@ unicodeSymbolTestGroup = testGroup "Unicode-Symbol" $ concat
   , testList "unicodeSymbol marks" tr "α\x0300\x0301\x0308\x0313\x0314\x0342\x0345\x2019"
   ]
   where
-  tr = testRoundFwd Round.unicodeSymbol
+  tr = testRoundFwd Rounds.unicodeSymbol
 
 vocalicSyllableTestGroup = testGroup "vocalic syllables" $
   [ test "Μωϋσῆς"
@@ -117,17 +117,17 @@ vocalicSyllableTestGroup = testGroup "vocalic syllables" $
     ]
   ]
   where
-  test n vs = testRoundId (Round.vocalicSyllable ()) n $ mapUnit3 vs
+  test n vs = testRoundId (Rounds.vocalicSyllable ()) n $ mapUnit3 vs
   mapUnit3 = fmap (\(x, y) -> (x, (y, ())))
   mapUnit2 = fmap (\x -> (x, ()))
-  testDest n vs ds = testRoundIdDest (Round.vocalicSyllable ()) n (mapUnit3 vs) (mapUnit2 ds)
+  testDest n vs ds = testRoundIdDest (Rounds.vocalicSyllable ()) n (mapUnit3 vs) (mapUnit2 ds)
 
 finalTestGroup = testGroup "final forms" $
-  [ testRoundFwd Round.final "medial and final sigma"
+  [ testRoundFwd Rounds.final "medial and final sigma"
     [ ((L_σ, NotFinal), ())
     , ((L_σ, IsFinal), ())
     ]
-  , testRoundFwd Round.final "medial sigma, final alpha"
+  , testRoundFwd Rounds.final "medial sigma, final alpha"
     [ ((L_σ, NotFinal), ())
     , ((L_α, IsFinal), ())
     ]
@@ -140,7 +140,7 @@ finalTestGroup = testGroup "final forms" $
         [ ((L_α, NotFinal), ())
         , ((L_σ, NotFinal), ())
         ]
-    let x = (roundFwdTo Round.final) input
+    let x = (roundFwdTo Rounds.final) input
     assertEqual "expect fail on non-final sigma in final position" True (isJust $ x ^? _Failure)
 
 greekGroups =

@@ -1,4 +1,4 @@
-module Grammar.Greek.Script.Round.MarkSplit where
+module Grammar.Greek.Script.Rounds.MarkSplit where
 
 import Control.Lens (over)
 import Data.Either.Validation

@@ -1,4 +1,4 @@
-module Grammar.Greek.Script.Round.SymbolLetter where
+module Grammar.Greek.Script.Rounds.SymbolLetter where
 
 import Grammar.Round
 import Grammar.CommonTypes

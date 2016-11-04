@@ -1,4 +1,4 @@
-module Grammar.Greek.Script.Round.Capitalization where
+module Grammar.Greek.Script.Rounds.Capitalization where
 
 import Control.Lens (over)
 import Data.Either.Validation

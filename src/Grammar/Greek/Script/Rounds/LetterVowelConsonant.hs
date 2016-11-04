@@ -1,4 +1,4 @@
-module Grammar.Greek.Script.Round.LetterVowelConsonant where
+module Grammar.Greek.Script.Rounds.LetterVowelConsonant where
 
 import Grammar.Round
 import Grammar.CommonTypes

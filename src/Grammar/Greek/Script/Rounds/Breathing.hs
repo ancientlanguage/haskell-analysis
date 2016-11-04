@@ -1,4 +1,4 @@
-module Grammar.Greek.Script.Round.Breathing where
+module Grammar.Greek.Script.Rounds.Breathing where
 
 import Data.Either.Validation
 import Grammar.Round

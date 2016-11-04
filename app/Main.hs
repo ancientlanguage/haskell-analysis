@@ -17,7 +17,7 @@ import qualified ScriptQueries
 import Grammar.IO.QueryStage
 import Grammar.Round
 import Grammar.CommonTypes
-import qualified Grammar.Greek.Stage as Stage
+import qualified Grammar.Greek.Script.Stage as Stage
 import Grammar.Greek.Script.Word (Word)
 import Grammar.Prepare
 import Grammar.Pretty

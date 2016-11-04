@@ -1,4 +1,4 @@
-module Grammar.Greek.Script.Round.UnicodeSymbol where
+module Grammar.Greek.Script.Rounds.UnicodeSymbol where
 
 import Data.Either.Validation
 import Grammar.Round

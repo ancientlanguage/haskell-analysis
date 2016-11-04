@@ -14,23 +14,22 @@ library
   exposed-modules:
     Grammar.CommonTypes
     Grammar.Contextualize
-    Grammar.Greek.Script.Round
-    Grammar.Greek.Script.Round.Accent
-    Grammar.Greek.Script.Round.Breathing
-    Grammar.Greek.Script.Round.Capitalization
-    Grammar.Greek.Script.Round.ConsonantMarks
-    Grammar.Greek.Script.Round.Final
-    Grammar.Greek.Script.Round.LetterVowelConsonant
-    Grammar.Greek.Script.Round.MarkGroups
-    Grammar.Greek.Script.Round.MarkSplit
-    Grammar.Greek.Script.Round.SymbolLetter
-    Grammar.Greek.Script.Round.UnicodeSymbol
-    Grammar.Greek.Script.Round.VocalicSyllable
-    Grammar.Greek.Script.Round.WordPunctuationElision
+    Grammar.Greek.Script.Rounds
+    Grammar.Greek.Script.Rounds.Accent
+    Grammar.Greek.Script.Rounds.Breathing
+    Grammar.Greek.Script.Rounds.Capitalization
+    Grammar.Greek.Script.Rounds.ConsonantMarks
+    Grammar.Greek.Script.Rounds.Final
+    Grammar.Greek.Script.Rounds.LetterVowelConsonant
+    Grammar.Greek.Script.Rounds.MarkGroups
+    Grammar.Greek.Script.Rounds.MarkSplit
+    Grammar.Greek.Script.Rounds.SymbolLetter
+    Grammar.Greek.Script.Rounds.UnicodeSymbol
+    Grammar.Greek.Script.Rounds.VocalicSyllable
+    Grammar.Greek.Script.Rounds.WordPunctuationElision
     Grammar.Greek.Script.Stage
     Grammar.Greek.Script.Types
     Grammar.Greek.Script.Word
-    Grammar.Greek.Stage
     Grammar.IO.QueryStage,
     Grammar.IO.RandomSample,
     Grammar.Prepare
