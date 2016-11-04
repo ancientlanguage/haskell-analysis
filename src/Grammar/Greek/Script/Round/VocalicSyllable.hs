@@ -1,17 +1,16 @@
 module Grammar.Greek.Script.Round.VocalicSyllable where
 
 import Control.Lens (over, _2)
-import Data.Void
 import Grammar.Round
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
 
 vocalicSyllable
   :: a
-  -> Round Void Void
+  -> RoundId
     [Vowel :* Maybe SyllabicMark :* a]
     [VocalicSyllable :* a]
-vocalicSyllable defaultA = makeIdRound to from
+vocalicSyllable defaultA = RoundId to from
   where
   to = over (traverse . _2) snd . foldr toFold []
 

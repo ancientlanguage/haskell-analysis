@@ -3,7 +3,6 @@ module Grammar.Greek.Script.Round.MarkSplit where
 import Control.Lens (over)
 import Data.Either.Validation
 import Data.List (sort)
-import Data.Void
 import Grammar.Round
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
@@ -14,8 +13,8 @@ data InvalidMarkCombo
   | MultipleSyllabicMark [SyllabicMark]
   deriving (Show)
 
-markSplit :: Round InvalidMarkCombo Void [Mark] (Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
-markSplit = Round to (Success . from)
+markSplit :: RoundFwd InvalidMarkCombo [Mark] (Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
+markSplit = RoundFwd to from
   where
   to = refineAll . start
 

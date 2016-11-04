@@ -2,7 +2,6 @@ module Grammar.Greek.Script.Round.Final where
 
 import Control.Lens (over)
 import Data.Either.Validation
-import Data.Void
 import Grammar.Round
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
@@ -12,8 +11,8 @@ data InvalidFinals
   | FinalInMedialPosition Letter
   deriving (Show)
 
-final :: Round [InvalidFinals] Void [(Letter :* Final) :* a] [Letter :* a]
-final = makeToValidationRound to from
+final :: RoundFwd [InvalidFinals] [(Letter :* Final) :* a] [Letter :* a]
+final = makeRoundFwd to from
   where
   to xs = over _Success reverse $ case reverse xs of
     [] -> Success []

@@ -1,7 +1,6 @@
 module Grammar.Round where
 
 import Data.Either.Validation
-import Data.Void
 import Grammar.CommonTypes
 import Control.Lens (over, _2)
 
@@ -10,12 +9,30 @@ data Round e1 e2 a b = Round
   , roundFrom :: b -> Validation [e2] a
   }
 
-makeIdRound :: (a -> b) -> (b -> a) -> Round Void Void a b
-makeIdRound f g = Round (Success . f) (Success . g)
+data RoundId a b = RoundId
+  { roundIdTo :: a -> b
+  , roundIdFrom :: b -> a
+  }
 
-type ParseRound e = Round e Void
-makeToValidationRound :: (a -> Validation e b) -> (b -> a) -> Round e Void a b
-makeToValidationRound f g = Round (over _Failure pure . f) (Success . g)
+data RoundFwd e a b = RoundFwd
+  { roundFwdTo :: a -> Validation [e] b
+  , roundFwdFrom :: b -> a
+  }
+
+liftRoundIdTo :: RoundId a b -> (a -> Validation [e] b)
+liftRoundIdTo r = pure . roundIdTo r
+
+liftRoundIdFrom :: RoundId a b -> (b -> Validation [e] a)
+liftRoundIdFrom r = pure . roundIdFrom r
+
+liftRoundFwdFrom :: RoundFwd e1 a b -> (b -> Validation [e2] a)
+liftRoundFwdFrom r = pure . roundFwdFrom r
+
+liftRoundFwd :: RoundFwd e1 a b -> Round e1 r2 a b
+liftRoundFwd (RoundFwd to from) = Round to (pure . from)
+
+makeRoundFwd :: (a -> Validation e b) -> (b -> a) -> RoundFwd e a b
+makeRoundFwd to from = RoundFwd (over _Failure pure . to) (from)
 
 joinValidation :: Validation [e1] (Validation [e2] a) -> Validation [e1 :+ e2] a
 joinValidation (Failure es) = Failure (fmap Left es)
@@ -54,8 +71,8 @@ joinRound' (Round a_b b_a) (Round b_c c_b) = Round a_c c_a
 (<+>) = joinRound'
 infixr 6 <+>
 
-sumAssocLeft :: Round Void Void (a :+ (b :+ c)) ((a :+ b) :+ c)
-sumAssocLeft = makeIdRound to from
+sumAssocLeft :: RoundId (a :+ (b :+ c)) ((a :+ b) :+ c)
+sumAssocLeft = RoundId to from
   where
   to (Left x) = Left (Left x)
   to (Right (Left y)) = Left (Right y)
@@ -65,30 +82,30 @@ sumAssocLeft = makeIdRound to from
   from (Left (Right y)) = Right (Left y)
   from (Right z) = Right (Right z)
 
-prodAssocLeft :: Round Void Void (a :* (b :* c)) ((a :* b) :* c)
-prodAssocLeft = makeIdRound to from
+prodAssocLeft :: RoundId (a :* (b :* c)) ((a :* b) :* c)
+prodAssocLeft = RoundId to from
   where
   to (x, (y, z)) = ((x, y), z)
   from ((x, y), z) = (x, (y, z))
 
-distLeftSumOverProd :: Round Void Void ((a :+ b) :* c) ((a :* c) :+ (b :* c))
-distLeftSumOverProd = makeIdRound to from
+distLeftSumOverProd :: RoundId ((a :+ b) :* c) ((a :* c) :+ (b :* c))
+distLeftSumOverProd = RoundId to from
   where
   to (Left a, c) = Left (a, c)
   to (Right b, c) = Right (b, c)
   from (Left (a, c)) = (Left a, c)
   from (Right (b, c)) = (Right b, c)
 
-distRightSumOverProd :: Round Void Void (a :* (b :+ c)) ((a :* b) :+ (a :* c))
-distRightSumOverProd = makeIdRound to from
+distRightSumOverProd :: RoundId (a :* (b :+ c)) ((a :* b) :+ (a :* c))
+distRightSumOverProd = RoundId to from
   where
   to (a, Left b) = Left (a, b)
   to (a, Right c) = Right (a, c)
   from (Left (a, b)) = (a, Left b)
   from (Right (a, c)) = (a, Right c)
 
-groupSums :: Round Void Void [a :+ b] [[a] :+ [b]]
-groupSums = makeIdRound to from
+groupSums :: RoundId [a :+ b] [[a] :+ [b]]
+groupSums = RoundId to from
   where
   to = foldr go []
     where
@@ -102,11 +119,11 @@ groupSums = makeIdRound to from
   fromItem (Left as) = fmap Left as
   fromItem (Right bs) = fmap Right bs
 
-ungroupSums :: Round Void Void [[a] :+ [b]] [a :+ b]
-ungroupSums = Round (roundFrom groupSums) (roundTo groupSums)
+ungroupSums :: RoundId [[a] :+ [b]] [a :+ b]
+ungroupSums = RoundId (roundIdFrom groupSums) (roundIdTo groupSums)
 
-groupRight :: Round Void Void [a :+ b] ([b] :* [a :* [b]])
-groupRight = makeIdRound to from
+groupRight :: RoundId [a :+ b] ([b] :* [a :* [b]])
+groupRight = RoundId to from
   where
   to = foldr go ([], [])
   go (Left x) (ms, ys) = ([], (x, ms) : ys)
@@ -114,8 +131,8 @@ groupRight = makeIdRound to from
 
   from (bs, xs) = fmap Right bs ++ concatMap (\(x, ms) -> Left x : fmap Right ms) xs
 
-groupLeft :: Round Void Void [a :+ b] ([[a] :* b] :* [a])
-groupLeft = makeIdRound to from
+groupLeft :: RoundId [a :+ b] ([[a] :* b] :* [a])
+groupLeft = RoundId to from
   where
   to = foldr go ([], [])
   go (Left a) ([], as) = ([], a : as)
@@ -124,8 +141,8 @@ groupLeft = makeIdRound to from
 
   from (xs, as) = concatMap (\(as', b) -> fmap Left as' ++ [Right b]) xs ++ fmap Left as
 
-swapSum :: Round Void Void (a :+ b) (b :+ a)
-swapSum = makeIdRound to from
+swapSum :: RoundId (a :+ b) (b :+ a)
+swapSum = RoundId to from
   where
   to (Left a) = Right a
   to (Right b) = Left b

@@ -64,9 +64,11 @@ testGroupStages = testCase "round stages" $ do
     Right gs -> mapM_ testSourceStages (Stage.start gs)
 
 unicodeSymbolTestGroup = testGroup "Unicode-Symbol" $ concat
-  [ testRoundList "unicodeSymbol letters" Round.unicodeSymbol "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρσςτυφχψω"
-  , testRoundList "unicodeSymbol marks" Round.unicodeSymbol "α\x0300\x0301\x0308\x0313\x0314\x0342\x0345\x2019"
+  [ testList "unicodeSymbol letters" tr "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρσςτυφχψω"
+  , testList "unicodeSymbol marks" tr "α\x0300\x0301\x0308\x0313\x0314\x0342\x0345\x2019"
   ]
+  where
+  tr = testRoundFwd Round.unicodeSymbol
 
 vocalicSyllableTestGroup = testGroup "vocalic syllables" $
   [ test "Μωϋσῆς"
@@ -115,17 +117,17 @@ vocalicSyllableTestGroup = testGroup "vocalic syllables" $
     ]
   ]
   where
-  test n vs = testRound n (Round.vocalicSyllable ()) $ mapUnit3 vs
+  test n vs = testRoundId (Round.vocalicSyllable ()) n $ mapUnit3 vs
   mapUnit3 = fmap (\(x, y) -> (x, (y, ())))
   mapUnit2 = fmap (\x -> (x, ()))
-  testDest n vs ds = testRoundDest n (Round.vocalicSyllable ()) (mapUnit3 vs) (mapUnit2 ds)
+  testDest n vs ds = testRoundIdDest (Round.vocalicSyllable ()) n (mapUnit3 vs) (mapUnit2 ds)
 
 finalTestGroup = testGroup "final forms" $
-  [ testRound "medial and final sigma" Round.final
+  [ testRoundFwd Round.final "medial and final sigma"
     [ ((L_σ, NotFinal), ())
     , ((L_σ, IsFinal), ())
     ]
-  , testRound "medial sigma, final alpha" Round.final
+  , testRoundFwd Round.final "medial sigma, final alpha"
     [ ((L_σ, NotFinal), ())
     , ((L_α, IsFinal), ())
     ]
@@ -138,7 +140,7 @@ finalTestGroup = testGroup "final forms" $
         [ ((L_α, NotFinal), ())
         , ((L_σ, NotFinal), ())
         ]
-    let x = (roundTo Round.final) input
+    let x = (roundFwdTo Round.final) input
     assertEqual "expect fail on non-final sigma in final position" True (isJust $ x ^? _Failure)
 
 greekGroups =

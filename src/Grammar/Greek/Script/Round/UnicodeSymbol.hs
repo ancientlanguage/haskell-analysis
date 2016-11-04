@@ -60,8 +60,8 @@ symbolToChar S_ψ = 'ψ'
 symbolToChar S_ω = 'ω'
 
 
-unicodeSymbol :: ParseRound InvalidChar Char (Symbol :+ Mark :+ WordPunctuation)
-unicodeSymbol = makeToValidationRound to from
+unicodeSymbol :: RoundFwd InvalidChar Char (Symbol :+ Mark :+ WordPunctuation)
+unicodeSymbol = makeRoundFwd to from
   where
   validSymbol = Success . Left
   validMark = Success . Right . Left

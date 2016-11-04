@@ -1,7 +1,6 @@
 module Grammar.Greek.Script.Round.ConsonantMarks where
 
 import Data.Either.Validation
-import Data.Void
 import Grammar.Round
 import Grammar.CommonTypes
 import Grammar.Greek.Script.Types
@@ -9,8 +8,8 @@ import Grammar.Greek.Script.Types
 data InvalidConsonantMarks = InvalidConsonantMarks (Consonant :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
   deriving (Show)
 
-consonantMarks :: Round InvalidConsonantMarks Void (Consonant :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark) ConsonantRho
-consonantMarks = makeToValidationRound to from
+consonantMarks :: RoundFwd InvalidConsonantMarks (Consonant :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark) ConsonantRho
+consonantMarks = makeRoundFwd to from
   where
   to (C_β, (Nothing, (Nothing, Nothing))) = Success CR_β
   to (C_γ, (Nothing, (Nothing, Nothing))) = Success CR_γ
