@@ -2,7 +2,7 @@
 
 module Grammar.Greek.Script.Stage where
 
-import Prelude hiding (Word)
+import Prelude hiding (Word, round)
 import qualified Data.Char as Char
 import Data.Text (Text)
 import qualified Data.Text as Text
@@ -83,10 +83,10 @@ assocLetterFinal :: RoundContext ctx Void Void
   (([(Letter :* Case :* Final) :* [Mark]] :* Elision) :* HasWordPunctuation)
   (([(Letter :* Final) :* Case :* [Mark]] :* Elision) :* HasWordPunctuation)
 assocLetterFinal = Round
-  (traverseWithItemContext . _1 . _1 . travList $ roundTo around)
-  (traverseWithItemContext . _1 . _1 . travList $ roundFrom around)
+  (traverseWithItemContext . _1 . _1 . travList $ roundTo round)
+  (traverseWithItemContext . _1 . _1 . travList $ roundFrom round)
   where
-  around = Round.makeIdRound to from
+  round = Round.makeIdRound to from
   to ((l, (c, f)), ms) = ((l, f), (c, ms))
   from ((l, f), (c, ms)) = ((l, (c, f)), ms)
 
@@ -164,10 +164,10 @@ vowelSyllabicMark :: RoundContext ctx Void Void
     ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 vowelSyllabicMark = Round
-  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left . travList $ roundTo around)
-  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left . travList $ roundFrom around)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left . travList $ roundTo round)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left . travList $ roundFrom round)
   where
-  around = Round.makeIdRound to from
+  round = Round.makeIdRound to from
   to (x, (y, (z, q))) = (x, (q, (y, z)))
   from (x, (q, (y, z))) = (x, (y, (z, q)))
 
@@ -224,10 +224,10 @@ reorderWordProps :: RoundContext ctx Void Void
   (([ ([ConsonantRho] :* VocalicSyllable) :* Maybe ContextualAccent ] :* HasWordPunctuation) :* [ConsonantRho]
     :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision)
 reorderWordProps = Round
-  (traverseWithItemContext $ roundTo around)
-  (traverseWithItemContext $ roundFrom around)
+  (traverseWithItemContext $ roundTo round)
+  (traverseWithItemContext $ roundFrom round)
   where
-  around = Round.makeIdRound to from
+  round = Round.makeIdRound to from
   to (((((x1, (x2, (x3, x4))), x5), x6), x7), x8) = ((fmap assocLeft x1, x8), (x5, (x2, (x3, (x4, (x6, x7))))))
   from ((x1, x8), (x5, (x2, (x3, (x4, (x6, x7)))))) = (((((fmap assocRight x1, (x2, (x3, x4))), x5), x6), x7), x8)
   assocLeft (x, (y, z)) = ((x, y), z)
@@ -247,10 +247,10 @@ word :: RoundContext ctx Void Void
     :* [ConsonantRho] :* MarkPreservation :* Crasis :* InitialAspiration :* Capitalization :* Elision)
   Word
 word = Round
-  (traverseWithItemContext $ roundTo around)
-  (traverseWithItemContext $ roundFrom around)
+  (traverseWithItemContext $ roundTo round)
+  (traverseWithItemContext $ roundFrom round)
   where
-  around = Round.makeIdRound to from
+  round = Round.makeIdRound to from
   to ((ss, (mwa, hwp)), (fc, (mp, (cr, (ia, (cap, el)))))) = Word ia (toSyllables ss) fc mwa cr el mp cap hwp
   toSyllables = fmap (\(c, v) -> Syllable c v)
   from (Word ia ss fc mwa cr el mp cap hwp) = ((fromSyllables ss, (mwa, hwp)), (fc, (mp, (cr, (ia, (cap, el))))))

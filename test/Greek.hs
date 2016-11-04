@@ -57,7 +57,7 @@ testSourceStages (SourceId g s, ms) = do
   testStages ms
 
 testGroupStages :: Test
-testGroupStages = testCase "around stages" $ do
+testGroupStages = testCase "round stages" $ do
   result <- readGroups
   case result of
     Left x -> assertFailure $ "decode failure:\n" ++ x
