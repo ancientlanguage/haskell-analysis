@@ -1,4 +1,4 @@
-module Round where
+module Grammar.Test.Round where
 
 import Test.Framework
 import Test.Framework.Providers.HUnit

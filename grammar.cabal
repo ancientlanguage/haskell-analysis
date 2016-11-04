@@ -36,6 +36,8 @@ library
     Grammar.Pretty
     Grammar.Round
     Grammar.Serialize
+    Grammar.Test.Round
+    Grammar.Test.Stage
   ghc-options: -Wall -fwarn-tabs -O2
   default-extensions:
     OverloadedStrings,
@@ -53,6 +55,9 @@ library
     random-fu,
     random-source,
     array,
+    test-framework,
+    test-framework-hunit,
+    HUnit,
     primary-type
   default-language: Haskell2010
 
@@ -84,7 +89,6 @@ test-suite verify
   hs-source-dirs: test
   main-is: Spec.hs
   other-modules:
-    Round,
     Greek
   default-extensions:
     OverloadedStrings,

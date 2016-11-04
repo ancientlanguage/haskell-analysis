@@ -3,7 +3,7 @@ module Greek where
 import Test.Framework
 import Test.Framework.Providers.HUnit
 import Test.HUnit (assertFailure, assertEqual)
-import Control.Lens ((^?))
+import Control.Lens (over, _2, (^?), _Right)
 import Data.Either.Validation (Validation(..), _Failure)
 import Data.Maybe (isJust)
 import Data.Text (Text)
@@ -17,51 +17,8 @@ import qualified Grammar.Greek.Script.Stage as Stage
 import Grammar.Pretty
 import Grammar.Prepare
 import Grammar.Serialize
-import Round
-
-failMessage :: Text -> IO ()
-failMessage = assertFailure . Text.unpack
-
-testDataLoss
-  :: [Milestone :* String]
-  -> [Milestone :* String]
-  -> IO ()
-testDataLoss xs ys = check . filter (\(x, y) -> x /= y) $ zip xs ys
-  where
-  check [] = return ()
-  check xs@(_ : _) = failMessage $ Text.concat
-    [ "data loss:"
-    , Text.concat $ fmap (\(x , y) -> Text.concat [ "\n initial:", prettyMilestonedString x, "\n final  :", prettyMilestonedString y ]) xs
-    ]
-
-testStage stg x = do
-  let stageTo = roundTo stg
-  let stageFrom = roundFrom stg
-  case stageTo x of
-    Failure es -> failMessage $ Text.concat
-      [ "stage to failure:"
-      , Text.concat $ fmap (Text.append "\n" . prettyMilestoned) es
-      ]
-    Success y ->
-      case stageFrom y of
-        Failure es' -> failMessage $ Text.concat
-          [ "stage from failure:"
-          , Text.concat $ fmap (Text.append "\n" . prettyMilestoned) es'
-          ]
-        Success z -> testDataLoss (forget x) (forget z)
-          where
-          forget = Stage.forgetHasWordPunctuation
-
-testSourceStage stg (SourceId g s, ms) = testCase (Text.unpack . Text.intercalate " " $ [g, s]) $ testStage stg ms
-
-testGroupStages name stg = buildTestBracketed $ do
-  result <- readGroups
-  let
-    sourceTests = case result of
-      Left x -> [testCase "decode" $ assertFailure $ "decode failure:\n" ++ x]
-      Right gs -> fmap (testSourceStage stg) (Stage.start gs)
-  let sourceTestGroup = testGroup name sourceTests
-  return (sourceTestGroup, return ())
+import Grammar.Test.Round
+import Grammar.Test.Stage
 
 unicodeSymbolTestGroup = testGroup "Unicode-Symbol" $ concat
   [ testList "unicodeSymbol letters" tr "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρσςτυφχψω"
@@ -147,5 +104,5 @@ greekGroups =
   [ unicodeSymbolTestGroup
   , vocalicSyllableTestGroup
   , finalTestGroup
-  , testGroupStages "script stage" Stage.script
+  , testGroupStages "script stage" Stage.script Stage.forgetHasWordPunctuation (fmap (over _Right Stage.start) $ readGroups)
   ]
