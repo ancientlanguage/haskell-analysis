@@ -14,7 +14,7 @@ import qualified Data.Text.IO as Text
 import Options.Applicative hiding (Failure, Success)
 
 import qualified ScriptQueries
-import QueryStage
+import Grammar.IO.QueryStage
 import Grammar.Around
 import Grammar.CommonTypes
 import qualified Grammar.Greek.Stage as Stage

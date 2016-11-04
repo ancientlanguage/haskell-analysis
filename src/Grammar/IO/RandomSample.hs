@@ -1,4 +1,4 @@
-module RandomSample where
+module Grammar.IO.RandomSample where
 
 import Data.Array
 import Data.Random.RVar

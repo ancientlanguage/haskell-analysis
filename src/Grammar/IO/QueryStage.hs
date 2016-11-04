@@ -1,4 +1,4 @@
-module QueryStage where
+module Grammar.IO.QueryStage where
 
 import Control.Lens (over, _1, _2)
 import qualified Data.Char as Char
@@ -9,7 +9,7 @@ import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import Data.Either.Validation
 
-import RandomSample (randomSample)
+import Grammar.IO.RandomSample (randomSample)
 import Grammar.Around
 import Grammar.CommonTypes
 import Grammar.Contextualize

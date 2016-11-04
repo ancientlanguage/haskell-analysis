@@ -8,7 +8,7 @@ import Data.Map (Map)
 import qualified Data.Map as Map
 import qualified Data.List as List
 
-import QueryStage
+import Grammar.IO.QueryStage
 import Grammar.CommonTypes
 import qualified Grammar.Greek.Stage as Stage
 import Grammar.Greek.Script.Types
