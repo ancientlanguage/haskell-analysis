@@ -2,11 +2,10 @@ module Grammar.Test.Stage where
 
 import Data.Text (Text)
 import qualified Data.Text as Text
-import qualified Data.Text.IO as Text
 import Test.Framework
 import Test.Framework.Providers.HUnit
-import Test.HUnit (assertFailure, assertEqual)
-import Data.Either.Validation (Validation(..), _Failure)
+import Test.HUnit (assertFailure)
+import Data.Either.Validation (Validation(..))
 import Grammar.CommonTypes
 import Grammar.Prepare
 import Grammar.Pretty
@@ -22,11 +21,17 @@ testDataLoss
 testDataLoss xs ys = check . filter (\(x, y) -> x /= y) $ zip xs ys
   where
   check [] = return ()
-  check xs@(_ : _) = failMessage $ Text.concat
+  check xs'@(_ : _) = failMessage $ Text.concat
     [ "data loss:"
-    , Text.concat $ fmap (\(x , y) -> Text.concat [ "\n initial:", prettyMilestonedString x, "\n final  :", prettyMilestonedString y ]) xs
+    , Text.concat $ fmap (\(x , y) -> Text.concat [ "\n initial:", prettyMilestonedString x, "\n final  :", prettyMilestonedString y ]) xs'
     ]
 
+testStage
+  :: (Show a1, Show a)
+  => Round (Milestone :* a) (Milestone :* a1) t b
+  -> (t -> [Milestone :* String])
+  -> t
+  -> IO ()
 testStage stg forget x = do
   let stageTo = roundTo stg
   let stageFrom = roundFrom stg
@@ -43,8 +48,21 @@ testStage stg forget x = do
           ]
         Success z -> testDataLoss (forget x) (forget z)
 
+testSourceStage
+  :: (Show a1, Show a)
+  => Round (Milestone :* a) (Milestone :* a1) t b
+  -> (t -> [Milestone :* String])
+  -> (SourceId, t)
+  -> Test
 testSourceStage stg forget (SourceId g s, ms) = testCase (Text.unpack . Text.intercalate " " $ [g, s]) $ testStage stg forget ms
 
+testGroupStages
+  :: (Show a1, Show a)
+  => TestName
+  -> Round (Milestone :* a) (Milestone :* a1) t b
+  -> (t -> [Milestone :* String])
+  -> IO (Either [Char] [(SourceId, t)])
+  -> Test
 testGroupStages name stg forget load = buildTestBracketed $ do
   result <- load
   let
