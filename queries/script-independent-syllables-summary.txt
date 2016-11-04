@@ -1,0 +1,1197 @@
+Showing summary
+1194 headings
+
+Syllable {syllableConsonants = [], syllableVowel = VS_Vowel V_α} 14892
+Syllable {syllableConsonants = [], syllableVowel = VS_Vowel V_ε} 17743
+Syllable {syllableConsonants = [], syllableVowel = VS_Vowel V_η} 6358
+Syllable {syllableConsonants = [], syllableVowel = VS_Vowel V_ι} 3568
+Syllable {syllableConsonants = [], syllableVowel = VS_Vowel V_ο} 10148
+Syllable {syllableConsonants = [], syllableVowel = VS_Vowel V_υ} 3077
+Syllable {syllableConsonants = [], syllableVowel = VS_Vowel V_ω} 3347
+Syllable {syllableConsonants = [], syllableVowel = VS_Diphthong D_αι} 936
+Syllable {syllableConsonants = [], syllableVowel = VS_Diphthong D_αυ} 6095
+Syllable {syllableConsonants = [], syllableVowel = VS_Diphthong D_ει} 5029
+Syllable {syllableConsonants = [], syllableVowel = VS_Diphthong D_ευ} 739
+Syllable {syllableConsonants = [], syllableVowel = VS_Diphthong D_ηυ} 21
+Syllable {syllableConsonants = [], syllableVowel = VS_Diphthong D_οι} 2275
+Syllable {syllableConsonants = [], syllableVowel = VS_Diphthong D_ου} 5837
+Syllable {syllableConsonants = [], syllableVowel = VS_Diphthong D_υι} 454
+Syllable {syllableConsonants = [], syllableVowel = VS_ImproperDiphthong I_α} 506
+Syllable {syllableConsonants = [], syllableVowel = VS_ImproperDiphthong I_η} 174
+Syllable {syllableConsonants = [], syllableVowel = VS_ImproperDiphthong I_ω} 636
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_Vowel V_α} 934
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_Vowel V_ε} 219
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_Vowel V_η} 211
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_Vowel V_ι} 96
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_Vowel V_ο} 344
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_Vowel V_υ} 54
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_Vowel V_ω} 98
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_Diphthong D_αι} 80
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_Diphthong D_ει} 83
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_Diphthong D_ευ} 2
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_Diphthong D_οι} 5
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_Diphthong D_ου} 171
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_ImproperDiphthong I_α} 6
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_ImproperDiphthong I_η} 17
+Syllable {syllableConsonants = [CR_β], syllableVowel = VS_ImproperDiphthong I_ω} 12
+Syllable {syllableConsonants = [CR_β,CR_β], syllableVowel = VS_Vowel V_α} 86
+Syllable {syllableConsonants = [CR_β,CR_β], syllableVowel = VS_Vowel V_ι} 15
+Syllable {syllableConsonants = [CR_β,CR_β], syllableVowel = VS_Diphthong D_ου} 2
+Syllable {syllableConsonants = [CR_β,CR_δ], syllableVowel = VS_Vowel V_ε} 9
+Syllable {syllableConsonants = [CR_β,CR_δ], syllableVowel = VS_Vowel V_ι} 2
+Syllable {syllableConsonants = [CR_β,CR_δ], syllableVowel = VS_Vowel V_ο} 21
+Syllable {syllableConsonants = [CR_β,CR_δ], syllableVowel = VS_Diphthong D_ου} 3
+Syllable {syllableConsonants = [CR_β,CR_δ], syllableVowel = VS_ImproperDiphthong I_ω} 5
+Syllable {syllableConsonants = [CR_β,CR_λ], syllableVowel = VS_Vowel V_α} 66
+Syllable {syllableConsonants = [CR_β,CR_λ], syllableVowel = VS_Vowel V_ε} 178
+Syllable {syllableConsonants = [CR_β,CR_λ], syllableVowel = VS_Vowel V_η} 53
+Syllable {syllableConsonants = [CR_β,CR_λ], syllableVowel = VS_Vowel V_ι} 36
+Syllable {syllableConsonants = [CR_β,CR_λ], syllableVowel = VS_Vowel V_ο} 1
+Syllable {syllableConsonants = [CR_β,CR_λ], syllableVowel = VS_Diphthong D_ου} 3
+Syllable {syllableConsonants = [CR_β,CR_λ], syllableVowel = VS_ImproperDiphthong I_ω} 7
+Syllable {syllableConsonants = [CR_β,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 104
+Syllable {syllableConsonants = [CR_β,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 17
+Syllable {syllableConsonants = [CR_β,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 14
+Syllable {syllableConsonants = [CR_β,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 15
+Syllable {syllableConsonants = [CR_β,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_υ} 9
+Syllable {syllableConsonants = [CR_β,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 32
+Syllable {syllableConsonants = [CR_β,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_αι} 4
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_Vowel V_α} 2086
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_Vowel V_ε} 1419
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_Vowel V_η} 475
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_Vowel V_ι} 715
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_Vowel V_ο} 938
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_Vowel V_υ} 269
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_Vowel V_ω} 1055
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_Diphthong D_αι} 24
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_Diphthong D_αυ} 1
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_Diphthong D_ει} 616
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_Diphthong D_ευ} 16
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_Diphthong D_οι} 49
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_Diphthong D_ου} 230
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_ImproperDiphthong I_η} 59
+Syllable {syllableConsonants = [CR_γ], syllableVowel = VS_ImproperDiphthong I_ω} 51
+Syllable {syllableConsonants = [CR_γ,CR_γ], syllableVowel = VS_Vowel V_α} 5
+Syllable {syllableConsonants = [CR_γ,CR_γ], syllableVowel = VS_Vowel V_ε} 458
+Syllable {syllableConsonants = [CR_γ,CR_γ], syllableVowel = VS_Vowel V_η} 1
+Syllable {syllableConsonants = [CR_γ,CR_γ], syllableVowel = VS_Vowel V_ι} 44
+Syllable {syllableConsonants = [CR_γ,CR_γ], syllableVowel = VS_Vowel V_ο} 14
+Syllable {syllableConsonants = [CR_γ,CR_γ], syllableVowel = VS_Vowel V_υ} 47
+Syllable {syllableConsonants = [CR_γ,CR_γ], syllableVowel = VS_Diphthong D_αι} 1
+Syllable {syllableConsonants = [CR_γ,CR_γ], syllableVowel = VS_Diphthong D_ει} 68
+Syllable {syllableConsonants = [CR_γ,CR_γ], syllableVowel = VS_Diphthong D_οι} 1
+Syllable {syllableConsonants = [CR_γ,CR_γ,CR_ν], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_γ,CR_γ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_αι} 1
+Syllable {syllableConsonants = [CR_γ,CR_δ], syllableVowel = VS_Vowel V_α} 11
+Syllable {syllableConsonants = [CR_γ,CR_δ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_γ,CR_δ], syllableVowel = VS_Vowel V_ο} 8
+Syllable {syllableConsonants = [CR_γ,CR_κ], syllableVowel = VS_Vowel V_α} 87
+Syllable {syllableConsonants = [CR_γ,CR_κ], syllableVowel = VS_Vowel V_ε} 26
+Syllable {syllableConsonants = [CR_γ,CR_κ], syllableVowel = VS_Vowel V_η} 14
+Syllable {syllableConsonants = [CR_γ,CR_κ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_γ,CR_κ], syllableVowel = VS_Vowel V_ο} 6
+Syllable {syllableConsonants = [CR_γ,CR_κ], syllableVowel = VS_Vowel V_υ} 7
+Syllable {syllableConsonants = [CR_γ,CR_κ], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_γ,CR_κ], syllableVowel = VS_Diphthong D_αι} 14
+Syllable {syllableConsonants = [CR_γ,CR_κ], syllableVowel = VS_Diphthong D_αυ} 1
+Syllable {syllableConsonants = [CR_γ,CR_κ], syllableVowel = VS_Diphthong D_ει} 6
+Syllable {syllableConsonants = [CR_γ,CR_κ], syllableVowel = VS_Diphthong D_οι} 7
+Syllable {syllableConsonants = [CR_γ,CR_κ], syllableVowel = VS_ImproperDiphthong I_η} 5
+Syllable {syllableConsonants = [CR_γ,CR_κ,CR_λ], syllableVowel = VS_Vowel V_η} 11
+Syllable {syllableConsonants = [CR_γ,CR_κ,CR_λ], syllableVowel = VS_Diphthong D_ει} 1
+Syllable {syllableConsonants = [CR_γ,CR_κ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 7
+Syllable {syllableConsonants = [CR_γ,CR_κ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 5
+Syllable {syllableConsonants = [CR_γ,CR_λ], syllableVowel = VS_Vowel V_υ} 4
+Syllable {syllableConsonants = [CR_γ,CR_λ], syllableVowel = VS_Vowel V_ω} 52
+Syllable {syllableConsonants = [CR_γ,CR_λ], syllableVowel = VS_Diphthong D_ευ} 1
+Syllable {syllableConsonants = [CR_γ,CR_μ], syllableVowel = VS_Vowel V_α} 61
+Syllable {syllableConsonants = [CR_γ,CR_μ], syllableVowel = VS_Vowel V_ε} 45
+Syllable {syllableConsonants = [CR_γ,CR_μ], syllableVowel = VS_Vowel V_ο} 16
+Syllable {syllableConsonants = [CR_γ,CR_μ], syllableVowel = VS_Vowel V_ω} 2
+Syllable {syllableConsonants = [CR_γ,CR_μ], syllableVowel = VS_Diphthong D_οι} 4
+Syllable {syllableConsonants = [CR_γ,CR_μ], syllableVowel = VS_Diphthong D_ου} 7
+Syllable {syllableConsonants = [CR_γ,CR_μ], syllableVowel = VS_ImproperDiphthong I_η} 2
+Syllable {syllableConsonants = [CR_γ,CR_ν], syllableVowel = VS_Vowel V_α} 7
+Syllable {syllableConsonants = [CR_γ,CR_ν], syllableVowel = VS_Vowel V_η} 8
+Syllable {syllableConsonants = [CR_γ,CR_ν], syllableVowel = VS_Vowel V_ι} 8
+Syllable {syllableConsonants = [CR_γ,CR_ν], syllableVowel = VS_Vowel V_ο} 40
+Syllable {syllableConsonants = [CR_γ,CR_ν], syllableVowel = VS_Vowel V_υ} 4
+Syllable {syllableConsonants = [CR_γ,CR_ν], syllableVowel = VS_Vowel V_ω} 262
+Syllable {syllableConsonants = [CR_γ,CR_ν], syllableVowel = VS_Diphthong D_ει} 2
+Syllable {syllableConsonants = [CR_γ,CR_ν], syllableVowel = VS_Diphthong D_οι} 7
+Syllable {syllableConsonants = [CR_γ,CR_ν], syllableVowel = VS_Diphthong D_ου} 22
+Syllable {syllableConsonants = [CR_γ,CR_ν], syllableVowel = VS_ImproperDiphthong I_ω} 6
+Syllable {syllableConsonants = [CR_γ,CR_ξ], syllableVowel = VS_Vowel V_α} 3
+Syllable {syllableConsonants = [CR_γ,CR_ξ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_γ,CR_ξ], syllableVowel = VS_Vowel V_ο} 2
+Syllable {syllableConsonants = [CR_γ,CR_ξ], syllableVowel = VS_Diphthong D_αι} 1
+Syllable {syllableConsonants = [CR_γ,CR_ξ], syllableVowel = VS_Diphthong D_ει} 1
+Syllable {syllableConsonants = [CR_γ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 344
+Syllable {syllableConsonants = [CR_γ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_η} 24
+Syllable {syllableConsonants = [CR_γ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 16
+Syllable {syllableConsonants = [CR_γ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 9
+Syllable {syllableConsonants = [CR_γ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_υ} 6
+Syllable {syllableConsonants = [CR_γ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 2
+Syllable {syllableConsonants = [CR_γ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_αυ} 1
+Syllable {syllableConsonants = [CR_γ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ευ} 1
+Syllable {syllableConsonants = [CR_γ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 16
+Syllable {syllableConsonants = [CR_γ,CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_α} 1
+Syllable {syllableConsonants = [CR_γ,CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_ω} 10
+Syllable {syllableConsonants = [CR_γ,CR_χ], syllableVowel = VS_Vowel V_α} 9
+Syllable {syllableConsonants = [CR_γ,CR_χ], syllableVowel = VS_Vowel V_ε} 6
+Syllable {syllableConsonants = [CR_γ,CR_χ], syllableVowel = VS_Vowel V_ο} 5
+Syllable {syllableConsonants = [CR_γ,CR_χ], syllableVowel = VS_Vowel V_υ} 2
+Syllable {syllableConsonants = [CR_γ,CR_χ], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_γ,CR_χ], syllableVowel = VS_Diphthong D_αι} 4
+Syllable {syllableConsonants = [CR_γ,CR_χ], syllableVowel = VS_Diphthong D_ει} 2
+Syllable {syllableConsonants = [CR_γ,CR_χ], syllableVowel = VS_ImproperDiphthong I_η} 1
+Syllable {syllableConsonants = [CR_γ,CR_χ,CR_θ], syllableVowel = VS_ImproperDiphthong I_η} 1
+Syllable {syllableConsonants = [CR_γ,CR_χ,CR_ν], syllableVowel = VS_Vowel V_α} 9
+Syllable {syllableConsonants = [CR_γ,CR_χ,CR_ν], syllableVowel = VS_Vowel V_ι} 11
+Syllable {syllableConsonants = [CR_γ,CR_χ,CR_ν], syllableVowel = VS_Vowel V_ο} 1
+Syllable {syllableConsonants = [CR_γ,CR_χ,CR_ν], syllableVowel = VS_Diphthong D_οι} 4
+Syllable {syllableConsonants = [CR_γ,CR_χ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 2
+Syllable {syllableConsonants = [CR_γ,CR_χ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_γ,CR_χ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_Vowel V_α} 824
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_Vowel V_ε} 4358
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_Vowel V_η} 304
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_Vowel V_ι} 2430
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_Vowel V_ο} 1123
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_Vowel V_υ} 570
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_Vowel V_ω} 644
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_Diphthong D_αι} 339
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_Diphthong D_ει} 409
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_Diphthong D_ευ} 87
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_Diphthong D_οι} 18
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_Diphthong D_ου} 529
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_Diphthong D_υι} 3
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_ImproperDiphthong I_α} 1
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_ImproperDiphthong I_η} 15
+Syllable {syllableConsonants = [CR_δ], syllableVowel = VS_ImproperDiphthong I_ω} 46
+Syllable {syllableConsonants = [CR_δ,CR_δ], syllableVowel = VS_Vowel V_α} 3
+Syllable {syllableConsonants = [CR_δ,CR_δ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_δ,CR_δ], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_δ,CR_δ], syllableVowel = VS_Diphthong D_αι} 2
+Syllable {syllableConsonants = [CR_δ,CR_δ], syllableVowel = VS_Diphthong D_ου} 14
+Syllable {syllableConsonants = [CR_δ,CR_μ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_δ,CR_ν], syllableVowel = VS_Vowel V_α} 1
+Syllable {syllableConsonants = [CR_δ,CR_ν], syllableVowel = VS_Vowel V_ω} 4
+Syllable {syllableConsonants = [CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 54
+Syllable {syllableConsonants = [CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 8
+Syllable {syllableConsonants = [CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 30
+Syllable {syllableConsonants = [CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 9
+Syllable {syllableConsonants = [CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 8
+Syllable {syllableConsonants = [CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_αι} 4
+Syllable {syllableConsonants = [CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ευ} 3
+Syllable {syllableConsonants = [CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_οι} 2
+Syllable {syllableConsonants = [CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 1
+Syllable {syllableConsonants = [CR_ζ], syllableVowel = VS_Vowel V_α} 89
+Syllable {syllableConsonants = [CR_ζ], syllableVowel = VS_Vowel V_ε} 212
+Syllable {syllableConsonants = [CR_ζ], syllableVowel = VS_Vowel V_η} 278
+Syllable {syllableConsonants = [CR_ζ], syllableVowel = VS_Vowel V_ι} 14
+Syllable {syllableConsonants = [CR_ζ], syllableVowel = VS_Vowel V_ο} 343
+Syllable {syllableConsonants = [CR_ζ], syllableVowel = VS_Vowel V_υ} 36
+Syllable {syllableConsonants = [CR_ζ], syllableVowel = VS_Vowel V_ω} 375
+Syllable {syllableConsonants = [CR_ζ], syllableVowel = VS_Diphthong D_αι} 1
+Syllable {syllableConsonants = [CR_ζ], syllableVowel = VS_Diphthong D_ει} 107
+Syllable {syllableConsonants = [CR_ζ], syllableVowel = VS_Diphthong D_ευ} 6
+Syllable {syllableConsonants = [CR_ζ], syllableVowel = VS_Diphthong D_ου} 25
+Syllable {syllableConsonants = [CR_ζ], syllableVowel = VS_ImproperDiphthong I_η} 28
+Syllable {syllableConsonants = [CR_ζ], syllableVowel = VS_ImproperDiphthong I_ω} 37
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_Vowel V_α} 703
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_Vowel V_ε} 2430
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_Vowel V_η} 1508
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_Vowel V_ι} 138
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_Vowel V_ο} 209
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_Vowel V_υ} 383
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_Vowel V_ω} 303
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_Diphthong D_αι} 14
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_Diphthong D_αυ} 53
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_Diphthong D_ει} 441
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_Diphthong D_ευ} 25
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_Diphthong D_οι} 16
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_Diphthong D_ου} 68
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_Diphthong D_υι} 3
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_ImproperDiphthong I_η} 99
+Syllable {syllableConsonants = [CR_θ], syllableVowel = VS_ImproperDiphthong I_ω} 20
+Syllable {syllableConsonants = [CR_θ,CR_θ], syllableVowel = VS_Vowel V_α} 2
+Syllable {syllableConsonants = [CR_θ,CR_θ], syllableVowel = VS_Vowel V_ι} 2
+Syllable {syllableConsonants = [CR_θ,CR_θ], syllableVowel = VS_Diphthong D_αι} 5
+Syllable {syllableConsonants = [CR_θ,CR_λ], syllableVowel = VS_Vowel V_ε} 8
+Syllable {syllableConsonants = [CR_θ,CR_λ], syllableVowel = VS_Vowel V_η} 3
+Syllable {syllableConsonants = [CR_θ,CR_λ], syllableVowel = VS_Vowel V_ι} 57
+Syllable {syllableConsonants = [CR_θ,CR_λ], syllableVowel = VS_Diphthong D_ου} 1
+Syllable {syllableConsonants = [CR_θ,CR_λ], syllableVowel = VS_ImproperDiphthong I_η} 1
+Syllable {syllableConsonants = [CR_θ,CR_μ], syllableVowel = VS_Vowel V_η} 5
+Syllable {syllableConsonants = [CR_θ,CR_μ], syllableVowel = VS_Vowel V_ο} 25
+Syllable {syllableConsonants = [CR_θ,CR_μ], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_θ,CR_μ], syllableVowel = VS_Diphthong D_ου} 3
+Syllable {syllableConsonants = [CR_θ,CR_μ], syllableVowel = VS_ImproperDiphthong I_ω} 1
+Syllable {syllableConsonants = [CR_θ,CR_ν], syllableVowel = VS_Vowel V_α} 1
+Syllable {syllableConsonants = [CR_θ,CR_ν], syllableVowel = VS_Vowel V_ε} 32
+Syllable {syllableConsonants = [CR_θ,CR_ν], syllableVowel = VS_Vowel V_η} 66
+Syllable {syllableConsonants = [CR_θ,CR_ν], syllableVowel = VS_Vowel V_ι} 5
+Syllable {syllableConsonants = [CR_θ,CR_ν], syllableVowel = VS_Vowel V_ο} 18
+Syllable {syllableConsonants = [CR_θ,CR_ν], syllableVowel = VS_Vowel V_ω} 45
+Syllable {syllableConsonants = [CR_θ,CR_ν], syllableVowel = VS_Diphthong D_ει} 7
+Syllable {syllableConsonants = [CR_θ,CR_ν], syllableVowel = VS_Diphthong D_ου} 7
+Syllable {syllableConsonants = [CR_θ,CR_ν], syllableVowel = VS_ImproperDiphthong I_η} 22
+Syllable {syllableConsonants = [CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 6
+Syllable {syllableConsonants = [CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 5
+Syllable {syllableConsonants = [CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_η} 10
+Syllable {syllableConsonants = [CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 8
+Syllable {syllableConsonants = [CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 70
+Syllable {syllableConsonants = [CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 2
+Syllable {syllableConsonants = [CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_αυ} 1
+Syllable {syllableConsonants = [CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ευ} 3
+Syllable {syllableConsonants = [CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_οι} 6
+Syllable {syllableConsonants = [CR_θ,CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_α} 6
+Syllable {syllableConsonants = [CR_θ,CR_σ], syllableVowel = VS_Vowel V_α} 7
+Syllable {syllableConsonants = [CR_θ,CR_σ], syllableVowel = VS_Vowel V_η} 2
+Syllable {syllableConsonants = [CR_θ,CR_φ], syllableVowel = VS_Vowel V_α} 3
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_Vowel V_α} 3543
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_Vowel V_ε} 761
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_Vowel V_η} 299
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_Vowel V_ι} 378
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_Vowel V_ο} 1207
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_Vowel V_υ} 842
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_Vowel V_ω} 297
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_Diphthong D_αι} 9428
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_Diphthong D_αυ} 89
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_Diphthong D_ει} 622
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_Diphthong D_οι} 150
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_Diphthong D_ου} 587
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_Diphthong D_υι} 3
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_ImproperDiphthong I_α} 3
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_ImproperDiphthong I_η} 37
+Syllable {syllableConsonants = [CR_κ], syllableVowel = VS_ImproperDiphthong I_ω} 30
+Syllable {syllableConsonants = [CR_κ,CR_β], syllableVowel = VS_Vowel V_α} 63
+Syllable {syllableConsonants = [CR_κ,CR_β], syllableVowel = VS_Vowel V_ο} 1
+Syllable {syllableConsonants = [CR_κ,CR_β,CR_λ], syllableVowel = VS_Vowel V_η} 3
+Syllable {syllableConsonants = [CR_κ,CR_γ], syllableVowel = VS_Vowel V_ο} 1
+Syllable {syllableConsonants = [CR_κ,CR_δ], syllableVowel = VS_Vowel V_α} 1
+Syllable {syllableConsonants = [CR_κ,CR_δ], syllableVowel = VS_Vowel V_ε} 12
+Syllable {syllableConsonants = [CR_κ,CR_δ], syllableVowel = VS_Vowel V_η} 6
+Syllable {syllableConsonants = [CR_κ,CR_δ], syllableVowel = VS_Vowel V_ι} 20
+Syllable {syllableConsonants = [CR_κ,CR_δ], syllableVowel = VS_Vowel V_ο} 2
+Syllable {syllableConsonants = [CR_κ,CR_δ], syllableVowel = VS_Vowel V_υ} 6
+Syllable {syllableConsonants = [CR_κ,CR_δ], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_κ,CR_ζ], syllableVowel = VS_Vowel V_η} 7
+Syllable {syllableConsonants = [CR_κ,CR_θ], syllableVowel = VS_Vowel V_α} 3
+Syllable {syllableConsonants = [CR_κ,CR_θ], syllableVowel = VS_Vowel V_ε} 1
+Syllable {syllableConsonants = [CR_κ,CR_κ], syllableVowel = VS_Vowel V_α} 3
+Syllable {syllableConsonants = [CR_κ,CR_κ], syllableVowel = VS_Vowel V_ε} 3
+Syllable {syllableConsonants = [CR_κ,CR_κ], syllableVowel = VS_Vowel V_ι} 6
+Syllable {syllableConsonants = [CR_κ,CR_κ], syllableVowel = VS_Vowel V_ο} 15
+Syllable {syllableConsonants = [CR_κ,CR_κ], syllableVowel = VS_Diphthong D_ου} 1
+Syllable {syllableConsonants = [CR_κ,CR_κ], syllableVowel = VS_ImproperDiphthong I_ω} 5
+Syllable {syllableConsonants = [CR_κ,CR_κ,CR_λ], syllableVowel = VS_Vowel V_η} 114
+Syllable {syllableConsonants = [CR_κ,CR_κ,CR_λ], syllableVowel = VS_Vowel V_ι} 2
+Syllable {syllableConsonants = [CR_κ,CR_κ,CR_λ], syllableVowel = VS_Diphthong D_ει} 1
+Syllable {syllableConsonants = [CR_κ,CR_λ], syllableVowel = VS_Vowel V_α} 42
+Syllable {syllableConsonants = [CR_κ,CR_λ], syllableVowel = VS_Vowel V_ε} 61
+Syllable {syllableConsonants = [CR_κ,CR_λ], syllableVowel = VS_Vowel V_η} 201
+Syllable {syllableConsonants = [CR_κ,CR_λ], syllableVowel = VS_Vowel V_ι} 50
+Syllable {syllableConsonants = [CR_κ,CR_λ], syllableVowel = VS_Vowel V_ο} 12
+Syllable {syllableConsonants = [CR_κ,CR_λ], syllableVowel = VS_Vowel V_υ} 13
+Syllable {syllableConsonants = [CR_κ,CR_λ], syllableVowel = VS_Vowel V_ω} 7
+Syllable {syllableConsonants = [CR_κ,CR_λ], syllableVowel = VS_Diphthong D_αι} 29
+Syllable {syllableConsonants = [CR_κ,CR_λ], syllableVowel = VS_Diphthong D_αυ} 23
+Syllable {syllableConsonants = [CR_κ,CR_λ], syllableVowel = VS_Diphthong D_ει} 31
+Syllable {syllableConsonants = [CR_κ,CR_λ], syllableVowel = VS_Diphthong D_ευ} 1
+Syllable {syllableConsonants = [CR_κ,CR_λ], syllableVowel = VS_Diphthong D_ου} 1
+Syllable {syllableConsonants = [CR_κ,CR_λ], syllableVowel = VS_ImproperDiphthong I_ω} 8
+Syllable {syllableConsonants = [CR_κ,CR_μ], syllableVowel = VS_Vowel V_α} 4
+Syllable {syllableConsonants = [CR_κ,CR_μ], syllableVowel = VS_Vowel V_η} 4
+Syllable {syllableConsonants = [CR_κ,CR_μ], syllableVowel = VS_Vowel V_ο} 1
+Syllable {syllableConsonants = [CR_κ,CR_ν], syllableVowel = VS_Vowel V_α} 65
+Syllable {syllableConsonants = [CR_κ,CR_ν], syllableVowel = VS_Vowel V_ε} 1
+Syllable {syllableConsonants = [CR_κ,CR_ν], syllableVowel = VS_Vowel V_η} 6
+Syllable {syllableConsonants = [CR_κ,CR_ν], syllableVowel = VS_Vowel V_ι} 9
+Syllable {syllableConsonants = [CR_κ,CR_ν], syllableVowel = VS_Vowel V_ο} 22
+Syllable {syllableConsonants = [CR_κ,CR_ν], syllableVowel = VS_Vowel V_υ} 14
+Syllable {syllableConsonants = [CR_κ,CR_ν], syllableVowel = VS_Vowel V_ω} 7
+Syllable {syllableConsonants = [CR_κ,CR_ν], syllableVowel = VS_Diphthong D_οι} 8
+Syllable {syllableConsonants = [CR_κ,CR_ν], syllableVowel = VS_Diphthong D_ου} 5
+Syllable {syllableConsonants = [CR_κ,CR_ν], syllableVowel = VS_ImproperDiphthong I_ω} 3
+Syllable {syllableConsonants = [CR_κ,CR_π], syllableVowel = VS_Vowel V_α} 2
+Syllable {syllableConsonants = [CR_κ,CR_π], syllableVowel = VS_Vowel V_ε} 13
+Syllable {syllableConsonants = [CR_κ,CR_π], syllableVowel = VS_Vowel V_ο} 30
+Syllable {syllableConsonants = [CR_κ,CR_π], syllableVowel = VS_Diphthong D_ει} 4
+Syllable {syllableConsonants = [CR_κ,CR_π,CR_λ], syllableVowel = VS_Vowel V_η} 3
+Syllable {syllableConsonants = [CR_κ,CR_π,CR_λ], syllableVowel = VS_Diphthong D_ευ} 1
+Syllable {syllableConsonants = [CR_κ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 191
+Syllable {syllableConsonants = [CR_κ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 10
+Syllable {syllableConsonants = [CR_κ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_η} 12
+Syllable {syllableConsonants = [CR_κ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 584
+Syllable {syllableConsonants = [CR_κ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 113
+Syllable {syllableConsonants = [CR_κ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_υ} 64
+Syllable {syllableConsonants = [CR_κ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 92
+Syllable {syllableConsonants = [CR_κ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_αι} 2
+Syllable {syllableConsonants = [CR_κ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_αυ} 15
+Syllable {syllableConsonants = [CR_κ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ει} 19
+Syllable {syllableConsonants = [CR_κ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_οι} 17
+Syllable {syllableConsonants = [CR_κ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 37
+Syllable {syllableConsonants = [CR_κ,CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_ω} 1
+Syllable {syllableConsonants = [CR_κ,CR_σ,CR_τ], syllableVowel = VS_Vowel V_α} 7
+Syllable {syllableConsonants = [CR_κ,CR_τ], syllableVowel = VS_Vowel V_α} 27
+Syllable {syllableConsonants = [CR_κ,CR_τ], syllableVowel = VS_Vowel V_ε} 24
+Syllable {syllableConsonants = [CR_κ,CR_τ], syllableVowel = VS_Vowel V_η} 45
+Syllable {syllableConsonants = [CR_κ,CR_τ], syllableVowel = VS_Vowel V_ι} 72
+Syllable {syllableConsonants = [CR_κ,CR_τ], syllableVowel = VS_Vowel V_ο} 85
+Syllable {syllableConsonants = [CR_κ,CR_τ], syllableVowel = VS_Vowel V_υ} 21
+Syllable {syllableConsonants = [CR_κ,CR_τ], syllableVowel = VS_Vowel V_ω} 29
+Syllable {syllableConsonants = [CR_κ,CR_τ], syllableVowel = VS_Diphthong D_αι} 10
+Syllable {syllableConsonants = [CR_κ,CR_τ], syllableVowel = VS_Diphthong D_ει} 64
+Syllable {syllableConsonants = [CR_κ,CR_τ], syllableVowel = VS_Diphthong D_ευ} 1
+Syllable {syllableConsonants = [CR_κ,CR_τ], syllableVowel = VS_Diphthong D_οι} 12
+Syllable {syllableConsonants = [CR_κ,CR_τ], syllableVowel = VS_Diphthong D_ου} 15
+Syllable {syllableConsonants = [CR_κ,CR_τ], syllableVowel = VS_ImproperDiphthong I_η} 3
+Syllable {syllableConsonants = [CR_κ,CR_τ], syllableVowel = VS_ImproperDiphthong I_ω} 9
+Syllable {syllableConsonants = [CR_κ,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 2
+Syllable {syllableConsonants = [CR_κ,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 3
+Syllable {syllableConsonants = [CR_κ,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_κ,CR_φ], syllableVowel = VS_Vowel V_ε} 2
+Syllable {syllableConsonants = [CR_κ,CR_φ], syllableVowel = VS_Vowel V_ο} 3
+Syllable {syllableConsonants = [CR_κ,CR_φ], syllableVowel = VS_Vowel V_υ} 5
+Syllable {syllableConsonants = [CR_κ,CR_φ], syllableVowel = VS_Diphthong D_ευ} 2
+Syllable {syllableConsonants = [CR_κ,CR_χ], syllableVowel = VS_Vowel V_ε} 4
+Syllable {syllableConsonants = [CR_κ,CR_χ], syllableVowel = VS_Vowel V_υ} 7
+Syllable {syllableConsonants = [CR_κ,CR_χ], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_κ,CR_χ], syllableVowel = VS_Diphthong D_αι} 3
+Syllable {syllableConsonants = [CR_κ,CR_χ], syllableVowel = VS_Diphthong D_ει} 1
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_Vowel V_α} 1596
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_Vowel V_ε} 2152
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_Vowel V_η} 1158
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_Vowel V_ι} 1216
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_Vowel V_ο} 1382
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_Vowel V_υ} 597
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_Vowel V_ω} 527
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_Diphthong D_αι} 206
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_Diphthong D_αυ} 8
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_Diphthong D_ει} 648
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_Diphthong D_ευ} 300
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_Diphthong D_οι} 227
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_Diphthong D_ου} 618
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_ImproperDiphthong I_α} 2
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_ImproperDiphthong I_η} 117
+Syllable {syllableConsonants = [CR_λ], syllableVowel = VS_ImproperDiphthong I_ω} 69
+Syllable {syllableConsonants = [CR_λ,CR_β], syllableVowel = VS_Vowel V_ο} 1
+Syllable {syllableConsonants = [CR_λ,CR_γ], syllableVowel = VS_Vowel V_η} 1
+Syllable {syllableConsonants = [CR_λ,CR_γ], syllableVowel = VS_Vowel V_ο} 3
+Syllable {syllableConsonants = [CR_λ,CR_γ], syllableVowel = VS_Diphthong D_ει} 10
+Syllable {syllableConsonants = [CR_λ,CR_δ], syllableVowel = VS_Vowel V_α} 1
+Syllable {syllableConsonants = [CR_λ,CR_δ], syllableVowel = VS_Diphthong D_αι} 1
+Syllable {syllableConsonants = [CR_λ,CR_ζ], syllableVowel = VS_Vowel V_ε} 7
+Syllable {syllableConsonants = [CR_λ,CR_θ], syllableVowel = VS_Vowel V_α} 33
+Syllable {syllableConsonants = [CR_λ,CR_θ], syllableVowel = VS_Vowel V_ε} 285
+Syllable {syllableConsonants = [CR_λ,CR_θ], syllableVowel = VS_Vowel V_η} 16
+Syllable {syllableConsonants = [CR_λ,CR_θ], syllableVowel = VS_Vowel V_ο} 282
+Syllable {syllableConsonants = [CR_λ,CR_θ], syllableVowel = VS_Vowel V_ω} 162
+Syllable {syllableConsonants = [CR_λ,CR_θ], syllableVowel = VS_Diphthong D_ει} 111
+Syllable {syllableConsonants = [CR_λ,CR_θ], syllableVowel = VS_Diphthong D_ου} 25
+Syllable {syllableConsonants = [CR_λ,CR_θ], syllableVowel = VS_ImproperDiphthong I_η} 62
+Syllable {syllableConsonants = [CR_λ,CR_κ], syllableVowel = VS_Vowel V_α} 6
+Syllable {syllableConsonants = [CR_λ,CR_κ], syllableVowel = VS_Vowel V_ε} 8
+Syllable {syllableConsonants = [CR_λ,CR_κ], syllableVowel = VS_Vowel V_η} 2
+Syllable {syllableConsonants = [CR_λ,CR_κ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_λ,CR_κ], syllableVowel = VS_Vowel V_ο} 9
+Syllable {syllableConsonants = [CR_λ,CR_κ], syllableVowel = VS_Vowel V_υ} 6
+Syllable {syllableConsonants = [CR_λ,CR_κ], syllableVowel = VS_Vowel V_ω} 2
+Syllable {syllableConsonants = [CR_λ,CR_κ], syllableVowel = VS_Diphthong D_ευ} 1
+Syllable {syllableConsonants = [CR_λ,CR_κ], syllableVowel = VS_Diphthong D_ου} 2
+Syllable {syllableConsonants = [CR_λ,CR_λ], syllableVowel = VS_Vowel V_α} 595
+Syllable {syllableConsonants = [CR_λ,CR_λ], syllableVowel = VS_Vowel V_ε} 46
+Syllable {syllableConsonants = [CR_λ,CR_λ], syllableVowel = VS_Vowel V_η} 202
+Syllable {syllableConsonants = [CR_λ,CR_λ], syllableVowel = VS_Vowel V_ι} 23
+Syllable {syllableConsonants = [CR_λ,CR_λ], syllableVowel = VS_Vowel V_ο} 254
+Syllable {syllableConsonants = [CR_λ,CR_λ], syllableVowel = VS_Vowel V_υ} 23
+Syllable {syllableConsonants = [CR_λ,CR_λ], syllableVowel = VS_Vowel V_ω} 96
+Syllable {syllableConsonants = [CR_λ,CR_λ], syllableVowel = VS_Diphthong D_αι} 11
+Syllable {syllableConsonants = [CR_λ,CR_λ], syllableVowel = VS_Diphthong D_ει} 65
+Syllable {syllableConsonants = [CR_λ,CR_λ], syllableVowel = VS_Diphthong D_οι} 123
+Syllable {syllableConsonants = [CR_λ,CR_λ], syllableVowel = VS_Diphthong D_ου} 83
+Syllable {syllableConsonants = [CR_λ,CR_λ], syllableVowel = VS_ImproperDiphthong I_η} 14
+Syllable {syllableConsonants = [CR_λ,CR_λ], syllableVowel = VS_ImproperDiphthong I_ω} 32
+Syllable {syllableConsonants = [CR_λ,CR_μ], syllableVowel = VS_Vowel V_α} 13
+Syllable {syllableConsonants = [CR_λ,CR_μ], syllableVowel = VS_Vowel V_ε} 14
+Syllable {syllableConsonants = [CR_λ,CR_μ], syllableVowel = VS_Vowel V_η} 7
+Syllable {syllableConsonants = [CR_λ,CR_μ], syllableVowel = VS_Vowel V_ο} 21
+Syllable {syllableConsonants = [CR_λ,CR_μ], syllableVowel = VS_Vowel V_ω} 19
+Syllable {syllableConsonants = [CR_λ,CR_μ], syllableVowel = VS_Diphthong D_ει} 1
+Syllable {syllableConsonants = [CR_λ,CR_μ], syllableVowel = VS_Diphthong D_οι} 25
+Syllable {syllableConsonants = [CR_λ,CR_μ], syllableVowel = VS_Diphthong D_ου} 43
+Syllable {syllableConsonants = [CR_λ,CR_μ], syllableVowel = VS_ImproperDiphthong I_α} 4
+Syllable {syllableConsonants = [CR_λ,CR_μ], syllableVowel = VS_ImproperDiphthong I_ω} 9
+Syllable {syllableConsonants = [CR_λ,CR_π], syllableVowel = VS_Vowel V_ι} 110
+Syllable {syllableConsonants = [CR_λ,CR_π], syllableVowel = VS_Vowel V_ο} 4
+Syllable {syllableConsonants = [CR_λ,CR_π], syllableVowel = VS_Diphthong D_ει} 1
+Syllable {syllableConsonants = [CR_λ,CR_π], syllableVowel = VS_Diphthong D_οι} 1
+Syllable {syllableConsonants = [CR_λ,CR_π], syllableVowel = VS_ImproperDiphthong I_η} 1
+Syllable {syllableConsonants = [CR_λ,CR_π], syllableVowel = VS_ImproperDiphthong I_ω} 1
+Syllable {syllableConsonants = [CR_λ,CR_τ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_λ,CR_τ], syllableVowel = VS_Diphthong D_αι} 4
+Syllable {syllableConsonants = [CR_λ,CR_φ], syllableVowel = VS_Vowel V_α} 8
+Syllable {syllableConsonants = [CR_λ,CR_φ], syllableVowel = VS_Vowel V_ε} 6
+Syllable {syllableConsonants = [CR_λ,CR_φ], syllableVowel = VS_Vowel V_η} 16
+Syllable {syllableConsonants = [CR_λ,CR_φ], syllableVowel = VS_Vowel V_ι} 6
+Syllable {syllableConsonants = [CR_λ,CR_φ], syllableVowel = VS_Vowel V_ο} 86
+Syllable {syllableConsonants = [CR_λ,CR_φ], syllableVowel = VS_Vowel V_ω} 21
+Syllable {syllableConsonants = [CR_λ,CR_φ], syllableVowel = VS_Diphthong D_αι} 8
+Syllable {syllableConsonants = [CR_λ,CR_φ], syllableVowel = VS_Diphthong D_ει} 2
+Syllable {syllableConsonants = [CR_λ,CR_φ], syllableVowel = VS_Diphthong D_οι} 163
+Syllable {syllableConsonants = [CR_λ,CR_φ], syllableVowel = VS_Diphthong D_ου} 57
+Syllable {syllableConsonants = [CR_λ,CR_φ], syllableVowel = VS_ImproperDiphthong I_η} 1
+Syllable {syllableConsonants = [CR_λ,CR_φ], syllableVowel = VS_ImproperDiphthong I_ω} 14
+Syllable {syllableConsonants = [CR_λ,CR_χ], syllableVowel = VS_Vowel V_ι} 10
+Syllable {syllableConsonants = [CR_λ,CR_χ], syllableVowel = VS_Vowel V_ο} 1
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_Vowel V_α} 3762
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_Vowel V_ε} 4953
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_Vowel V_η} 1961
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_Vowel V_ι} 1539
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_Vowel V_ο} 773
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_Vowel V_υ} 83
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_Vowel V_ω} 1308
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_Diphthong D_αι} 296
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_Diphthong D_αυ} 37
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_Diphthong D_ει} 686
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_Diphthong D_ευ} 1
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_Diphthong D_οι} 552
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_Diphthong D_ου} 876
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_ImproperDiphthong I_α} 6
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_ImproperDiphthong I_η} 27
+Syllable {syllableConsonants = [CR_μ], syllableVowel = VS_ImproperDiphthong I_ω} 82
+Syllable {syllableConsonants = [CR_μ,CR_β], syllableVowel = VS_Vowel V_α} 103
+Syllable {syllableConsonants = [CR_μ,CR_β], syllableVowel = VS_Vowel V_ε} 3
+Syllable {syllableConsonants = [CR_μ,CR_β], syllableVowel = VS_Vowel V_η} 9
+Syllable {syllableConsonants = [CR_μ,CR_β], syllableVowel = VS_Vowel V_ι} 6
+Syllable {syllableConsonants = [CR_μ,CR_β], syllableVowel = VS_Vowel V_ο} 12
+Syllable {syllableConsonants = [CR_μ,CR_β], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_μ,CR_β], syllableVowel = VS_Diphthong D_αι} 3
+Syllable {syllableConsonants = [CR_μ,CR_β], syllableVowel = VS_Diphthong D_ει} 2
+Syllable {syllableConsonants = [CR_μ,CR_β], syllableVowel = VS_Diphthong D_ευ} 2
+Syllable {syllableConsonants = [CR_μ,CR_β], syllableVowel = VS_Diphthong D_οι} 2
+Syllable {syllableConsonants = [CR_μ,CR_β], syllableVowel = VS_Diphthong D_ου} 14
+Syllable {syllableConsonants = [CR_μ,CR_β,CR_λ], syllableVowel = VS_Vowel V_ε} 8
+Syllable {syllableConsonants = [CR_μ,CR_β,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 1
+Syllable {syllableConsonants = [CR_μ,CR_β,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_η} 1
+Syllable {syllableConsonants = [CR_μ,CR_β,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 4
+Syllable {syllableConsonants = [CR_μ,CR_β,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 1
+Syllable {syllableConsonants = [CR_μ,CR_β,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ευ} 1
+Syllable {syllableConsonants = [CR_μ,CR_μ], syllableVowel = VS_Vowel V_α} 103
+Syllable {syllableConsonants = [CR_μ,CR_μ], syllableVowel = VS_Vowel V_ε} 75
+Syllable {syllableConsonants = [CR_μ,CR_μ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_μ,CR_μ], syllableVowel = VS_Vowel V_ο} 9
+Syllable {syllableConsonants = [CR_μ,CR_μ], syllableVowel = VS_Vowel V_υ} 3
+Syllable {syllableConsonants = [CR_μ,CR_μ], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_μ,CR_μ], syllableVowel = VS_Diphthong D_αι} 1
+Syllable {syllableConsonants = [CR_μ,CR_μ], syllableVowel = VS_ImproperDiphthong I_η} 1
+Syllable {syllableConsonants = [CR_μ,CR_ν], syllableVowel = VS_Vowel V_α} 28
+Syllable {syllableConsonants = [CR_μ,CR_ν], syllableVowel = VS_Vowel V_ε} 4
+Syllable {syllableConsonants = [CR_μ,CR_ν], syllableVowel = VS_Vowel V_η} 138
+Syllable {syllableConsonants = [CR_μ,CR_ν], syllableVowel = VS_Vowel V_ι} 7
+Syllable {syllableConsonants = [CR_μ,CR_ν], syllableVowel = VS_Vowel V_ο} 22
+Syllable {syllableConsonants = [CR_μ,CR_ν], syllableVowel = VS_Vowel V_υ} 7
+Syllable {syllableConsonants = [CR_μ,CR_ν], syllableVowel = VS_Vowel V_ω} 5
+Syllable {syllableConsonants = [CR_μ,CR_ν], syllableVowel = VS_Diphthong D_αι} 2
+Syllable {syllableConsonants = [CR_μ,CR_ν], syllableVowel = VS_Diphthong D_ει} 9
+Syllable {syllableConsonants = [CR_μ,CR_ν], syllableVowel = VS_Diphthong D_οι} 4
+Syllable {syllableConsonants = [CR_μ,CR_ν], syllableVowel = VS_Diphthong D_ου} 11
+Syllable {syllableConsonants = [CR_μ,CR_ν], syllableVowel = VS_ImproperDiphthong I_α} 5
+Syllable {syllableConsonants = [CR_μ,CR_ν], syllableVowel = VS_ImproperDiphthong I_η} 11
+Syllable {syllableConsonants = [CR_μ,CR_π], syllableVowel = VS_Vowel V_α} 23
+Syllable {syllableConsonants = [CR_μ,CR_π], syllableVowel = VS_Vowel V_ε} 42
+Syllable {syllableConsonants = [CR_μ,CR_π], syllableVowel = VS_Vowel V_ι} 2
+Syllable {syllableConsonants = [CR_μ,CR_π], syllableVowel = VS_Vowel V_ο} 18
+Syllable {syllableConsonants = [CR_μ,CR_π], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_μ,CR_π], syllableVowel = VS_Diphthong D_αι} 11
+Syllable {syllableConsonants = [CR_μ,CR_π], syllableVowel = VS_Diphthong D_ει} 4
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_λ], syllableVowel = VS_Vowel V_α} 1
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_λ], syllableVowel = VS_Vowel V_ε} 1
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_λ], syllableVowel = VS_Vowel V_η} 4
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_λ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_λ], syllableVowel = VS_Vowel V_ο} 1
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_ν], syllableVowel = VS_Vowel V_ε} 1
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_ν], syllableVowel = VS_Vowel V_ι} 3
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 4
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 1
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 53
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_α} 2
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_τ], syllableVowel = VS_Vowel V_η} 2
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_τ], syllableVowel = VS_Vowel V_ο} 7
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_τ], syllableVowel = VS_Vowel V_υ} 4
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_τ], syllableVowel = VS_Vowel V_ω} 4
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_τ], syllableVowel = VS_Diphthong D_ει} 1
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_τ], syllableVowel = VS_Diphthong D_οι} 3
+Syllable {syllableConsonants = [CR_μ,CR_π,CR_τ], syllableVowel = VS_Diphthong D_ου} 1
+Syllable {syllableConsonants = [CR_μ,CR_φ], syllableVowel = VS_Vowel V_α} 8
+Syllable {syllableConsonants = [CR_μ,CR_φ], syllableVowel = VS_Vowel V_ε} 15
+Syllable {syllableConsonants = [CR_μ,CR_φ], syllableVowel = VS_Vowel V_η} 10
+Syllable {syllableConsonants = [CR_μ,CR_φ], syllableVowel = VS_Vowel V_ι} 23
+Syllable {syllableConsonants = [CR_μ,CR_φ], syllableVowel = VS_Vowel V_ο} 23
+Syllable {syllableConsonants = [CR_μ,CR_φ], syllableVowel = VS_Vowel V_υ} 9
+Syllable {syllableConsonants = [CR_μ,CR_φ], syllableVowel = VS_Vowel V_ω} 11
+Syllable {syllableConsonants = [CR_μ,CR_φ], syllableVowel = VS_Diphthong D_αι} 7
+Syllable {syllableConsonants = [CR_μ,CR_φ,CR_θ], syllableVowel = VS_Vowel V_ε} 4
+Syllable {syllableConsonants = [CR_μ,CR_φ,CR_θ], syllableVowel = VS_Vowel V_η} 11
+Syllable {syllableConsonants = [CR_μ,CR_φ,CR_θ], syllableVowel = VS_Diphthong D_ει} 2
+Syllable {syllableConsonants = [CR_μ,CR_φ,CR_θ], syllableVowel = VS_ImproperDiphthong I_η} 1
+Syllable {syllableConsonants = [CR_μ,CR_ψ], syllableVowel = VS_Vowel V_α} 58
+Syllable {syllableConsonants = [CR_μ,CR_ψ], syllableVowel = VS_Vowel V_ε} 26
+Syllable {syllableConsonants = [CR_μ,CR_ψ], syllableVowel = VS_Vowel V_η} 2
+Syllable {syllableConsonants = [CR_μ,CR_ψ], syllableVowel = VS_Vowel V_ι} 7
+Syllable {syllableConsonants = [CR_μ,CR_ψ], syllableVowel = VS_Vowel V_ο} 16
+Syllable {syllableConsonants = [CR_μ,CR_ψ], syllableVowel = VS_Vowel V_υ} 1
+Syllable {syllableConsonants = [CR_μ,CR_ψ], syllableVowel = VS_Vowel V_ω} 9
+Syllable {syllableConsonants = [CR_μ,CR_ψ], syllableVowel = VS_Diphthong D_αι} 12
+Syllable {syllableConsonants = [CR_μ,CR_ψ], syllableVowel = VS_Diphthong D_ει} 5
+Syllable {syllableConsonants = [CR_μ,CR_ψ], syllableVowel = VS_Diphthong D_ου} 2
+Syllable {syllableConsonants = [CR_μ,CR_ψ], syllableVowel = VS_ImproperDiphthong I_η} 3
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_Vowel V_α} 2806
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_Vowel V_ε} 1781
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_Vowel V_η} 1427
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_Vowel V_ι} 808
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_Vowel V_ο} 2599
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_Vowel V_υ} 312
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_Vowel V_ω} 816
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_Diphthong D_αι} 788
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_Diphthong D_αυ} 8
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_Diphthong D_ει} 430
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_Diphthong D_ευ} 95
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_Diphthong D_οι} 719
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_Diphthong D_ου} 614
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_Diphthong D_υι} 1
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_ImproperDiphthong I_α} 12
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_ImproperDiphthong I_η} 191
+Syllable {syllableConsonants = [CR_ν], syllableVowel = VS_ImproperDiphthong I_ω} 122
+Syllable {syllableConsonants = [CR_ν,CR_γ], syllableVowel = VS_Vowel V_ε} 3
+Syllable {syllableConsonants = [CR_ν,CR_δ], syllableVowel = VS_Vowel V_α} 48
+Syllable {syllableConsonants = [CR_ν,CR_δ], syllableVowel = VS_Vowel V_ε} 22
+Syllable {syllableConsonants = [CR_ν,CR_δ], syllableVowel = VS_Vowel V_η} 3
+Syllable {syllableConsonants = [CR_ν,CR_δ], syllableVowel = VS_Vowel V_ι} 3
+Syllable {syllableConsonants = [CR_ν,CR_δ], syllableVowel = VS_Vowel V_ο} 18
+Syllable {syllableConsonants = [CR_ν,CR_δ], syllableVowel = VS_Vowel V_υ} 49
+Syllable {syllableConsonants = [CR_ν,CR_δ], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_ν,CR_δ], syllableVowel = VS_Diphthong D_ει} 14
+Syllable {syllableConsonants = [CR_ν,CR_δ], syllableVowel = VS_Diphthong D_οι} 1
+Syllable {syllableConsonants = [CR_ν,CR_δ], syllableVowel = VS_Diphthong D_ου} 10
+Syllable {syllableConsonants = [CR_ν,CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 64
+Syllable {syllableConsonants = [CR_ν,CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 77
+Syllable {syllableConsonants = [CR_ν,CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 22
+Syllable {syllableConsonants = [CR_ν,CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 42
+Syllable {syllableConsonants = [CR_ν,CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 11
+Syllable {syllableConsonants = [CR_ν,CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ευ} 1
+Syllable {syllableConsonants = [CR_ν,CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 2
+Syllable {syllableConsonants = [CR_ν,CR_θ], syllableVowel = VS_Vowel V_α} 36
+Syllable {syllableConsonants = [CR_ν,CR_θ], syllableVowel = VS_Vowel V_ε} 16
+Syllable {syllableConsonants = [CR_ν,CR_θ], syllableVowel = VS_Vowel V_η} 49
+Syllable {syllableConsonants = [CR_ν,CR_θ], syllableVowel = VS_Vowel V_ι} 8
+Syllable {syllableConsonants = [CR_ν,CR_θ], syllableVowel = VS_Vowel V_ο} 14
+Syllable {syllableConsonants = [CR_ν,CR_θ], syllableVowel = VS_Vowel V_υ} 12
+Syllable {syllableConsonants = [CR_ν,CR_θ], syllableVowel = VS_Vowel V_ω} 14
+Syllable {syllableConsonants = [CR_ν,CR_θ], syllableVowel = VS_Diphthong D_αι} 3
+Syllable {syllableConsonants = [CR_ν,CR_θ], syllableVowel = VS_Diphthong D_ει} 5
+Syllable {syllableConsonants = [CR_ν,CR_θ], syllableVowel = VS_Diphthong D_ου} 5
+Syllable {syllableConsonants = [CR_ν,CR_θ], syllableVowel = VS_ImproperDiphthong I_η} 7
+Syllable {syllableConsonants = [CR_ν,CR_θ], syllableVowel = VS_ImproperDiphthong I_ω} 4
+Syllable {syllableConsonants = [CR_ν,CR_θ,CR_λ], syllableVowel = VS_Vowel V_α} 2
+Syllable {syllableConsonants = [CR_ν,CR_θ,CR_λ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_ν,CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 3
+Syllable {syllableConsonants = [CR_ν,CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_υ} 1
+Syllable {syllableConsonants = [CR_ν,CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 565
+Syllable {syllableConsonants = [CR_ν,CR_ν], syllableVowel = VS_Vowel V_α} 29
+Syllable {syllableConsonants = [CR_ν,CR_ν], syllableVowel = VS_Vowel V_ε} 9
+Syllable {syllableConsonants = [CR_ν,CR_ν], syllableVowel = VS_Vowel V_η} 200
+Syllable {syllableConsonants = [CR_ν,CR_ν], syllableVowel = VS_Vowel V_ο} 9
+Syllable {syllableConsonants = [CR_ν,CR_ν], syllableVowel = VS_Vowel V_υ} 9
+Syllable {syllableConsonants = [CR_ν,CR_ν], syllableVowel = VS_Vowel V_ω} 3
+Syllable {syllableConsonants = [CR_ν,CR_ν], syllableVowel = VS_Diphthong D_αι} 1
+Syllable {syllableConsonants = [CR_ν,CR_ν], syllableVowel = VS_Diphthong D_ει} 1
+Syllable {syllableConsonants = [CR_ν,CR_ν], syllableVowel = VS_Diphthong D_οι} 2
+Syllable {syllableConsonants = [CR_ν,CR_ν], syllableVowel = VS_Diphthong D_ου} 40
+Syllable {syllableConsonants = [CR_ν,CR_ν], syllableVowel = VS_ImproperDiphthong I_η} 6
+Syllable {syllableConsonants = [CR_ν,CR_π], syllableVowel = VS_Vowel V_ε} 2
+Syllable {syllableConsonants = [CR_ν,CR_σ], syllableVowel = VS_Vowel V_ο} 3
+Syllable {syllableConsonants = [CR_ν,CR_σ], syllableVowel = VS_Diphthong D_ου} 1
+Syllable {syllableConsonants = [CR_ν,CR_σ,CR_τ], syllableVowel = VS_Vowel V_η} 1
+Syllable {syllableConsonants = [CR_ν,CR_τ], syllableVowel = VS_Vowel V_α} 939
+Syllable {syllableConsonants = [CR_ν,CR_τ], syllableVowel = VS_Vowel V_ε} 1444
+Syllable {syllableConsonants = [CR_ν,CR_τ], syllableVowel = VS_Vowel V_η} 58
+Syllable {syllableConsonants = [CR_ν,CR_τ], syllableVowel = VS_Vowel V_ι} 335
+Syllable {syllableConsonants = [CR_ν,CR_τ], syllableVowel = VS_Vowel V_ο} 644
+Syllable {syllableConsonants = [CR_ν,CR_τ], syllableVowel = VS_Vowel V_υ} 10
+Syllable {syllableConsonants = [CR_ν,CR_τ], syllableVowel = VS_Vowel V_ω} 367
+Syllable {syllableConsonants = [CR_ν,CR_τ], syllableVowel = VS_Diphthong D_αι} 347
+Syllable {syllableConsonants = [CR_ν,CR_τ], syllableVowel = VS_Diphthong D_ει} 4
+Syllable {syllableConsonants = [CR_ν,CR_τ], syllableVowel = VS_Diphthong D_ευ} 13
+Syllable {syllableConsonants = [CR_ν,CR_τ], syllableVowel = VS_Diphthong D_οι} 9
+Syllable {syllableConsonants = [CR_ν,CR_τ], syllableVowel = VS_Diphthong D_ου} 1
+Syllable {syllableConsonants = [CR_ν,CR_τ], syllableVowel = VS_ImproperDiphthong I_η} 1
+Syllable {syllableConsonants = [CR_ν,CR_τ,CR_λ], syllableVowel = VS_Vowel V_η} 4
+Syllable {syllableConsonants = [CR_ν,CR_τ,CR_λ], syllableVowel = VS_Diphthong D_ει} 1
+Syllable {syllableConsonants = [CR_ν,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 7
+Syllable {syllableConsonants = [CR_ν,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 6
+Syllable {syllableConsonants = [CR_ν,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 12
+Syllable {syllableConsonants = [CR_ν,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 8
+Syllable {syllableConsonants = [CR_ν,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_υ} 1
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_Vowel V_α} 457
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_Vowel V_ε} 431
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_Vowel V_η} 236
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_Vowel V_ι} 172
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_Vowel V_ο} 53
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_Vowel V_υ} 44
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_Vowel V_ω} 115
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_Diphthong D_αι} 45
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_Diphthong D_αυ} 6
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_Diphthong D_ει} 54
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_Diphthong D_ευ} 1
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_Diphthong D_οι} 4
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_Diphthong D_ου} 141
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_ImproperDiphthong I_η} 41
+Syllable {syllableConsonants = [CR_ξ], syllableVowel = VS_ImproperDiphthong I_ω} 1
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_Vowel V_α} 3919
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_Vowel V_ε} 3071
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_Vowel V_η} 546
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_Vowel V_ι} 2173
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_Vowel V_ο} 3502
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_Vowel V_υ} 147
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_Vowel V_ω} 568
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_Diphthong D_αι} 175
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_Diphthong D_αυ} 224
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_Diphthong D_ει} 332
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_Diphthong D_ευ} 43
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_Diphthong D_οι} 863
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_Diphthong D_ου} 392
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_ImproperDiphthong I_α} 14
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_ImproperDiphthong I_η} 70
+Syllable {syllableConsonants = [CR_π], syllableVowel = VS_ImproperDiphthong I_ω} 56
+Syllable {syllableConsonants = [CR_π,CR_λ], syllableVowel = VS_Vowel V_α} 91
+Syllable {syllableConsonants = [CR_π,CR_λ], syllableVowel = VS_Vowel V_ε} 41
+Syllable {syllableConsonants = [CR_π,CR_λ], syllableVowel = VS_Vowel V_η} 299
+Syllable {syllableConsonants = [CR_π,CR_λ], syllableVowel = VS_Vowel V_ι} 7
+Syllable {syllableConsonants = [CR_π,CR_λ], syllableVowel = VS_Vowel V_ο} 10
+Syllable {syllableConsonants = [CR_π,CR_λ], syllableVowel = VS_Vowel V_υ} 3
+Syllable {syllableConsonants = [CR_π,CR_λ], syllableVowel = VS_Vowel V_ω} 5
+Syllable {syllableConsonants = [CR_π,CR_λ], syllableVowel = VS_Diphthong D_ει} 59
+Syllable {syllableConsonants = [CR_π,CR_λ], syllableVowel = VS_Diphthong D_ευ} 14
+Syllable {syllableConsonants = [CR_π,CR_λ], syllableVowel = VS_Diphthong D_οι} 72
+Syllable {syllableConsonants = [CR_π,CR_λ], syllableVowel = VS_Diphthong D_ου} 75
+Syllable {syllableConsonants = [CR_π,CR_ν], syllableVowel = VS_Vowel V_ε} 4
+Syllable {syllableConsonants = [CR_π,CR_ν], syllableVowel = VS_Vowel V_η} 4
+Syllable {syllableConsonants = [CR_π,CR_ν], syllableVowel = VS_Vowel V_ι} 16
+Syllable {syllableConsonants = [CR_π,CR_ν], syllableVowel = VS_Vowel V_ο} 19
+Syllable {syllableConsonants = [CR_π,CR_ν], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_π,CR_ν], syllableVowel = VS_Diphthong D_ει} 3
+Syllable {syllableConsonants = [CR_π,CR_ν], syllableVowel = VS_Diphthong D_ευ} 414
+Syllable {syllableConsonants = [CR_π,CR_ν], syllableVowel = VS_Diphthong D_οι} 3
+Syllable {syllableConsonants = [CR_π,CR_ν], syllableVowel = VS_Diphthong D_ου} 15
+Syllable {syllableConsonants = [CR_π,CR_ν], syllableVowel = VS_ImproperDiphthong I_ω} 3
+Syllable {syllableConsonants = [CR_π,CR_π], syllableVowel = VS_Vowel V_α} 13
+Syllable {syllableConsonants = [CR_π,CR_π], syllableVowel = VS_Vowel V_ε} 1
+Syllable {syllableConsonants = [CR_π,CR_π], syllableVowel = VS_Vowel V_η} 7
+Syllable {syllableConsonants = [CR_π,CR_π], syllableVowel = VS_Vowel V_ι} 2
+Syllable {syllableConsonants = [CR_π,CR_π], syllableVowel = VS_Vowel V_ο} 28
+Syllable {syllableConsonants = [CR_π,CR_π], syllableVowel = VS_Vowel V_ω} 8
+Syllable {syllableConsonants = [CR_π,CR_π], syllableVowel = VS_Diphthong D_ει} 2
+Syllable {syllableConsonants = [CR_π,CR_π], syllableVowel = VS_Diphthong D_οι} 4
+Syllable {syllableConsonants = [CR_π,CR_π], syllableVowel = VS_Diphthong D_ου} 11
+Syllable {syllableConsonants = [CR_π,CR_π], syllableVowel = VS_ImproperDiphthong I_η} 4
+Syllable {syllableConsonants = [CR_π,CR_π], syllableVowel = VS_ImproperDiphthong I_ω} 7
+Syllable {syllableConsonants = [CR_π,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 93
+Syllable {syllableConsonants = [CR_π,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 86
+Syllable {syllableConsonants = [CR_π,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_η} 2
+Syllable {syllableConsonants = [CR_π,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 27
+Syllable {syllableConsonants = [CR_π,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 1863
+Syllable {syllableConsonants = [CR_π,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_υ} 3
+Syllable {syllableConsonants = [CR_π,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 189
+Syllable {syllableConsonants = [CR_π,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_αι} 8
+Syllable {syllableConsonants = [CR_π,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_οι} 4
+Syllable {syllableConsonants = [CR_π,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 4
+Syllable {syllableConsonants = [CR_π,CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_ω} 2
+Syllable {syllableConsonants = [CR_π,CR_τ], syllableVowel = VS_Vowel V_α} 104
+Syllable {syllableConsonants = [CR_π,CR_τ], syllableVowel = VS_Vowel V_ε} 33
+Syllable {syllableConsonants = [CR_π,CR_τ], syllableVowel = VS_Vowel V_η} 16
+Syllable {syllableConsonants = [CR_π,CR_τ], syllableVowel = VS_Vowel V_ι} 116
+Syllable {syllableConsonants = [CR_π,CR_τ], syllableVowel = VS_Vowel V_ο} 49
+Syllable {syllableConsonants = [CR_π,CR_τ], syllableVowel = VS_Vowel V_υ} 12
+Syllable {syllableConsonants = [CR_π,CR_τ], syllableVowel = VS_Vowel V_ω} 80
+Syllable {syllableConsonants = [CR_π,CR_τ], syllableVowel = VS_Diphthong D_αι} 83
+Syllable {syllableConsonants = [CR_π,CR_τ], syllableVowel = VS_Diphthong D_ει} 26
+Syllable {syllableConsonants = [CR_π,CR_τ], syllableVowel = VS_Diphthong D_ευ} 2
+Syllable {syllableConsonants = [CR_π,CR_τ], syllableVowel = VS_Diphthong D_οι} 2
+Syllable {syllableConsonants = [CR_π,CR_τ], syllableVowel = VS_Diphthong D_ου} 18
+Syllable {syllableConsonants = [CR_π,CR_τ], syllableVowel = VS_ImproperDiphthong I_η} 1
+Syllable {syllableConsonants = [CR_π,CR_τ], syllableVowel = VS_ImproperDiphthong I_ω} 13
+Syllable {syllableConsonants = [CR_π,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_π,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 1
+Syllable {syllableConsonants = [CR_π,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_ω} 1
+Syllable {syllableConsonants = [CR_π,CR_φ], syllableVowel = VS_Vowel V_ι} 3
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 2484
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 686
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_Vowel V_η} 515
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 2910
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 930
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_Vowel V_υ} 117
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 675
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_αι} 165
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_αυ} 10
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ει} 389
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ευ} 277
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_οι} 133
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 465
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_α} 149
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_η} 37
+Syllable {syllableConsonants = [CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_ω} 165
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_β], syllableVowel = VS_Vowel V_α} 15
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_β], syllableVowel = VS_Vowel V_η} 3
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_β], syllableVowel = VS_Vowel V_ο} 9
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_β], syllableVowel = VS_Diphthong D_αι} 2
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_γ], syllableVowel = VS_Vowel V_α} 160
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_γ], syllableVowel = VS_Vowel V_ε} 5
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_γ], syllableVowel = VS_Vowel V_η} 65
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_γ], syllableVowel = VS_Vowel V_ι} 28
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_γ], syllableVowel = VS_Vowel V_ο} 58
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_γ], syllableVowel = VS_Vowel V_υ} 34
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_γ], syllableVowel = VS_Vowel V_ω} 50
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_γ], syllableVowel = VS_Diphthong D_αι} 3
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_γ], syllableVowel = VS_Diphthong D_ει} 22
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_γ], syllableVowel = VS_Diphthong D_οι} 34
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_γ], syllableVowel = VS_Diphthong D_ου} 39
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_γ], syllableVowel = VS_Diphthong D_υι} 2
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_γ], syllableVowel = VS_ImproperDiphthong I_η} 4
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_γ], syllableVowel = VS_ImproperDiphthong I_ω} 11
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_δ], syllableVowel = VS_Vowel V_α} 17
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_δ], syllableVowel = VS_Vowel V_ε} 2
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_δ], syllableVowel = VS_Vowel V_η} 18
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_δ], syllableVowel = VS_Vowel V_ι} 162
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_δ], syllableVowel = VS_Vowel V_ο} 2
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_δ], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_δ], syllableVowel = VS_Diphthong D_ει} 2
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_δ], syllableVowel = VS_Diphthong D_ου} 3
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_θ], syllableVowel = VS_Vowel V_α} 14
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_θ], syllableVowel = VS_Vowel V_ε} 18
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_θ], syllableVowel = VS_Vowel V_η} 54
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_θ], syllableVowel = VS_Vowel V_ο} 7
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_θ], syllableVowel = VS_Vowel V_ω} 12
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_θ], syllableVowel = VS_Diphthong D_ει} 16
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_θ], syllableVowel = VS_Diphthong D_οι} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_θ], syllableVowel = VS_Diphthong D_ου} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_θ], syllableVowel = VS_ImproperDiphthong I_η} 6
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 2
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_κ], syllableVowel = VS_Vowel V_α} 46
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_κ], syllableVowel = VS_Vowel V_ε} 8
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_κ], syllableVowel = VS_Vowel V_η} 5
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_κ], syllableVowel = VS_Vowel V_ι} 57
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_κ], syllableVowel = VS_Vowel V_ο} 47
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_κ], syllableVowel = VS_Vowel V_ω} 5
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_κ], syllableVowel = VS_Diphthong D_ει} 6
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_κ], syllableVowel = VS_Diphthong D_οι} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_κ], syllableVowel = VS_Diphthong D_ου} 10
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_κ], syllableVowel = VS_ImproperDiphthong I_ω} 2
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_λ], syllableVowel = VS_Vowel V_ι} 2
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_μ], syllableVowel = VS_Vowel V_α} 61
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_μ], syllableVowel = VS_Vowel V_ε} 7
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_μ], syllableVowel = VS_Vowel V_η} 39
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_μ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_μ], syllableVowel = VS_Vowel V_ο} 8
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_μ], syllableVowel = VS_Vowel V_ω} 6
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_μ], syllableVowel = VS_Diphthong D_αι} 6
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_μ], syllableVowel = VS_Diphthong D_οι} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_μ], syllableVowel = VS_Diphthong D_ου} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ν], syllableVowel = VS_Vowel V_α} 48
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ν], syllableVowel = VS_Vowel V_ε} 3
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ν], syllableVowel = VS_Vowel V_η} 54
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ν], syllableVowel = VS_Vowel V_ι} 38
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ν], syllableVowel = VS_Vowel V_ο} 3
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ν], syllableVowel = VS_Vowel V_ω} 3
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ν], syllableVowel = VS_Diphthong D_αι} 2
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ν], syllableVowel = VS_Diphthong D_ει} 27
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ν], syllableVowel = VS_Diphthong D_ευ} 9
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ν], syllableVowel = VS_Diphthong D_οι} 6
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ν], syllableVowel = VS_Diphthong D_ου} 8
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ν], syllableVowel = VS_ImproperDiphthong I_η} 2
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ξ], syllableVowel = VS_Vowel V_α} 76
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ξ], syllableVowel = VS_Vowel V_ε} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ξ], syllableVowel = VS_Vowel V_η} 4
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ξ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ξ], syllableVowel = VS_Vowel V_ο} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ξ], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ξ], syllableVowel = VS_Diphthong D_ει} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ξ], syllableVowel = VS_ImproperDiphthong I_η} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_π], syllableVowel = VS_Vowel V_α} 31
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_π], syllableVowel = VS_Vowel V_ε} 7
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_π], syllableVowel = VS_Vowel V_ι} 19
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_π], syllableVowel = VS_Vowel V_ο} 58
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_π], syllableVowel = VS_Vowel V_ω} 6
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_π], syllableVowel = VS_Diphthong D_οι} 2
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_π], syllableVowel = VS_Diphthong D_ου} 15
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_π], syllableVowel = VS_ImproperDiphthong I_ω} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 14
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 11
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_η} 50
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 6
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 3
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_υ} 5
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 14
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 5
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_α} 2
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_σ], syllableVowel = VS_Vowel V_α} 2
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_σ], syllableVowel = VS_Vowel V_ε} 13
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_σ], syllableVowel = VS_Vowel V_ι} 33
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_σ], syllableVowel = VS_Vowel V_ο} 3
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_σ], syllableVowel = VS_Diphthong D_ει} 9
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_σ], syllableVowel = VS_Diphthong D_ευ} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_σ], syllableVowel = VS_ImproperDiphthong I_ω} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_τ], syllableVowel = VS_Vowel V_α} 42
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_τ], syllableVowel = VS_Vowel V_ε} 23
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_τ], syllableVowel = VS_Vowel V_η} 42
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_τ], syllableVowel = VS_Vowel V_ι} 242
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_τ], syllableVowel = VS_Vowel V_ο} 93
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_τ], syllableVowel = VS_Vowel V_υ} 212
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_τ], syllableVowel = VS_Vowel V_ω} 58
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_τ], syllableVowel = VS_Diphthong D_αι} 10
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_τ], syllableVowel = VS_Diphthong D_οι} 9
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_τ], syllableVowel = VS_Diphthong D_ου} 49
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_τ], syllableVowel = VS_ImproperDiphthong I_η} 10
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_τ], syllableVowel = VS_ImproperDiphthong I_ω} 10
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_φ], syllableVowel = VS_Vowel V_α} 4
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_φ], syllableVowel = VS_Vowel V_η} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_φ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_φ], syllableVowel = VS_Vowel V_ο} 7
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_φ], syllableVowel = VS_Vowel V_υ} 9
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_φ], syllableVowel = VS_Vowel V_ω} 5
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_φ], syllableVowel = VS_Diphthong D_ου} 3
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_φ], syllableVowel = VS_ImproperDiphthong I_η} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_φ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 1
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_χ], syllableVowel = VS_Vowel V_α} 10
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_χ], syllableVowel = VS_Vowel V_ε} 140
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_χ], syllableVowel = VS_Vowel V_η} 76
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_χ], syllableVowel = VS_Vowel V_ι} 140
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_χ], syllableVowel = VS_Vowel V_ο} 236
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_χ], syllableVowel = VS_Vowel V_ω} 32
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_χ], syllableVowel = VS_Diphthong D_αι} 18
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_χ], syllableVowel = VS_Diphthong D_ει} 15
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_χ], syllableVowel = VS_Diphthong D_οι} 3
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_χ], syllableVowel = VS_Diphthong D_ου} 26
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_χ], syllableVowel = VS_ImproperDiphthong I_η} 12
+Syllable {syllableConsonants = [CR_ρ B_Smooth,CR_χ], syllableVowel = VS_ImproperDiphthong I_ω} 4
+Syllable {syllableConsonants = [CR_ρ B_Rough], syllableVowel = VS_Vowel V_α} 48
+Syllable {syllableConsonants = [CR_ρ B_Rough], syllableVowel = VS_Vowel V_ε} 3
+Syllable {syllableConsonants = [CR_ρ B_Rough], syllableVowel = VS_Vowel V_η} 91
+Syllable {syllableConsonants = [CR_ρ B_Rough], syllableVowel = VS_Vowel V_ι} 23
+Syllable {syllableConsonants = [CR_ρ B_Rough], syllableVowel = VS_Vowel V_ο} 11
+Syllable {syllableConsonants = [CR_ρ B_Rough], syllableVowel = VS_Vowel V_υ} 25
+Syllable {syllableConsonants = [CR_ρ B_Rough], syllableVowel = VS_Vowel V_ω} 21
+Syllable {syllableConsonants = [CR_ρ B_Rough], syllableVowel = VS_Diphthong D_αι} 1
+Syllable {syllableConsonants = [CR_ρ B_Rough], syllableVowel = VS_Diphthong D_ευ} 1
+Syllable {syllableConsonants = [CR_ρ B_Rough], syllableVowel = VS_Diphthong D_οι} 1
+Syllable {syllableConsonants = [CR_ρ B_Rough], syllableVowel = VS_Diphthong D_ου} 4
+Syllable {syllableConsonants = [CR_ρ B_Rough], syllableVowel = VS_ImproperDiphthong I_α} 2
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_Vowel V_α} 3101
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_Vowel V_ε} 2007
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_Vowel V_η} 552
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_Vowel V_ι} 2834
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_Vowel V_ο} 630
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_Vowel V_υ} 1243
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_Vowel V_ω} 841
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_Diphthong D_αι} 594
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_Diphthong D_αυ} 67
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_Diphthong D_ει} 515
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_Diphthong D_ευ} 108
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_Diphthong D_ηυ} 13
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_Diphthong D_οι} 251
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_Diphthong D_ου} 1557
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_ImproperDiphthong I_η} 305
+Syllable {syllableConsonants = [CR_σ], syllableVowel = VS_ImproperDiphthong I_ω} 74
+Syllable {syllableConsonants = [CR_σ,CR_β], syllableVowel = VS_Vowel V_α} 1
+Syllable {syllableConsonants = [CR_σ,CR_β], syllableVowel = VS_Vowel V_ε} 9
+Syllable {syllableConsonants = [CR_σ,CR_β], syllableVowel = VS_Vowel V_υ} 73
+Syllable {syllableConsonants = [CR_σ,CR_β], syllableVowel = VS_Diphthong D_ει} 2
+Syllable {syllableConsonants = [CR_σ,CR_β], syllableVowel = VS_Diphthong D_ευ} 2
+Syllable {syllableConsonants = [CR_σ,CR_γ], syllableVowel = VS_Vowel V_η} 1
+Syllable {syllableConsonants = [CR_σ,CR_δ], syllableVowel = VS_Vowel V_α} 2
+Syllable {syllableConsonants = [CR_σ,CR_δ], syllableVowel = VS_Vowel V_ε} 20
+Syllable {syllableConsonants = [CR_σ,CR_δ], syllableVowel = VS_Vowel V_ο} 17
+Syllable {syllableConsonants = [CR_σ,CR_δ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 3
+Syllable {syllableConsonants = [CR_σ,CR_θ], syllableVowel = VS_Vowel V_α} 6
+Syllable {syllableConsonants = [CR_σ,CR_θ], syllableVowel = VS_Vowel V_ε} 565
+Syllable {syllableConsonants = [CR_σ,CR_θ], syllableVowel = VS_Vowel V_η} 283
+Syllable {syllableConsonants = [CR_σ,CR_θ], syllableVowel = VS_Vowel V_ι} 80
+Syllable {syllableConsonants = [CR_σ,CR_θ], syllableVowel = VS_Vowel V_ο} 25
+Syllable {syllableConsonants = [CR_σ,CR_θ], syllableVowel = VS_Vowel V_ω} 68
+Syllable {syllableConsonants = [CR_σ,CR_θ], syllableVowel = VS_Diphthong D_αι} 362
+Syllable {syllableConsonants = [CR_σ,CR_θ], syllableVowel = VS_Diphthong D_ει} 32
+Syllable {syllableConsonants = [CR_σ,CR_θ], syllableVowel = VS_Diphthong D_ου} 4
+Syllable {syllableConsonants = [CR_σ,CR_θ], syllableVowel = VS_ImproperDiphthong I_η} 31
+Syllable {syllableConsonants = [CR_σ,CR_κ], syllableVowel = VS_Vowel V_α} 193
+Syllable {syllableConsonants = [CR_σ,CR_κ], syllableVowel = VS_Vowel V_ε} 88
+Syllable {syllableConsonants = [CR_σ,CR_κ], syllableVowel = VS_Vowel V_η} 54
+Syllable {syllableConsonants = [CR_σ,CR_κ], syllableVowel = VS_Vowel V_ι} 21
+Syllable {syllableConsonants = [CR_σ,CR_κ], syllableVowel = VS_Vowel V_ο} 210
+Syllable {syllableConsonants = [CR_σ,CR_κ], syllableVowel = VS_Vowel V_υ} 50
+Syllable {syllableConsonants = [CR_σ,CR_κ], syllableVowel = VS_Vowel V_ω} 56
+Syllable {syllableConsonants = [CR_σ,CR_κ], syllableVowel = VS_Diphthong D_αι} 6
+Syllable {syllableConsonants = [CR_σ,CR_κ], syllableVowel = VS_Diphthong D_ει} 82
+Syllable {syllableConsonants = [CR_σ,CR_κ], syllableVowel = VS_Diphthong D_ευ} 49
+Syllable {syllableConsonants = [CR_σ,CR_κ], syllableVowel = VS_Diphthong D_οι} 10
+Syllable {syllableConsonants = [CR_σ,CR_κ], syllableVowel = VS_Diphthong D_ου} 14
+Syllable {syllableConsonants = [CR_σ,CR_κ], syllableVowel = VS_ImproperDiphthong I_η} 5
+Syllable {syllableConsonants = [CR_σ,CR_κ], syllableVowel = VS_ImproperDiphthong I_ω} 8
+Syllable {syllableConsonants = [CR_σ,CR_κ,CR_λ], syllableVowel = VS_Vowel V_η} 15
+Syllable {syllableConsonants = [CR_σ,CR_κ,CR_λ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_σ,CR_λ], syllableVowel = VS_Vowel V_α} 9
+Syllable {syllableConsonants = [CR_σ,CR_λ], syllableVowel = VS_Vowel V_η} 1
+Syllable {syllableConsonants = [CR_σ,CR_λ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_σ,CR_μ], syllableVowel = VS_Vowel V_α} 90
+Syllable {syllableConsonants = [CR_σ,CR_μ], syllableVowel = VS_Vowel V_ε} 148
+Syllable {syllableConsonants = [CR_σ,CR_μ], syllableVowel = VS_Vowel V_η} 12
+Syllable {syllableConsonants = [CR_σ,CR_μ], syllableVowel = VS_Vowel V_ι} 21
+Syllable {syllableConsonants = [CR_σ,CR_μ], syllableVowel = VS_Vowel V_ο} 167
+Syllable {syllableConsonants = [CR_σ,CR_μ], syllableVowel = VS_Vowel V_υ} 6
+Syllable {syllableConsonants = [CR_σ,CR_μ], syllableVowel = VS_Vowel V_ω} 28
+Syllable {syllableConsonants = [CR_σ,CR_μ], syllableVowel = VS_Diphthong D_αι} 9
+Syllable {syllableConsonants = [CR_σ,CR_μ], syllableVowel = VS_Diphthong D_ει} 4
+Syllable {syllableConsonants = [CR_σ,CR_μ], syllableVowel = VS_Diphthong D_ευ} 3
+Syllable {syllableConsonants = [CR_σ,CR_μ], syllableVowel = VS_Diphthong D_οι} 22
+Syllable {syllableConsonants = [CR_σ,CR_μ], syllableVowel = VS_Diphthong D_ου} 112
+Syllable {syllableConsonants = [CR_σ,CR_μ], syllableVowel = VS_ImproperDiphthong I_ω} 52
+Syllable {syllableConsonants = [CR_σ,CR_ν], syllableVowel = VS_Vowel V_ο} 1
+Syllable {syllableConsonants = [CR_σ,CR_π], syllableVowel = VS_Vowel V_α} 106
+Syllable {syllableConsonants = [CR_σ,CR_π], syllableVowel = VS_Vowel V_ε} 94
+Syllable {syllableConsonants = [CR_σ,CR_π], syllableVowel = VS_Vowel V_η} 7
+Syllable {syllableConsonants = [CR_σ,CR_π], syllableVowel = VS_Vowel V_ι} 14
+Syllable {syllableConsonants = [CR_σ,CR_π], syllableVowel = VS_Vowel V_ο} 63
+Syllable {syllableConsonants = [CR_σ,CR_π], syllableVowel = VS_Vowel V_υ} 5
+Syllable {syllableConsonants = [CR_σ,CR_π], syllableVowel = VS_Diphthong D_ει} 52
+Syllable {syllableConsonants = [CR_σ,CR_π], syllableVowel = VS_Diphthong D_ευ} 6
+Syllable {syllableConsonants = [CR_σ,CR_π], syllableVowel = VS_Diphthong D_ου} 30
+Syllable {syllableConsonants = [CR_σ,CR_π,CR_λ], syllableVowel = VS_Vowel V_α} 25
+Syllable {syllableConsonants = [CR_σ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 77
+Syllable {syllableConsonants = [CR_σ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 3
+Syllable {syllableConsonants = [CR_σ,CR_σ], syllableVowel = VS_Vowel V_α} 127
+Syllable {syllableConsonants = [CR_σ,CR_σ], syllableVowel = VS_Vowel V_ε} 60
+Syllable {syllableConsonants = [CR_σ,CR_σ], syllableVowel = VS_Vowel V_η} 39
+Syllable {syllableConsonants = [CR_σ,CR_σ], syllableVowel = VS_Vowel V_ι} 10
+Syllable {syllableConsonants = [CR_σ,CR_σ], syllableVowel = VS_Vowel V_ο} 94
+Syllable {syllableConsonants = [CR_σ,CR_σ], syllableVowel = VS_Vowel V_ω} 46
+Syllable {syllableConsonants = [CR_σ,CR_σ], syllableVowel = VS_Diphthong D_αι} 24
+Syllable {syllableConsonants = [CR_σ,CR_σ], syllableVowel = VS_Diphthong D_ει} 27
+Syllable {syllableConsonants = [CR_σ,CR_σ], syllableVowel = VS_Diphthong D_ευ} 46
+Syllable {syllableConsonants = [CR_σ,CR_σ], syllableVowel = VS_Diphthong D_οι} 1
+Syllable {syllableConsonants = [CR_σ,CR_σ], syllableVowel = VS_Diphthong D_ου} 23
+Syllable {syllableConsonants = [CR_σ,CR_σ], syllableVowel = VS_ImproperDiphthong I_η} 23
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_Vowel V_α} 375
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_Vowel V_ε} 476
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_Vowel V_η} 409
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_Vowel V_ι} 1124
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_Vowel V_ο} 585
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_Vowel V_υ} 9
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_Vowel V_ω} 105
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_Diphthong D_αι} 152
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_Diphthong D_αυ} 79
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_Diphthong D_ει} 183
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_Diphthong D_ευ} 263
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_Diphthong D_οι} 58
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_Diphthong D_ου} 305
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_ImproperDiphthong I_α} 1
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_ImproperDiphthong I_η} 6
+Syllable {syllableConsonants = [CR_σ,CR_τ], syllableVowel = VS_ImproperDiphthong I_ω} 134
+Syllable {syllableConsonants = [CR_σ,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 112
+Syllable {syllableConsonants = [CR_σ,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 95
+Syllable {syllableConsonants = [CR_σ,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_η} 4
+Syllable {syllableConsonants = [CR_σ,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 8
+Syllable {syllableConsonants = [CR_σ,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 25
+Syllable {syllableConsonants = [CR_σ,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 10
+Syllable {syllableConsonants = [CR_σ,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_οι} 4
+Syllable {syllableConsonants = [CR_σ,CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 4
+Syllable {syllableConsonants = [CR_σ,CR_φ], syllableVowel = VS_Vowel V_α} 34
+Syllable {syllableConsonants = [CR_σ,CR_φ], syllableVowel = VS_Vowel V_ε} 19
+Syllable {syllableConsonants = [CR_σ,CR_φ], syllableVowel = VS_Vowel V_η} 58
+Syllable {syllableConsonants = [CR_σ,CR_φ], syllableVowel = VS_Vowel V_ι} 4
+Syllable {syllableConsonants = [CR_σ,CR_φ], syllableVowel = VS_Vowel V_ο} 23
+Syllable {syllableConsonants = [CR_σ,CR_φ], syllableVowel = VS_Vowel V_υ} 9
+Syllable {syllableConsonants = [CR_σ,CR_φ], syllableVowel = VS_Vowel V_ω} 2
+Syllable {syllableConsonants = [CR_σ,CR_φ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 32
+Syllable {syllableConsonants = [CR_σ,CR_φ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_η} 1
+Syllable {syllableConsonants = [CR_σ,CR_χ], syllableVowel = VS_Vowel V_α} 82
+Syllable {syllableConsonants = [CR_σ,CR_χ], syllableVowel = VS_Vowel V_ε} 16
+Syllable {syllableConsonants = [CR_σ,CR_χ], syllableVowel = VS_Vowel V_η} 31
+Syllable {syllableConsonants = [CR_σ,CR_χ], syllableVowel = VS_Vowel V_ι} 33
+Syllable {syllableConsonants = [CR_σ,CR_χ], syllableVowel = VS_Vowel V_ο} 20
+Syllable {syllableConsonants = [CR_σ,CR_χ], syllableVowel = VS_Vowel V_υ} 113
+Syllable {syllableConsonants = [CR_σ,CR_χ], syllableVowel = VS_Vowel V_ω} 15
+Syllable {syllableConsonants = [CR_σ,CR_χ], syllableVowel = VS_Diphthong D_ει} 7
+Syllable {syllableConsonants = [CR_σ,CR_χ], syllableVowel = VS_Diphthong D_οι} 3
+Syllable {syllableConsonants = [CR_σ,CR_χ], syllableVowel = VS_ImproperDiphthong I_ω} 1
+Syllable {syllableConsonants = [CR_σ,CR_χ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 8
+Syllable {syllableConsonants = [CR_σ,CR_χ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 1
+Syllable {syllableConsonants = [CR_σ,CR_ψ], syllableVowel = VS_Diphthong D_αυ} 1
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_Vowel V_α} 3689
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_Vowel V_ε} 3804
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_Vowel V_η} 4362
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_Vowel V_ι} 3678
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_Vowel V_ο} 7151
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_Vowel V_υ} 139
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_Vowel V_ω} 2725
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_Diphthong D_αι} 1545
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_Diphthong D_αυ} 379
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_Diphthong D_ει} 296
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_Diphthong D_ευ} 89
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_Diphthong D_οι} 1683
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_Diphthong D_ου} 6262
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_ImproperDiphthong I_α} 9
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_ImproperDiphthong I_η} 1077
+Syllable {syllableConsonants = [CR_τ], syllableVowel = VS_ImproperDiphthong I_ω} 2287
+Syllable {syllableConsonants = [CR_τ,CR_θ], syllableVowel = VS_Vowel V_α} 2
+Syllable {syllableConsonants = [CR_τ,CR_λ], syllableVowel = VS_Vowel V_ο} 2
+Syllable {syllableConsonants = [CR_τ,CR_μ], syllableVowel = VS_Vowel V_η} 5
+Syllable {syllableConsonants = [CR_τ,CR_μ], syllableVowel = VS_Vowel V_ι} 2
+Syllable {syllableConsonants = [CR_τ,CR_μ], syllableVowel = VS_ImproperDiphthong I_ω} 1
+Syllable {syllableConsonants = [CR_τ,CR_ν], syllableVowel = VS_Vowel V_η} 1
+Syllable {syllableConsonants = [CR_τ,CR_ν], syllableVowel = VS_ImproperDiphthong I_η} 3
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 82
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 48
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_η} 12
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 240
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 312
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_υ} 15
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 27
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_αι} 7
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_αυ} 3
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ει} 50
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ευ} 21
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_οι} 1
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 20
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_α} 2
+Syllable {syllableConsonants = [CR_τ,CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_ω} 29
+Syllable {syllableConsonants = [CR_τ,CR_τ], syllableVowel = VS_Vowel V_α} 5
+Syllable {syllableConsonants = [CR_τ,CR_τ], syllableVowel = VS_Vowel V_η} 4
+Syllable {syllableConsonants = [CR_τ,CR_τ], syllableVowel = VS_Vowel V_ο} 25
+Syllable {syllableConsonants = [CR_τ,CR_τ], syllableVowel = VS_Vowel V_ω} 5
+Syllable {syllableConsonants = [CR_τ,CR_τ], syllableVowel = VS_Diphthong D_οι} 1
+Syllable {syllableConsonants = [CR_τ,CR_τ], syllableVowel = VS_Diphthong D_ου} 2
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_Vowel V_α} 534
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_Vowel V_ε} 272
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_Vowel V_η} 443
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_Vowel V_ι} 299
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_Vowel V_ο} 302
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_Vowel V_υ} 209
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_Vowel V_ω} 342
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_Diphthong D_αι} 33
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_Diphthong D_αυ} 7
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_Diphthong D_ει} 109
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_Diphthong D_ευ} 17
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_Diphthong D_οι} 17
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_Diphthong D_ου} 17
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_ImproperDiphthong I_α} 2
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_ImproperDiphthong I_η} 12
+Syllable {syllableConsonants = [CR_φ], syllableVowel = VS_ImproperDiphthong I_ω} 2
+Syllable {syllableConsonants = [CR_φ,CR_θ], syllableVowel = VS_Vowel V_α} 142
+Syllable {syllableConsonants = [CR_φ,CR_θ], syllableVowel = VS_Vowel V_ε} 9
+Syllable {syllableConsonants = [CR_φ,CR_θ], syllableVowel = VS_Vowel V_η} 38
+Syllable {syllableConsonants = [CR_φ,CR_θ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_φ,CR_θ], syllableVowel = VS_Vowel V_ο} 28
+Syllable {syllableConsonants = [CR_φ,CR_θ], syllableVowel = VS_Vowel V_ω} 1
+Syllable {syllableConsonants = [CR_φ,CR_θ], syllableVowel = VS_Diphthong D_αι} 1
+Syllable {syllableConsonants = [CR_φ,CR_θ], syllableVowel = VS_Diphthong D_ει} 11
+Syllable {syllableConsonants = [CR_φ,CR_θ], syllableVowel = VS_ImproperDiphthong I_η} 2
+Syllable {syllableConsonants = [CR_φ,CR_λ], syllableVowel = VS_Vowel V_ε} 2
+Syllable {syllableConsonants = [CR_φ,CR_λ], syllableVowel = VS_Vowel V_ο} 30
+Syllable {syllableConsonants = [CR_φ,CR_λ], syllableVowel = VS_Vowel V_υ} 3
+Syllable {syllableConsonants = [CR_φ,CR_λ], syllableVowel = VS_Vowel V_ω} 7
+Syllable {syllableConsonants = [CR_φ,CR_λ], syllableVowel = VS_Diphthong D_οι} 16
+Syllable {syllableConsonants = [CR_φ,CR_λ], syllableVowel = VS_Diphthong D_ου} 7
+Syllable {syllableConsonants = [CR_φ,CR_λ], syllableVowel = VS_ImproperDiphthong I_ω} 1
+Syllable {syllableConsonants = [CR_φ,CR_ν], syllableVowel = VS_Vowel V_η} 5
+Syllable {syllableConsonants = [CR_φ,CR_ν], syllableVowel = VS_Vowel V_ι} 2
+Syllable {syllableConsonants = [CR_φ,CR_ν], syllableVowel = VS_Vowel V_ω} 3
+Syllable {syllableConsonants = [CR_φ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 22
+Syllable {syllableConsonants = [CR_φ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 11
+Syllable {syllableConsonants = [CR_φ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 5
+Syllable {syllableConsonants = [CR_φ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 105
+Syllable {syllableConsonants = [CR_φ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_υ} 6
+Syllable {syllableConsonants = [CR_φ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 5
+Syllable {syllableConsonants = [CR_φ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_αι} 9
+Syllable {syllableConsonants = [CR_φ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 6
+Syllable {syllableConsonants = [CR_φ,CR_φ], syllableVowel = VS_Vowel V_α} 1
+Syllable {syllableConsonants = [CR_χ], syllableVowel = VS_Vowel V_α} 488
+Syllable {syllableConsonants = [CR_χ], syllableVowel = VS_Vowel V_ε} 237
+Syllable {syllableConsonants = [CR_χ], syllableVowel = VS_Vowel V_η} 215
+Syllable {syllableConsonants = [CR_χ], syllableVowel = VS_Vowel V_ι} 178
+Syllable {syllableConsonants = [CR_χ], syllableVowel = VS_Vowel V_ο} 390
+Syllable {syllableConsonants = [CR_χ], syllableVowel = VS_Vowel V_υ} 42
+Syllable {syllableConsonants = [CR_χ], syllableVowel = VS_Vowel V_ω} 358
+Syllable {syllableConsonants = [CR_χ], syllableVowel = VS_Diphthong D_αι} 99
+Syllable {syllableConsonants = [CR_χ], syllableVowel = VS_Diphthong D_ει} 455
+Syllable {syllableConsonants = [CR_χ], syllableVowel = VS_Diphthong D_ευ} 15
+Syllable {syllableConsonants = [CR_χ], syllableVowel = VS_Diphthong D_οι} 49
+Syllable {syllableConsonants = [CR_χ], syllableVowel = VS_Diphthong D_ου} 119
+Syllable {syllableConsonants = [CR_χ], syllableVowel = VS_ImproperDiphthong I_η} 49
+Syllable {syllableConsonants = [CR_χ], syllableVowel = VS_ImproperDiphthong I_ω} 2
+Syllable {syllableConsonants = [CR_χ,CR_θ], syllableVowel = VS_Vowel V_α} 2
+Syllable {syllableConsonants = [CR_χ,CR_θ], syllableVowel = VS_Vowel V_ε} 14
+Syllable {syllableConsonants = [CR_χ,CR_θ], syllableVowel = VS_Vowel V_η} 83
+Syllable {syllableConsonants = [CR_χ,CR_θ], syllableVowel = VS_Vowel V_ι} 2
+Syllable {syllableConsonants = [CR_χ,CR_θ], syllableVowel = VS_Vowel V_ο} 2
+Syllable {syllableConsonants = [CR_χ,CR_θ], syllableVowel = VS_Vowel V_υ} 22
+Syllable {syllableConsonants = [CR_χ,CR_θ], syllableVowel = VS_Diphthong D_αι} 1
+Syllable {syllableConsonants = [CR_χ,CR_θ], syllableVowel = VS_Diphthong D_ει} 7
+Syllable {syllableConsonants = [CR_χ,CR_θ], syllableVowel = VS_ImproperDiphthong I_η} 3
+Syllable {syllableConsonants = [CR_χ,CR_θ], syllableVowel = VS_ImproperDiphthong I_ω} 2
+Syllable {syllableConsonants = [CR_χ,CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 4
+Syllable {syllableConsonants = [CR_χ,CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 1
+Syllable {syllableConsonants = [CR_χ,CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 9
+Syllable {syllableConsonants = [CR_χ,CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 2
+Syllable {syllableConsonants = [CR_χ,CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_αι} 1
+Syllable {syllableConsonants = [CR_χ,CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_οι} 6
+Syllable {syllableConsonants = [CR_χ,CR_θ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 14
+Syllable {syllableConsonants = [CR_χ,CR_θ,CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_α} 1
+Syllable {syllableConsonants = [CR_χ,CR_λ], syllableVowel = VS_Vowel V_α} 2
+Syllable {syllableConsonants = [CR_χ,CR_λ], syllableVowel = VS_Vowel V_ι} 1
+Syllable {syllableConsonants = [CR_χ,CR_λ], syllableVowel = VS_Vowel V_ο} 82
+Syllable {syllableConsonants = [CR_χ,CR_λ], syllableVowel = VS_Vowel V_υ} 1
+Syllable {syllableConsonants = [CR_χ,CR_λ], syllableVowel = VS_Vowel V_ω} 5
+Syllable {syllableConsonants = [CR_χ,CR_λ], syllableVowel = VS_Diphthong D_αι} 1
+Syllable {syllableConsonants = [CR_χ,CR_λ], syllableVowel = VS_Diphthong D_ει} 1
+Syllable {syllableConsonants = [CR_χ,CR_λ], syllableVowel = VS_Diphthong D_ευ} 2
+Syllable {syllableConsonants = [CR_χ,CR_λ], syllableVowel = VS_Diphthong D_οι} 38
+Syllable {syllableConsonants = [CR_χ,CR_λ], syllableVowel = VS_Diphthong D_ου} 45
+Syllable {syllableConsonants = [CR_χ,CR_λ], syllableVowel = VS_ImproperDiphthong I_η} 1
+Syllable {syllableConsonants = [CR_χ,CR_λ], syllableVowel = VS_ImproperDiphthong I_ω} 12
+Syllable {syllableConsonants = [CR_χ,CR_μ], syllableVowel = VS_Vowel V_α} 15
+Syllable {syllableConsonants = [CR_χ,CR_μ], syllableVowel = VS_Vowel V_η} 3
+Syllable {syllableConsonants = [CR_χ,CR_ν], syllableVowel = VS_Vowel V_ε} 3
+Syllable {syllableConsonants = [CR_χ,CR_ν], syllableVowel = VS_Vowel V_η} 2
+Syllable {syllableConsonants = [CR_χ,CR_ν], syllableVowel = VS_Vowel V_ι} 18
+Syllable {syllableConsonants = [CR_χ,CR_ν], syllableVowel = VS_Vowel V_ο} 11
+Syllable {syllableConsonants = [CR_χ,CR_ν], syllableVowel = VS_Diphthong D_οι} 1
+Syllable {syllableConsonants = [CR_χ,CR_ν], syllableVowel = VS_Diphthong D_ου} 2
+Syllable {syllableConsonants = [CR_χ,CR_ν], syllableVowel = VS_ImproperDiphthong I_η} 1
+Syllable {syllableConsonants = [CR_χ,CR_ν], syllableVowel = VS_ImproperDiphthong I_ω} 1
+Syllable {syllableConsonants = [CR_χ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_α} 1
+Syllable {syllableConsonants = [CR_χ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ε} 3
+Syllable {syllableConsonants = [CR_χ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_η} 71
+Syllable {syllableConsonants = [CR_χ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ι} 614
+Syllable {syllableConsonants = [CR_χ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ο} 63
+Syllable {syllableConsonants = [CR_χ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_υ} 45
+Syllable {syllableConsonants = [CR_χ,CR_ρ B_Smooth], syllableVowel = VS_Vowel V_ω} 6
+Syllable {syllableConsonants = [CR_χ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ει} 51
+Syllable {syllableConsonants = [CR_χ,CR_ρ B_Smooth], syllableVowel = VS_Diphthong D_ου} 1
+Syllable {syllableConsonants = [CR_χ,CR_ρ B_Smooth], syllableVowel = VS_ImproperDiphthong I_η} 5
+Syllable {syllableConsonants = [CR_ψ], syllableVowel = VS_Vowel V_α} 197
+Syllable {syllableConsonants = [CR_ψ], syllableVowel = VS_Vowel V_ε} 100
+Syllable {syllableConsonants = [CR_ψ], syllableVowel = VS_Vowel V_η} 34
+Syllable {syllableConsonants = [CR_ψ], syllableVowel = VS_Vowel V_ι} 65
+Syllable {syllableConsonants = [CR_ψ], syllableVowel = VS_Vowel V_ο} 47
+Syllable {syllableConsonants = [CR_ψ], syllableVowel = VS_Vowel V_υ} 129
+Syllable {syllableConsonants = [CR_ψ], syllableVowel = VS_Vowel V_ω} 69
+Syllable {syllableConsonants = [CR_ψ], syllableVowel = VS_Diphthong D_αι} 26
+Syllable {syllableConsonants = [CR_ψ], syllableVowel = VS_Diphthong D_ει} 35
+Syllable {syllableConsonants = [CR_ψ], syllableVowel = VS_Diphthong D_ευ} 65
+Syllable {syllableConsonants = [CR_ψ], syllableVowel = VS_Diphthong D_ου} 7
+Syllable {syllableConsonants = [CR_ψ], syllableVowel = VS_ImproperDiphthong I_α} 2
+Syllable {syllableConsonants = [CR_ψ], syllableVowel = VS_ImproperDiphthong I_η} 19

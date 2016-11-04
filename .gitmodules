@@ -1,0 +1,3 @@
+[submodule "modules/binary-primary"]
+	path = modules/binary-primary
+	url = https://github.com/ancientlanguage/binary-primary.git
