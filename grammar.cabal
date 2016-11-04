@@ -66,9 +66,11 @@ executable query
   build-depends:
     base,
     containers,
+    bytestring,
     text,
     either,
     lens,
+    cereal,
     grammar,
     primary-type,
     random-fu,

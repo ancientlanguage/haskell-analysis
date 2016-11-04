@@ -2,6 +2,10 @@
 
 module Main where
 
+import Control.Lens (over, _1, _2)
+import qualified Data.ByteString as BS
+import Data.Either.Validation
+import qualified Data.Serialize as Serialize
 import Data.Map (Map)
 import qualified Data.Map as Map
 import qualified Data.Text as Text
@@ -10,6 +14,9 @@ import Options.Applicative hiding (Failure, Success)
 
 import qualified ScriptQueries
 import QueryStage
+import Grammar.Around
+import qualified Grammar.Greek.Stage as Stage
+import Grammar.Prepare
 import Grammar.Pretty
 import Grammar.Serialize
 import qualified Primary
@@ -56,6 +63,7 @@ data Command
   = CommandSources
   | CommandScriptQuery Query
   | CommandList String
+  | CommandSave
 
 options :: Parser Command
 options = subparser
@@ -73,6 +81,11 @@ options = subparser
     ( info
       (CommandList <$> (strArgument (value "" <> metavar "C" <> help "Property category")))
       (progDesc "List available queries" )
+    )
+  <> command "save"
+    ( info
+      (pure CommandSave)
+      (progDesc "Save script analysis" )
     )
   )
 
@@ -109,6 +122,14 @@ showCategory c = do
       mapM_ (\x -> putStrLn $ c ++ " " ++ x) $ Map.keys m
     Nothing -> putStrLn $ "Invalid query category: " ++ c
 
+saveScript :: [Primary.Group] -> IO ()
+saveScript gs = case (traverse . _2) (aroundTo Stage.script . over (traverse . _1) fst . addCtx 0) . prepareGroups $ gs of
+  Failure es -> mapM_ (putStrLn . show) es
+  Success ss' -> do
+    let path = "../binary-greek-script/data/greek-script.data"
+    _ <- Text.putStrLn $ Text.concat ["Writing", Text.pack path]
+    BS.writeFile path (Serialize.encode ss')
+
 runCommand :: Command -> IO ()
 runCommand (CommandSources) = handleGroups showWordCounts
 runCommand (CommandScriptQuery (Query n opt)) = case Map.lookup n ScriptQueries.queries of
@@ -116,6 +137,7 @@ runCommand (CommandScriptQuery (Query n opt)) = case Map.lookup n ScriptQueries.
   Nothing -> putStrLn $ "Invalid query name: " ++ n
 runCommand (CommandList "") = mapM_ showCategory $ Map.keys queryCategories
 runCommand (CommandList c) = showCategory c
+runCommand (CommandSave) = handleGroups saveScript
 
 main :: IO ()
 main = execParser opts >>= runCommand
