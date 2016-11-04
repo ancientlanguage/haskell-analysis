@@ -34,9 +34,9 @@ testDataLoss xs ys = check . filter (\(x, y) -> x /= y) $ zip xs ys
     , Text.concat $ fmap (\(x , y) -> Text.concat [ "\n initial:", prettyMilestonedString x, "\n final  :", prettyMilestonedString y ]) xs
     ]
 
-testStages x = do
-  let stageTo = roundTo Stage.script
-  let stageFrom = roundFrom Stage.script
+testStage stg x = do
+  let stageTo = roundTo stg
+  let stageFrom = roundFrom stg
   case stageTo x of
     Failure es -> failMessage $ Text.concat
       [ "stage to failure:"
@@ -52,16 +52,16 @@ testStages x = do
           where
           forget = Stage.forgetHasWordPunctuation
 
-testSourceStages (SourceId g s, ms) = do
-  _ <- Text.putStrLn $ Text.intercalate " " [g, s]
-  testStages ms
+testSourceStage stg (SourceId g s, ms) = testCase (Text.unpack . Text.intercalate " " $ [g, s]) $ testStage stg ms
 
-testGroupStages :: Test
-testGroupStages = testCase "round stages" $ do
+testGroupStages name stg = buildTestBracketed $ do
   result <- readGroups
-  case result of
-    Left x -> assertFailure $ "decode failure:\n" ++ x
-    Right gs -> mapM_ testSourceStages (Stage.start gs)
+  let
+    sourceTests = case result of
+      Left x -> [testCase "decode" $ assertFailure $ "decode failure:\n" ++ x]
+      Right gs -> fmap (testSourceStage stg) (Stage.start gs)
+  let sourceTestGroup = testGroup name sourceTests
+  return (sourceTestGroup, return ())
 
 unicodeSymbolTestGroup = testGroup "Unicode-Symbol" $ concat
   [ testList "unicodeSymbol letters" tr "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩαβγδεζηθικλμνξοπρσςτυφχψω"
@@ -147,5 +147,5 @@ greekGroups =
   [ unicodeSymbolTestGroup
   , vocalicSyllableTestGroup
   , finalTestGroup
-  , testGroup "Script stages" [ testGroupStages ]
+  , testGroupStages "script stage" Stage.script
   ]
