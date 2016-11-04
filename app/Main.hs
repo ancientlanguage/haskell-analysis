@@ -2,6 +2,7 @@
 
 module Main where
 
+import Prelude hiding (Word)
 import Control.Lens (over, _1, _2)
 import qualified Data.ByteString as BS
 import Data.Either.Validation
@@ -15,7 +16,9 @@ import Options.Applicative hiding (Failure, Success)
 import qualified ScriptQueries
 import QueryStage
 import Grammar.Around
+import Grammar.CommonTypes
 import qualified Grammar.Greek.Stage as Stage
+import Grammar.Greek.Script.Word (Word)
 import Grammar.Prepare
 import Grammar.Pretty
 import Grammar.Serialize
@@ -125,7 +128,7 @@ showCategory c = do
 saveScript :: [Primary.Group] -> IO ()
 saveScript gs = case (traverse . _2) (aroundTo Stage.script . over (traverse . _1) fst . addCtx 0) . prepareGroups $ gs of
   Failure es -> mapM_ (putStrLn . show) es
-  Success ss' -> do
+  Success (ss' :: [SourceId :* [Milestone :* Word]]) -> do
     let path = "../binary-greek-script/data/greek-script.data"
     _ <- Text.putStrLn $ Text.concat ["Writing", Text.pack path]
     BS.writeFile path (Serialize.encode ss')
