@@ -97,6 +97,22 @@ queryStageContext
   -> IO ()
 queryStageContext ctxs stg f opt gs = queryStageContextWords ctxs stg f opt $ prepareGroups gs
 
+alignResultColumns :: [(Text, Text, Text, Text)] -> [Text]
+alignResultColumns xs = fmap (padCombine (maxes xs)) xs
+  where
+  padCombine (l1,l2,l3,l4) (x1,x2,x3,x4) = Text.intercalate " " $
+    [ Text.append x1 (pad x1 l1)
+    , Text.concat [pad x2 l2, x2, "  "]
+    , Text.append x3 (pad x3 l3)
+    , Text.concat ["  ", x4, pad x4 l4]
+    ]
+  pad x n = Text.replicate (n - (baseLength x)) " "
+  maxes = foldr go (0,0,0,0)
+    where
+    go (x1,x2,x3,x4) (l1,l2,l3,l4) =
+      (max (baseLength x1) l1,max (baseLength x2) l2,max (baseLength x3) l3,max (baseLength x4) l4)
+  baseLength = Text.length . Text.filter (not . Char.isMark)
+
 queryStageContextWords
   :: (Show e1, Ord c, Show c)
   => Int
@@ -136,26 +152,10 @@ queryStageContextWords contextSize stg f (QueryOptions ro keyMatch omitMatch) ws
     skv (k, vs) = do
       _ <- putStrLn $ show k ++ " " ++ show (length vs)
       vs' <- sampleResults vs
-      _ <- mapM_ Text.putStrLn . alignColumns $ vs'
+      _ <- mapM_ Text.putStrLn . alignResultColumns $ vs'
       case ro of
         Summary -> return ()
         _ -> putStrLn ""
-
-  alignColumns :: [(Text, Text, Text, Text)] -> [Text]
-  alignColumns xs = fmap (padCombine (maxes xs)) xs
-    where
-    padCombine (l1,l2,l3,l4) (x1,x2,x3,x4) = Text.intercalate " " $
-      [ Text.append x1 (pad x1 l1)
-      , Text.concat [pad x2 l2, x2, "  "]
-      , Text.append x3 (pad x3 l3)
-      , Text.concat ["  ", x4, pad x4 l4]
-      ]
-    pad x n = Text.replicate (n - (baseLength x)) " "
-    maxes = foldr go (0,0,0,0)
-      where
-      go (x1,x2,x3,x4) (l1,l2,l3,l4) =
-        (max (baseLength x1) l1,max (baseLength x2) l2,max (baseLength x3) l3,max (baseLength x4) l4)
-    baseLength = Text.length . Text.filter (not . Char.isMark)
 
   prepareItems addPrefix = over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . concatMap (\x -> fmap (\y -> (y, fst x)) (f x)) . contextualize contextSize
 
