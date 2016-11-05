@@ -155,7 +155,7 @@ queryStageContextWords
   -> QueryOptions
   -> [SourceId :* [Milestone :* Primary.Word]]
   -> IO ()
-queryStageContextWords contextSize stg f qo ws =
+queryStageContextWords contextSize stg itemQuery qo ws =
   mapM goSource ws
     >>= showKeyValues qo alignResultColumns . over (traverse . _2) concat . groupPairs . concat
   where
@@ -171,9 +171,11 @@ queryStageContextWords contextSize stg f qo ws =
         , Text.intercalate "\n" $ fmap prettyMilestoned $ over (traverse . _1) fst es
         ]
       return []
-    Success (result :: [b]) -> return . over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . concatMap (\x -> fmap (\y -> (y, fst x)) (f x)) . contextualize contextSize $ result
+    Success (result :: [b]) -> return . over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . itemQueryWithContext $ result
       where
       addPrefix (x1,x2,x3,x4) = (Text.concat [ "  ", g , " ", s, " " ] `Text.append` x1,x2,x3,x4)
+
+  itemQueryWithContext = concatMap (\x -> fmap (\y -> (y, fst x)) (itemQuery x)) . contextualize contextSize
 
   showItems
     :: [(Milestone :* Text :* [Text] :* [Text]) :* (String :* HasWordPunctuation)]
