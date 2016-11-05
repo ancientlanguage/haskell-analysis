@@ -101,7 +101,7 @@ showKeyValues
   :: Show a
   => QueryOptions
   -> ([b] -> [Text])
-  -> IO [(a, [b])]
+  -> [(a, [b])]
   -> IO ()
 showKeyValues (QueryOptions ro keyMatch omitMatch) alignShow xs = do
   case ro of
@@ -109,9 +109,8 @@ showKeyValues (QueryOptions ro keyMatch omitMatch) alignShow xs = do
     All -> putStrLn "Showing all results"
     First rc -> putStrLn $ "Showing the first " ++ show rc ++ " results per heading"
     Random rc -> putStrLn $ "Showing " ++ show rc ++ " random results per heading"
-  xs' <- xs
-  _ <- putStrLn $ show (length xs') ++ " headings\n"
-  mapM_ skv (filterKeyMatches xs')
+  _ <- putStrLn $ show (length xs) ++ " headings\n"
+  mapM_ skv (filterKeyMatches xs)
   where
   filterKeyMatches = filter (\(k, _) -> (null keyMatch || show k == keyMatch) && (null omitMatch || show k /= omitMatch))
   skv (k, vs) = do
@@ -156,8 +155,13 @@ queryStageContextWords
   -> QueryOptions
   -> [SourceId :* [Milestone :* Primary.Word]]
   -> IO ()
-queryStageContextWords contextSize stg f qo ws = showKeyValues qo alignResultColumns . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ ws
+queryStageContextWords contextSize stg f qo ws =
+  mapM goSource ws
+    >>= showKeyValues qo alignResultColumns . over (traverse . _2) concat . groupPairs . concat
   where
+  -- goSource
+  --   :: (SourceId, [Milestone :* Primary.Word])
+  --   -> IO [(c, [(Text, Text, Text, Text)])]
   goSource (SourceId g s, ms) = case roundTo stg . addCtx 5 $ ms of
     Failure es -> do
       _ <- Text.putStrLn $ Text.intercalate " "
@@ -169,9 +173,14 @@ queryStageContextWords contextSize stg f qo ws = showKeyValues qo alignResultCol
       return []
     Success y -> return $ prepareItems (\(x1,x2,x3,x4) -> (Text.concat [ "  ", g , " ", s, " " ] `Text.append` x1,x2,x3,x4)) y
 
+  -- prepareItems
+  --   :: (Show c, Show b1)
+  --   => ((Text, Text, Text, Text) -> b1)
+  --   -> [b] -> [(c, [b1])]
   prepareItems addPrefix = over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . concatMap (\x -> fmap (\y -> (y, fst x)) (f x)) . contextualize contextSize
 
-  showItems :: [(Milestone :* Text :* [Text] :* [Text]) :* (String :* HasWordPunctuation)]
+  showItems
+    :: [(Milestone :* Text :* [Text] :* [Text]) :* (String :* HasWordPunctuation)]
     -> [(Text, Text, Text, Text)]
   showItems = fmap prettyMilestoneCtxString . Stage.forgetHasWordPunctuation
 
