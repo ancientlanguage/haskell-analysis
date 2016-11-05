@@ -97,6 +97,32 @@ queryStageContext
   -> IO ()
 queryStageContext ctxs stg f opt gs = queryStageContextWords ctxs stg f opt $ prepareGroups gs
 
+showKeyValues :: Show c => QueryOptions -> IO [(c, [(Text, Text, Text, Text)])] -> IO ()
+showKeyValues (QueryOptions ro keyMatch omitMatch) xs = do
+  case ro of
+    Summary -> putStrLn "Showing summary"
+    All -> putStrLn "Showing all results"
+    First rc -> putStrLn $ "Showing the first " ++ show rc ++ " results per heading"
+    Random rc -> putStrLn $ "Showing " ++ show rc ++ " random results per heading"
+  xs' <- xs
+  _ <- putStrLn $ show (length xs') ++ " headings\n"
+  mapM_ skv (filterKeyMatches xs')
+  where
+  filterKeyMatches = filter (\(k, _) -> (null keyMatch || show k == keyMatch) && (null omitMatch || show k /= omitMatch))
+  skv (k, vs) = do
+    _ <- putStrLn $ show k ++ " " ++ show (length vs)
+    vs' <- sampleResults vs
+    _ <- mapM_ Text.putStrLn . alignResultColumns $ vs'
+    case ro of
+      Summary -> return ()
+      _ -> putStrLn ""
+
+  sampleResults = case ro of
+    Summary -> return . const []
+    All -> return . id
+    First rc -> return . take rc
+    Random rc -> randomSample rc
+
 alignResultColumns :: [(Text, Text, Text, Text)] -> [Text]
 alignResultColumns xs = fmap (padCombine (maxes xs)) xs
   where
@@ -125,7 +151,7 @@ queryStageContextWords
   -> QueryOptions
   -> [SourceId :* [Milestone :* Primary.Word]]
   -> IO ()
-queryStageContextWords contextSize stg f (QueryOptions ro keyMatch omitMatch) ws = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ ws
+queryStageContextWords contextSize stg f qo ws = showKeyValues qo . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ ws
   where
   goSource (SourceId g s, ms) = case roundTo stg . addCtx 5 $ ms of
     Failure es -> do
@@ -138,33 +164,7 @@ queryStageContextWords contextSize stg f (QueryOptions ro keyMatch omitMatch) ws
       return []
     Success y -> return $ prepareItems (\(x1,x2,x3,x4) -> (Text.concat [ "  ", g , " ", s, " " ] `Text.append` x1,x2,x3,x4)) y
 
-  showKeyValues :: Show c => IO [(c, [(Text, Text, Text, Text)])] -> IO ()
-  showKeyValues xs = do
-    case ro of
-      Summary -> putStrLn "Showing summary"
-      All -> putStrLn "Showing all results"
-      First rc -> putStrLn $ "Showing the first " ++ show rc ++ " results per heading"
-      Random rc -> putStrLn $ "Showing " ++ show rc ++ " random results per heading"
-    xs' <- xs
-    _ <- putStrLn $ show (length xs') ++ " headings\n"
-    mapM_ skv (filterKeyMatches xs')
-    where
-    filterKeyMatches = filter (\(k, _) -> (null keyMatch || show k == keyMatch) && (null omitMatch || show k /= omitMatch))
-    skv (k, vs) = do
-      _ <- putStrLn $ show k ++ " " ++ show (length vs)
-      vs' <- sampleResults vs
-      _ <- mapM_ Text.putStrLn . alignResultColumns $ vs'
-      case ro of
-        Summary -> return ()
-        _ -> putStrLn ""
-
   prepareItems addPrefix = over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . concatMap (\x -> fmap (\y -> (y, fst x)) (f x)) . contextualize contextSize
-
-  sampleResults = case ro of
-    Summary -> return . const []
-    All -> return . id
-    First rc -> return . take rc
-    Random rc -> randomSample rc
 
   showItems :: [(Milestone :* Text :* [Text] :* [Text]) :* (String :* HasWordPunctuation)]
     -> [(Text, Text, Text, Text)]
