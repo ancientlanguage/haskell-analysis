@@ -95,7 +95,21 @@ queryStageContext
   -> QueryOptions
   -> [Primary.Group]
   -> IO ()
-queryStageContext contextSize stg f (QueryOptions ro keyMatch omitMatch) gs = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ prepareGroups gs
+queryStageContext ctxs stg f opt gs = queryStageContextWords ctxs stg f opt $ prepareGroups gs
+
+queryStageContextWords
+  :: (Show e1, Ord c, Show c)
+  => Int
+  -> Round
+    (MilestoneCtx :* e1)
+    e2
+    [MilestoneCtx :* (String :* HasWordPunctuation)]
+    [b]
+  -> (b :* [b] :* [b] -> [c])
+  -> QueryOptions
+  -> [SourceId :* [Milestone :* Primary.Word]]
+  -> IO ()
+queryStageContextWords contextSize stg f (QueryOptions ro keyMatch omitMatch) ws = showKeyValues . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ ws
   where
   goSource (SourceId g s, ms) = case roundTo stg . addCtx 5 $ ms of
     Failure es -> do
