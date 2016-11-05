@@ -171,13 +171,9 @@ queryStageContextWords contextSize stg f qo ws =
         , Text.intercalate "\n" $ fmap prettyMilestoned $ over (traverse . _1) fst es
         ]
       return []
-    Success y -> return $ prepareItems (\(x1,x2,x3,x4) -> (Text.concat [ "  ", g , " ", s, " " ] `Text.append` x1,x2,x3,x4)) y
-
-  -- prepareItems
-  --   :: (Show c, Show b1)
-  --   => ((Text, Text, Text, Text) -> b1)
-  --   -> [b] -> [(c, [b1])]
-  prepareItems addPrefix = over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . concatMap (\x -> fmap (\y -> (y, fst x)) (f x)) . contextualize contextSize
+    Success (result :: [b]) -> return . over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . concatMap (\x -> fmap (\y -> (y, fst x)) (f x)) . contextualize contextSize $ result
+      where
+      addPrefix (x1,x2,x3,x4) = (Text.concat [ "  ", g , " ", s, " " ] `Text.append` x1,x2,x3,x4)
 
   showItems
     :: [(Milestone :* Text :* [Text] :* [Text]) :* (String :* HasWordPunctuation)]
