@@ -138,6 +138,7 @@ queryStageContextWords contextSize stg f (QueryOptions ro keyMatch omitMatch) ws
       return []
     Success y -> return $ prepareItems (\(x1,x2,x3,x4) -> (Text.concat [ "  ", g , " ", s, " " ] `Text.append` x1,x2,x3,x4)) y
 
+  showKeyValues :: Show c => IO [(c, [(Text, Text, Text, Text)])] -> IO ()
   showKeyValues xs = do
     case ro of
       Summary -> putStrLn "Showing summary"
