@@ -97,8 +97,13 @@ queryStageContext
   -> IO ()
 queryStageContext ctxs stg f opt gs = queryStageContextWords ctxs stg f opt $ prepareGroups gs
 
-showKeyValues :: Show c => QueryOptions -> IO [(c, [(Text, Text, Text, Text)])] -> IO ()
-showKeyValues (QueryOptions ro keyMatch omitMatch) xs = do
+showKeyValues
+  :: Show a
+  => QueryOptions
+  -> ([b] -> [Text])
+  -> IO [(a, [b])]
+  -> IO ()
+showKeyValues (QueryOptions ro keyMatch omitMatch) alignShow xs = do
   case ro of
     Summary -> putStrLn "Showing summary"
     All -> putStrLn "Showing all results"
@@ -112,7 +117,7 @@ showKeyValues (QueryOptions ro keyMatch omitMatch) xs = do
   skv (k, vs) = do
     _ <- putStrLn $ show k ++ " " ++ show (length vs)
     vs' <- sampleResults vs
-    _ <- mapM_ Text.putStrLn . alignResultColumns $ vs'
+    _ <- mapM_ Text.putStrLn . alignShow $ vs'
     case ro of
       Summary -> return ()
       _ -> putStrLn ""
@@ -151,7 +156,7 @@ queryStageContextWords
   -> QueryOptions
   -> [SourceId :* [Milestone :* Primary.Word]]
   -> IO ()
-queryStageContextWords contextSize stg f qo ws = showKeyValues qo . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ ws
+queryStageContextWords contextSize stg f qo ws = showKeyValues qo alignResultColumns . fmap ((over (traverse . _2) concat) . groupPairs . concat) . mapM goSource $ ws
   where
   goSource (SourceId g s, ms) = case roundTo stg . addCtx 5 $ ms of
     Failure es -> do
