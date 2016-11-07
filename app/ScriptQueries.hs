@@ -209,6 +209,17 @@ queryStageContextWords
   -> IO ()
 queryStageContextWords contextSize stg itemQuery qo ws = queryStageContextWords2 contextSize 5 stg itemQuery qo Stage.basicWord Stage.fullWordText Stage.forgetHasWordPunctuation ws
 
+queryFinalConsonantNoElision
+  :: ctx :* Word
+  -> [[ConsonantRho]]
+queryFinalConsonantNoElision (_, w) = result
+  where
+  result = case (el, fc) of
+    (NotElided, _ : _) -> pure fc
+    _ -> []
+  el = wordElision w
+  fc = wordFinalConsonants w
+
 queries :: Map String (QueryOptions -> [Primary.Group] -> IO ())
 queries = Map.fromList
   [ ("elision", queryStage Stage.toElision queryElision)
@@ -229,4 +240,5 @@ queries = Map.fromList
   , ("independent-syllables", queryStage Stage.script queryIndependentSyllables)
   , ("elision-next-syllable", queryStageContext 1 Stage.script queryElisionNextSyllable)
   , ("de-next", queryStageContext 1 Stage.script queryDeNext)
+  , ("final-consonant-no-elision", queryStage Stage.script queryFinalConsonantNoElision)
   ]
