@@ -134,11 +134,12 @@ queryStageContextWords
   -> QueryOptions
   -> [SourceId :* [Milestone :* Primary.Word]]
   -> IO ()
-queryStageContextWords contextSize stg itemQuery qo ws = queryStageContextWords2 contextSize stg itemQuery qo basicWord fullWordText Stage.forgetHasWordPunctuation ws
+queryStageContextWords contextSize stg itemQuery qo ws = queryStageContextWords2 contextSize 5 stg itemQuery qo basicWord fullWordText Stage.forgetHasWordPunctuation ws
 
 queryStageContextWords2
   :: (Show e1, Ord c, Show c)
   => Int
+  -> Int
   -> Round
     (MilestoneCtx :* e1)
     e2
@@ -151,11 +152,11 @@ queryStageContextWords2
   -> ([MilestoneCtx :* s] -> [MilestoneCtx :* String])
   -> [SourceId :* [Milestone :* w]]
   -> IO ()
-queryStageContextWords2 contextSize stg itemQuery qo wordString wordText forget ws =
+queryStageContextWords2 queryContextSize resultContextSize stg itemQuery qo wordString wordText forget ws =
   mapM goSource ws
     >>= showKeyValues qo alignResultColumns . over (traverse . _2) concat . groupPairs . concat
   where
-  goSource (sid, ms) = continueForward (showSourceId sid) $ roundTo stg . over (traverse . _2) wordString . addMilestoneCtx 5 wordText $ ms
+  goSource (sid, ms) = continueForward (showSourceId sid) $ roundTo stg . over (traverse . _2) wordString . addMilestoneCtx resultContextSize wordText $ ms
   showSourceId (SourceId g s) = Text.intercalate " " [g, s]
 
   continueForward sid (Failure es) = do
@@ -169,9 +170,9 @@ queryStageContextWords2 contextSize stg itemQuery qo wordString wordText forget 
     where
     addPrefix (x1,x2,x3,x4) = (Text.concat [ "  ", sid, " " ] `Text.append` x1,x2,x3,x4)
 
-  itemQueryWithContext = concatMap (\x -> fmap (\y -> (y, fst x)) (itemQuery x)) . contextualize contextSize
+  itemQueryWithContext = concatMap (\x -> fmap (\y -> (y, fst x)) (itemQuery x)) . contextualize queryContextSize
 
-  showItems = fmap prettyMilestoneCtxString . forget
+  showItems = fmap (prettyMilestoneCtx . fst) . forget
 
   goBack xs = case (roundFrom stg) xs of
     Success ys -> showItems ys
