@@ -31,7 +31,6 @@ library
     Grammar.Greek.Script.Stage
     Grammar.Greek.Script.Types
     Grammar.Greek.Script.Word
-    Grammar.IO.QueryStage
     Grammar.Serialize
   ghc-options: -Wall -fwarn-tabs -O2
   default-extensions:

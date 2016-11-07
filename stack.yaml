@@ -7,7 +7,7 @@ packages:
   extra-dep: true
 - location:
     git: https://github.com/ancientlanguage/haskell-grammar.git
-    commit: f96d807b2f88d8213e7003bb18730026548cfc7b
+    commit: 44272b0d2524ece82b81c351bb17e53ce40b88a0
   extra-dep: true
 extra-deps: []
 flags: {}
