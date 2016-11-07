@@ -134,7 +134,7 @@ queryStageContextWords
   -> QueryOptions
   -> [SourceId :* [Milestone :* Primary.Word]]
   -> IO ()
-queryStageContextWords contextSize stg itemQuery qo ws = queryStageContextWords2 contextSize stg itemQuery qo Stage.forgetHasWordPunctuation ws
+queryStageContextWords contextSize stg itemQuery qo ws = queryStageContextWords2 contextSize stg itemQuery qo basicWord Stage.forgetHasWordPunctuation ws
 
 queryStageContextWords2
   :: (Show e1, Ord c, Show c)
@@ -142,18 +142,19 @@ queryStageContextWords2
   -> Round
     (MilestoneCtx :* e1)
     e2
-    [MilestoneCtx :* (String :* HasWordPunctuation)]
+    [MilestoneCtx :* s]
     [b]
   -> (b :* [b] :* [b] -> [c])
   -> QueryOptions
-  -> ([MilestoneCtx :* String :* HasWordPunctuation] -> [MilestoneCtx :* String])
+  -> (Primary.Word -> s)
+  -> ([MilestoneCtx :* s] -> [MilestoneCtx :* String])
   -> [SourceId :* [Milestone :* Primary.Word]]
   -> IO ()
-queryStageContextWords2 contextSize stg itemQuery qo forget ws =
+queryStageContextWords2 contextSize stg itemQuery qo wordString forget ws =
   mapM goSource ws
     >>= showKeyValues qo alignResultColumns . over (traverse . _2) concat . groupPairs . concat
   where
-  goSource (sid, ms) = continueForward (showSourceId sid) $ roundTo stg . over (traverse . _2) basicWord . addMilestoneCtx 5 fullWordText $ ms
+  goSource (sid, ms) = continueForward (showSourceId sid) $ roundTo stg . over (traverse . _2) wordString . addMilestoneCtx 5 fullWordText $ ms
   showSourceId (SourceId g s) = Text.intercalate " " [g, s]
 
   continueForward sid (Failure es) = do
