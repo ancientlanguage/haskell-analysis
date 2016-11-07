@@ -134,7 +134,22 @@ queryStageContextWords
   -> QueryOptions
   -> [SourceId :* [Milestone :* Primary.Word]]
   -> IO ()
-queryStageContextWords contextSize stg itemQuery qo ws =
+queryStageContextWords contextSize stg itemQuery qo ws = queryStageContextWords2 contextSize stg itemQuery qo Stage.forgetHasWordPunctuation ws
+
+queryStageContextWords2
+  :: (Show e1, Ord c, Show c)
+  => Int
+  -> Round
+    (MilestoneCtx :* e1)
+    e2
+    [MilestoneCtx :* (String :* HasWordPunctuation)]
+    [b]
+  -> (b :* [b] :* [b] -> [c])
+  -> QueryOptions
+  -> ([MilestoneCtx :* String :* HasWordPunctuation] -> [MilestoneCtx :* String])
+  -> [SourceId :* [Milestone :* Primary.Word]]
+  -> IO ()
+queryStageContextWords2 contextSize stg itemQuery qo forget ws =
   mapM goSource ws
     >>= showKeyValues qo alignResultColumns . over (traverse . _2) concat . groupPairs . concat
   where
@@ -154,10 +169,7 @@ queryStageContextWords contextSize stg itemQuery qo ws =
 
   itemQueryWithContext = concatMap (\x -> fmap (\y -> (y, fst x)) (itemQuery x)) . contextualize contextSize
 
-  showItems
-    :: [(Milestone :* Text :* [Text] :* [Text]) :* (String :* HasWordPunctuation)]
-    -> [(Text, Text, Text, Text)]
-  showItems = fmap prettyMilestoneCtxString . Stage.forgetHasWordPunctuation
+  showItems = fmap prettyMilestoneCtxString . forget
 
   goBack xs = case (roundFrom stg) xs of
     Success ys -> showItems ys
