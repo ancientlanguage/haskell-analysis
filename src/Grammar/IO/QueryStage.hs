@@ -138,21 +138,19 @@ queryStageContextWords contextSize stg itemQuery qo ws =
   mapM goSource ws
     >>= showKeyValues qo alignResultColumns . over (traverse . _2) concat . groupPairs . concat
   where
-  -- goSource
-  --   :: (SourceId, [Milestone :* Primary.Word])
-  --   -> IO [(c, [(Text, Text, Text, Text)])]
-  goSource (SourceId g s, ms) = case roundTo stg . over (traverse . _2) basicWord . addMilestoneCtx 5 fullWordText $ ms of
-    Failure es -> do
-      _ <- Text.putStrLn $ Text.intercalate " "
-        [ g
-        , s
-        , "Failure: roundTo --"
-        , Text.intercalate "\n" $ fmap prettyMilestoned $ over (traverse . _1) fst es
-        ]
-      return []
-    Success (result :: [b]) -> return . over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . itemQueryWithContext $ result
-      where
-      addPrefix (x1,x2,x3,x4) = (Text.concat [ "  ", g , " ", s, " " ] `Text.append` x1,x2,x3,x4)
+  goSource (sid, ms) = continueForward (showSourceId sid) $ roundTo stg . over (traverse . _2) basicWord . addMilestoneCtx 5 fullWordText $ ms
+  showSourceId (SourceId g s) = Text.intercalate " " [g, s]
+
+  continueForward sid (Failure es) = do
+    _ <- Text.putStrLn $ Text.intercalate " "
+      [ sid
+      , "Failure: roundTo --"
+      , Text.intercalate "\n" $ fmap prettyMilestoned $ over (traverse . _1) fst es
+      ]
+    return []
+  continueForward sid (Success (result :: [b])) = return . over (traverse . _2) (fmap addPrefix . goBack) . groupPairs . itemQueryWithContext $ result
+    where
+    addPrefix (x1,x2,x3,x4) = (Text.concat [ "  ", sid, " " ] `Text.append` x1,x2,x3,x4)
 
   itemQueryWithContext = concatMap (\x -> fmap (\y -> (y, fst x)) (itemQuery x)) . contextualize contextSize
 
