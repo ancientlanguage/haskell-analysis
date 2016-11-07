@@ -3,7 +3,7 @@
 module Main where
 
 import Prelude hiding (Word)
-import Control.Lens (over, _1, _2)
+import Control.Lens (over, _2)
 import qualified Data.ByteString as BS
 import Data.Either.Validation
 import qualified Data.Serialize as Serialize
@@ -126,7 +126,7 @@ showCategory c = do
     Nothing -> putStrLn $ "Invalid query category: " ++ c
 
 saveScript :: [Primary.Group] -> IO ()
-saveScript gs = case (traverse . _2) (roundTo Stage.script . over (traverse . _1) fst . addCtx 0) . prepareGroups $ gs of
+saveScript gs = case (traverse . _2) (roundTo Stage.script . over (traverse . _2) basicWord) . prepareGroups $ gs of
   Failure es -> mapM_ (putStrLn . show) es
   Success (ss' :: [SourceId :* [Milestone :* Word]]) -> do
     let path = "../binary-greek-script/data/greek-script.data"
