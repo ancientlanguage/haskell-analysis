@@ -9,7 +9,8 @@ import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import Grammar.CommonTypes
 import System.Directory (createDirectoryIfMissing)
-import System.FilePath ((</>))
+import System.FilePath ((</>), addExtension)
+import Text.Printf (printf)
 
 splitIndexSourceIds
   :: [SourceId :* a]
@@ -18,22 +19,25 @@ splitIndexSourceIds = addIndex . over (traverse . _2) addIndex . groupConsecutiv
   where
   splitSourceId (SourceId gid sid, a) = (gid, (sid, a))
 
-filePathWithIndex :: Int -> Text -> FilePath
-filePathWithIndex i n = Text.unpack $ Text.concat [Text.pack . show $ i, "_", n]
+filePathWithIndex :: Int -> Int -> Text -> FilePath
+filePathWithIndex dig i n = Text.unpack $ Text.concat [Text.pack . printf ("%0" ++ show dig ++ "d") $ i, "_", n]
 
 prefixFilePaths :: FilePath -> [Int :* Text :* a] -> [FilePath :* a]
-prefixFilePaths prefix = over (traverse . _1) (prefix </>) . fmap (\(x, (y, z)) -> (filePathWithIndex x y, z))
-
-printFileName :: FilePath -> IO ()
-printFileName p = Text.putStrLn $ Text.intercalate " " ["Writing", Text.pack p]
+prefixFilePaths prefix xs = go xs
+  where
+  maxDigitsDouble :: Double
+  maxDigitsDouble = logBase 10 . fromIntegral . maximum . (0 :) . fmap fst $ xs
+  maxDigits :: Int
+  maxDigits = ceiling maxDigitsDouble
+  go = over (traverse . _1) (prefix </>) . fmap (\(x, (y, z)) -> (filePathWithIndex maxDigits x y, z))
 
 serializeAsFile :: Serialize a => (FilePath -> IO ()) -> FilePath -> a -> IO ()
 serializeAsFile doFirst path item = do
   _ <- doFirst path
   BS.writeFile path (Serialize.encode item)
 
-serializeStage' :: Serialize a => (FilePath -> IO ()) -> FilePath -> [SourceId :* a] -> IO ()
-serializeStage' doFirst prefix = mapM_ saveGroup . prefixFilePaths prefix . splitIndexSourceIds
+serializeStage' :: Serialize a => String -> (FilePath -> IO ()) -> FilePath -> [SourceId :* a] -> IO ()
+serializeStage' ext doFirst prefix = mapM_ saveGroup . prefixFilePaths prefix . splitIndexSourceIds
   where
   saveGroup
     :: Serialize a
@@ -41,7 +45,14 @@ serializeStage' doFirst prefix = mapM_ saveGroup . prefixFilePaths prefix . spli
     -> IO ()
   saveGroup (g, ss) = do
     _ <- createDirectoryIfMissing True g
-    mapM_ (uncurry $ serializeAsFile doFirst) $ prefixFilePaths g ss
+    let items = over (traverse . _1) (flip addExtension ext) . prefixFilePaths g $ ss
+    mapM_ (uncurry $ serializeAsFile doFirst) $ items
+
+printFileName :: FilePath -> IO ()
+printFileName p = Text.putStrLn $ Text.intercalate " " ["Writing", Text.pack p]
+
+dataExtension :: String
+dataExtension = "data"
 
 serializeStage :: Serialize a => FilePath -> [SourceId :* a] -> IO ()
-serializeStage = serializeStage' printFileName
+serializeStage = serializeStage' dataExtension printFileName

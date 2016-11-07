@@ -1,7 +1,6 @@
 module Grammar.Serialize where
 
 import qualified Data.ByteString as BS
-import Data.Serialize as Serialize
 import qualified Data.Serialize as Serialize
 import Primary
 
