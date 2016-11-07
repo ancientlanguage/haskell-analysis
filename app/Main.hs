@@ -4,9 +4,7 @@ module Main where
 
 import Prelude hiding (Word)
 import Control.Lens (over, _2)
-import qualified Data.ByteString as BS
 import Data.Either.Validation
-import qualified Data.Serialize as Serialize
 import Data.Map (Map)
 import qualified Data.Map as Map
 import qualified Data.Text as Text
@@ -21,7 +19,8 @@ import qualified Grammar.Greek.Script.Stage as Stage
 import Grammar.Greek.Script.Word (Word)
 import Grammar.Prepare
 import Grammar.Pretty
-import Grammar.Serialize
+import qualified Grammar.Serialize as Serialize
+import qualified Grammar.SerializeStage as Serialize
 import qualified Primary
 
 queryOptionsParser :: Parser QueryOptions
@@ -108,7 +107,7 @@ showWordCounts x = mapM_ showGroup x
 
 handleGroups :: ([Primary.Group] -> IO ()) -> IO ()
 handleGroups f = do
-  result <- readGroups
+  result <- Serialize.readGroups
   case result of
     Left x -> putStrLn x
     Right x -> f x
@@ -128,10 +127,7 @@ showCategory c = do
 saveScript :: [Primary.Group] -> IO ()
 saveScript gs = case (traverse . _2) (roundTo Stage.script . over (traverse . _2) Stage.basicWord) . prepareGroups $ gs of
   Failure es -> mapM_ (putStrLn . show) es
-  Success (ss' :: [SourceId :* [Milestone :* Word]]) -> do
-    let path = "../binary-greek-script/data/greek-script.data"
-    _ <- Text.putStrLn $ Text.concat ["Writing", Text.pack path]
-    BS.writeFile path (Serialize.encode ss')
+  Success (ss' :: [SourceId :* [Milestone :* Word]]) -> Serialize.serializeStage "../binary-greek-script/data" ss'
 
 runCommand :: Command -> IO ()
 runCommand (CommandSources) = handleGroups showWordCounts

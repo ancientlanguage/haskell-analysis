@@ -32,6 +32,7 @@ library
     Grammar.Greek.Script.Types
     Grammar.Greek.Script.Word
     Grammar.Serialize
+    Grammar.SerializeStage
   ghc-options: -Wall -fwarn-tabs -O2
   default-extensions:
     OverloadedStrings,
@@ -49,6 +50,8 @@ library
     random-fu,
     random-source,
     array,
+    directory,
+    filepath,
     test-framework,
     test-framework-hunit,
     HUnit,

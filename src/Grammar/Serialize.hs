@@ -1,6 +1,7 @@
 module Grammar.Serialize where
 
 import qualified Data.ByteString as BS
+import Data.Serialize as Serialize
 import qualified Data.Serialize as Serialize
 import Primary
 
@@ -11,4 +12,4 @@ groupsPath :: FilePath
 groupsPath = "./modules/binary-primary/data/groups.data"
 
 readGroups :: IO (Either String [Group])
-readGroups = decodeGroups <$> BS.readFile groupsPath 
+readGroups = decodeGroups <$> BS.readFile groupsPath
