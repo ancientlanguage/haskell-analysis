@@ -9,6 +9,7 @@ module Grammar.CommonTypes
   , addIndex
   , addReverseIndex
   , groupPairs
+  , groupConsecutivePairs
   )
   where
 
@@ -56,3 +57,10 @@ groupPairs = Map.assocs . foldr go Map.empty
   go (k, v) m = case Map.lookup k m of
     Just vs -> Map.insert k (v : vs) m
     Nothing -> Map.insert k [v] m
+
+groupConsecutivePairs :: Eq k => [k :* v] -> [k :* [v]]
+groupConsecutivePairs = foldr go []
+  where
+  go (k, v) [] = [(k, [v])]
+  go (k, v) ((k', vs) : xs) | k == k' = (k', v : vs) : xs
+  go (k, v) xs = (k, [v]) : xs
