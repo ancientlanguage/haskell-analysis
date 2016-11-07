@@ -17,7 +17,8 @@ library
   exposed-modules:
     Grammar.CommonTypes
     Grammar.Contextualize
-    Grammar.IO.RandomSample,
+    Grammar.IO.RandomSample
+    Grammar.IO.QueryStage
     Grammar.Prepare
     Grammar.Pretty
     Grammar.Round
