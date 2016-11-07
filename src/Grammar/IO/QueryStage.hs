@@ -3,7 +3,6 @@ module Grammar.IO.QueryStage where
 import Control.Lens (over, _1, _2)
 import qualified Data.Char as Char
 import Data.List (foldl')
-import qualified Data.Map.Strict as Map
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
@@ -18,13 +17,6 @@ import Grammar.Prepare
 import Grammar.Pretty
 import Grammar.Round
 import qualified Primary
-
-groupPairs :: Ord k => [k :* v] -> [k :* [v]]
-groupPairs = Map.assocs . foldr go Map.empty
-  where
-  go (k, v) m = case Map.lookup k m of
-    Just vs -> Map.insert k (v : vs) m
-    Nothing -> Map.insert k [v] m
 
 data ResultOption
   = Summary
