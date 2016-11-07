@@ -24,6 +24,12 @@ suffixHasPunctuation _ = HasWordPunctuation
 wordWithSentence :: Primary.Word -> String :* HasWordPunctuation
 wordWithSentence (Primary.Word _ t s) = (Text.unpack t , suffixHasPunctuation s)
 
+basicWord :: Primary.Word -> String :* HasWordPunctuation
+basicWord (Primary.Word _ t s) = (Text.unpack t, suffixHasPunctuation s)
+
+fullWordText :: Primary.Word -> Text
+fullWordText (Primary.Word p t s) = Text.concat [p, t, s]
+
 start
   :: [Primary.Group]
   -> [SourceId :* [Milestone :* String :* HasWordPunctuation]]

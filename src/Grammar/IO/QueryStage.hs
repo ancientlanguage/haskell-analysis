@@ -10,12 +10,9 @@ import Data.Either.Validation
 import Grammar.IO.RandomSample (randomSample)
 import Grammar.CommonTypes
 import Grammar.Contextualize
-import qualified Grammar.Greek.Script.Stage as Stage
-import Grammar.Greek.Script.Types
 import Grammar.Prepare
 import Grammar.Pretty
 import Grammar.Round
-import qualified Primary
 
 data ResultOption
   = Summary
@@ -33,12 +30,6 @@ data QueryOptions = QueryOptions
 
 type MilestoneCtx = Milestone :* Text :* [Text] :* [Text]
 
-basicWord :: Primary.Word -> String :* HasWordPunctuation
-basicWord (Primary.Word _ t s) = (Text.unpack t, Stage.suffixHasPunctuation s)
-
-fullWordText :: Primary.Word -> Text
-fullWordText (Primary.Word p t s) = Text.concat [p, t, s]
-
 addMilestoneCtx
   :: Int
   -> (a -> Text)
@@ -48,33 +39,6 @@ addMilestoneCtx n f xs = zipWith merge (contextualize n texts) xs
   where
   texts = fmap (f . snd) xs
   merge t (m, w) = ((m, t), w)
-
-queryStage
-  :: (Show e1, Ord c, Show c)
-  => Round
-    (MilestoneCtx :* e1)
-    e2
-    [MilestoneCtx :* (String :* HasWordPunctuation)]
-    [b]
-  -> (b -> [c])
-  -> QueryOptions
-  -> [Primary.Group]
-  -> IO ()
-queryStage a f = queryStageContext 0 a (f . fst)
-
-queryStageContext
-  :: (Show e1, Ord c, Show c)
-  => Int
-  -> Round
-    (MilestoneCtx :* e1)
-    e2
-    [MilestoneCtx :* (String :* HasWordPunctuation)]
-    [b]
-  -> (b :* [b] :* [b] -> [c])
-  -> QueryOptions
-  -> [Primary.Group]
-  -> IO ()
-queryStageContext ctxs stg f opt gs = queryStageContextWords ctxs stg f opt $ prepareGroups gs
 
 showKeyValues
   :: Show a
@@ -121,20 +85,6 @@ alignResultColumns xs = fmap (padCombine (maxes xs)) xs
     go (x1,x2,x3,x4) (l1,l2,l3,l4) =
       (max (baseLength x1) l1,max (baseLength x2) l2,max (baseLength x3) l3,max (baseLength x4) l4)
   baseLength = Text.length . Text.filter (not . Char.isMark)
-
-queryStageContextWords
-  :: (Show e1, Ord c, Show c)
-  => Int
-  -> Round
-    (MilestoneCtx :* e1)
-    e2
-    [MilestoneCtx :* (String :* HasWordPunctuation)]
-    [b]
-  -> (b :* [b] :* [b] -> [c])
-  -> QueryOptions
-  -> [SourceId :* [Milestone :* Primary.Word]]
-  -> IO ()
-queryStageContextWords contextSize stg itemQuery qo ws = queryStageContextWords2 contextSize 5 stg itemQuery qo basicWord fullWordText Stage.forgetHasWordPunctuation ws
 
 queryStageContextWords2
   :: (Show e1, Ord c, Show c)

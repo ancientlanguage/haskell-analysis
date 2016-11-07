@@ -14,6 +14,8 @@ import qualified Grammar.Greek.Script.Stage as Stage
 import Grammar.Greek.Script.Types
 import Grammar.Greek.Script.Word
 import qualified Primary
+import qualified Grammar.Prepare as Prepare
+import Grammar.Round
 
 queryElision = pure . view (_2 . _1 . _2)
 
@@ -165,6 +167,47 @@ queryDeNext (w, (_, n)) =
   case wordSyllables (snd w) of
     [Syllable [CR_δ] (VS_Vowel V_ε)] -> pure ((), concatMap (getInitialVocalicSyllable . snd) . take 1 $ n)
     _ -> []
+
+queryStage
+  :: (Show e1, Ord c, Show c)
+  => Round
+  (MilestoneCtx :* e1)
+    e2
+    [MilestoneCtx :* (String :* HasWordPunctuation)]
+    [b]
+  -> (b -> [c])
+  -> QueryOptions
+  -> [Primary.Group]
+  -> IO ()
+queryStage a f = queryStageContext 0 a (f . fst)
+
+queryStageContext
+  :: (Show e1, Ord c, Show c)
+  => Int
+  -> Round
+    (MilestoneCtx :* e1)
+    e2
+    [MilestoneCtx :* (String :* HasWordPunctuation)]
+    [b]
+  -> (b :* [b] :* [b] -> [c])
+  -> QueryOptions
+  -> [Primary.Group]
+  -> IO ()
+queryStageContext ctxs stg f opt gs = queryStageContextWords ctxs stg f opt $ Prepare.prepareGroups gs
+
+queryStageContextWords
+  :: (Show e1, Ord c, Show c)
+  => Int
+  -> Round
+    (MilestoneCtx :* e1)
+    e2
+    [MilestoneCtx :* (String :* HasWordPunctuation)]
+    [b]
+  -> (b :* [b] :* [b] -> [c])
+  -> QueryOptions
+  -> [SourceId :* [Prepare.Milestone :* Primary.Word]]
+  -> IO ()
+queryStageContextWords contextSize stg itemQuery qo ws = queryStageContextWords2 contextSize 5 stg itemQuery qo Stage.basicWord Stage.fullWordText Stage.forgetHasWordPunctuation ws
 
 queries :: Map String (QueryOptions -> [Primary.Group] -> IO ())
 queries = Map.fromList

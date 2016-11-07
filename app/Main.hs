@@ -126,7 +126,7 @@ showCategory c = do
     Nothing -> putStrLn $ "Invalid query category: " ++ c
 
 saveScript :: [Primary.Group] -> IO ()
-saveScript gs = case (traverse . _2) (roundTo Stage.script . over (traverse . _2) basicWord) . prepareGroups $ gs of
+saveScript gs = case (traverse . _2) (roundTo Stage.script . over (traverse . _2) Stage.basicWord) . prepareGroups $ gs of
   Failure es -> mapM_ (putStrLn . show) es
   Success (ss' :: [SourceId :* [Milestone :* Word]]) -> do
     let path = "../binary-greek-script/data/greek-script.data"
