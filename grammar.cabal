@@ -45,3 +45,26 @@ library
     HUnit,
     primary-type
   default-language: Haskell2010
+
+test-suite spec
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is: Spec.hs
+  default-extensions:
+    OverloadedStrings,
+    PatternSynonyms,
+    ScopedTypeVariables,
+    TypeOperators
+  build-depends:
+    base,
+    either,
+    lens,
+    test-framework,
+    test-framework-hunit,
+    HUnit,
+    hspec,
+    text,
+    primary-type,
+    grammar
+  ghc-options: -fwarn-tabs -O2 -threaded -rtsopts -with-rtsopts=-N
+  default-language: Haskell2010
