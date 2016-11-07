@@ -2,7 +2,6 @@ module Grammar.IO.QueryStage where
 
 import Control.Lens (over, _1, _2)
 import qualified Data.Char as Char
-import Data.List (foldl')
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
@@ -34,33 +33,21 @@ data QueryOptions = QueryOptions
 
 type MilestoneCtx = Milestone :* Text :* [Text] :* [Text]
 
-rightContext :: Foldable t => Int -> t a -> [[a]]
-rightContext n = snd . foldr go ([], [])
-  where
-  go x (ctx, xs) = (take n (x : ctx), ctx : xs)
-leftContext :: Foldable t => Int -> t a -> [[a]]
-leftContext n = reverse . fmap reverse . snd . foldl' go ([], [])
-  where
-  go (ctx, xs) x = (take n (x : ctx), ctx : xs)
-
 basicWord :: Primary.Word -> String :* HasWordPunctuation
 basicWord (Primary.Word _ t s) = (Text.unpack t, Stage.suffixHasPunctuation s)
 
-addCtx
+fullWordText :: Primary.Word -> Text
+fullWordText (Primary.Word p t s) = Text.concat [p, t, s]
+
+addMilestoneCtx
   :: Int
-  -> [Milestone :* Primary.Word]
-  -> [MilestoneCtx :* Primary.Word]
-addCtx n xs = zipWith3 addContextZip xs lefts rights
+  -> (a -> Text)
+  -> [Milestone :* a]
+  -> [MilestoneCtx :* a]
+addMilestoneCtx n f xs = zipWith merge (contextualize n texts) xs
   where
-  addContextZip (m, w) ls rs = ((m, (fullWordText w, (ls, rs))), w)
-
-  lefts = leftContext n (onlyText xs)
-  rights = rightContext n (onlyText xs)
-
-  fullWordText :: Primary.Word -> Text
-  fullWordText (Primary.Word p t s) = Text.concat [p, t, s]
-
-  onlyText = fmap (fullWordText . snd)
+  texts = fmap (f . snd) xs
+  merge t (m, w) = ((m, t), w)
 
 queryStage
   :: (Show e1, Ord c, Show c)
@@ -154,7 +141,7 @@ queryStageContextWords contextSize stg itemQuery qo ws =
   -- goSource
   --   :: (SourceId, [Milestone :* Primary.Word])
   --   -> IO [(c, [(Text, Text, Text, Text)])]
-  goSource (SourceId g s, ms) = case roundTo stg . over (traverse . _2) basicWord . addCtx 5 $ ms of
+  goSource (SourceId g s, ms) = case roundTo stg . over (traverse . _2) basicWord . addMilestoneCtx 5 fullWordText $ ms of
     Failure es -> do
       _ <- Text.putStrLn $ Text.intercalate " "
         [ g
