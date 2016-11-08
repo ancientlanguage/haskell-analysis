@@ -1,5 +1,5 @@
 name: grammar
-version: 0.1.0.0
+version: 1.0.0
 synopsis: Ancient language grammars encoded in Haskell
 description: Please see README.md
 homepage: https://github.com/ancientlanguage/haskell-grammar#readme
@@ -15,6 +15,7 @@ source-repository head
 library
   hs-source-dirs: src
   exposed-modules:
+    Grammar.Common
     Grammar.Common.List
     Grammar.Common.Numeric
     Grammar.Common.Prepare
