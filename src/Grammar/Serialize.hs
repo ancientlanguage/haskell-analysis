@@ -11,6 +11,7 @@ import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import Grammar.CommonTypes
+import Grammar.Numeric
 import qualified System.Directory as Dir
 import System.FilePath ((</>))
 import qualified System.FilePath as Path
@@ -29,11 +30,8 @@ filePathWithIndex dig i n = Text.unpack $ Text.concat [Text.pack . printf ("%0" 
 prefixFilePaths :: FilePath -> [Int :* Text :* a] -> [FilePath :* a]
 prefixFilePaths prefix xs = go xs
   where
-  maxDigitsDouble :: Double
-  maxDigitsDouble = logBase 10 . fromIntegral . maximum . (0 :) . fmap fst $ xs
-  maxDigits :: Int
-  maxDigits = ceiling maxDigitsDouble
-  go = over (traverse . _1) (prefix </>) . fmap (\(x, (y, z)) -> (filePathWithIndex maxDigits x y, z))
+  maxDig = maxDigits . fmap fst $ xs
+  go = over (traverse . _1) (prefix </>) . fmap (\(x, (y, z)) -> (filePathWithIndex maxDig x y, z))
 
 saveAsFile :: Serialize a => (FilePath -> IO ()) -> FilePath -> a -> IO ()
 saveAsFile doFirst path item = do

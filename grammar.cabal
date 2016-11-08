@@ -19,6 +19,7 @@ library
     Grammar.Contextualize
     Grammar.IO.RandomSample
     Grammar.IO.QueryStage
+    Grammar.Numeric
     Grammar.Prepare
     Grammar.Pretty
     Grammar.Round
