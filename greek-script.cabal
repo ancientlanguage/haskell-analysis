@@ -1,5 +1,5 @@
 name: greek-script
-version: 1.0.0
+version: 1.1.0
 synopsis: Models of ancient Greek script verified against primary sources
 description: Please see README.md
 homepage: https://github.com/ancientlanguage/haskell-greek-script#readme
@@ -59,7 +59,7 @@ library
     grammar
   default-language: Haskell2010
 
-executable query
+executable greek-script-query
   hs-source-dirs: app
   main-is: Main.hs
   other-modules:
@@ -83,7 +83,7 @@ executable query
     greek-script
   default-language: Haskell2010
 
-test-suite verify
+test-suite greek-script-test
   type: exitcode-stdio-1.0
   hs-source-dirs: test
   main-is: Spec.hs
