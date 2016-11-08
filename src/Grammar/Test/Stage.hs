@@ -14,21 +14,22 @@ failMessage :: Text -> IO ()
 failMessage = assertFailure . Text.unpack
 
 testDataLoss
-  :: [Milestone :* String]
-  -> [Milestone :* String]
+  :: (Eq a, Show a)
+  => [Milestone :* a]
+  -> [Milestone :* a]
   -> IO ()
 testDataLoss xs ys = check . filter (\(x, y) -> x /= y) $ zip xs ys
   where
   check [] = return ()
   check xs'@(_ : _) = failMessage $ Text.concat
     [ "data loss:"
-    , Text.concat $ fmap (\(x , y) -> Text.concat [ "\n initial:", prettyMilestonedString x, "\n final  :", prettyMilestonedString y ]) xs'
+    , Text.concat $ fmap (\(x , y) -> Text.concat [ "\n initial:", prettyMilestoned x, "\n final  :", prettyMilestoned y ]) xs'
     ]
 
 testStage
-  :: (Show a1, Show a)
+  :: (Show a1, Show a, Eq q, Show q)
   => Round (Milestone :* a) (Milestone :* a1) t b
-  -> (t -> [Milestone :* String])
+  -> (t -> [Milestone :* q])
   -> t
   -> IO ()
 testStage stg forget x = do
@@ -48,19 +49,19 @@ testStage stg forget x = do
         Success z -> testDataLoss (forget x) (forget z)
 
 testSourceStage
-  :: (Show a1, Show a)
+  :: (Show a1, Show a, Eq q, Show q)
   => Round (Milestone :* a) (Milestone :* a1) t b
-  -> (t -> [Milestone :* String])
+  -> (t -> [Milestone :* q])
   -> (SourceId, t)
   -> Test
 testSourceStage stg forget (SourceId g s, ms) = testCase (Text.unpack . Text.intercalate " " $ [g, s]) $ testStage stg forget ms
 
 testGroupStages
-  :: (Show a1, Show a)
+  :: (Show a1, Show a, Eq q, Show q)
   => TestName
   -> Round (Milestone :* a) (Milestone :* a1) t b
-  -> (t -> [Milestone :* String])
-  -> IO (Either [Char] [(SourceId, t)])
+  -> (t -> [Milestone :* q])
+  -> IO (Either String [(SourceId, t)])
   -> Test
 testGroupStages name stg forget load = buildTestBracketed $ do
   result <- load
