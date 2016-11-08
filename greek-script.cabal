@@ -32,7 +32,6 @@ library
     Grammar.Greek.Script.Stage
     Grammar.Greek.Script.Types
     Grammar.Greek.Script.Word
-    Grammar.Serialize
   ghc-options: -Wall -fwarn-tabs -O2
   default-extensions:
     OverloadedStrings,
