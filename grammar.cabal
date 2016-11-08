@@ -15,15 +15,15 @@ source-repository head
 library
   hs-source-dirs: src
   exposed-modules:
-    Grammar.CommonTypes
-    Grammar.Contextualize
+    Grammar.Common.List
+    Grammar.Common.Numeric
+    Grammar.Common.Prepare
+    Grammar.Common.Pretty
+    Grammar.Common.Round
+    Grammar.Common.Serialize
+    Grammar.Common.Types
     Grammar.IO.RandomSample
     Grammar.IO.QueryStage
-    Grammar.Numeric
-    Grammar.Prepare
-    Grammar.Pretty
-    Grammar.Round
-    Grammar.Serialize
     Grammar.Test.Round
     Grammar.Test.Stage
   ghc-options: -Wall -fwarn-tabs -O2

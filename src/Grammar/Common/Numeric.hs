@@ -1,4 +1,4 @@
-module Grammar.Numeric where
+module Grammar.Common.Numeric where
 
 maxDigitsDouble :: Integral a => [a] -> Double
 maxDigitsDouble = logBase 10 . fromIntegral . maximum . (0 :)

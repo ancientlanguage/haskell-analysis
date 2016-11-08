@@ -6,10 +6,9 @@ import Test.Framework
 import Test.Framework.Providers.HUnit
 import Test.HUnit (assertFailure)
 import Data.Either.Validation (Validation(..))
-import Grammar.CommonTypes
-import Grammar.Prepare
-import Grammar.Pretty
-import Grammar.Round
+import Grammar.Common.Pretty
+import Grammar.Common.Round
+import Grammar.Common.Types
 
 failMessage :: Text -> IO ()
 failMessage = assertFailure . Text.unpack

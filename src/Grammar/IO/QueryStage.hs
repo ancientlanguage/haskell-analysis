@@ -8,11 +8,10 @@ import qualified Data.Text.IO as Text
 import Data.Either.Validation
 
 import Grammar.IO.RandomSample (randomSample)
-import Grammar.CommonTypes
-import Grammar.Contextualize
-import Grammar.Prepare
-import Grammar.Pretty
-import Grammar.Round
+import Grammar.Common.List
+import Grammar.Common.Pretty
+import Grammar.Common.Round
+import Grammar.Common.Types
 
 data ResultOption
   = Summary

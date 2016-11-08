@@ -1,9 +1,8 @@
-module Grammar.Pretty where
+module Grammar.Common.Pretty where
 
 import Data.Text (Text)
 import qualified Data.Text as Text
-import Grammar.CommonTypes
-import Grammar.Prepare
+import Grammar.Common.Types
 
 textShow :: Show a => a -> Text
 textShow = Text.pack . show

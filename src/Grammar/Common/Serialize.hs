@@ -1,4 +1,4 @@
-module Grammar.Serialize where
+module Grammar.Common.Serialize where
 
 import Control.Lens (over, _1, _2)
 import Control.Monad (filterM)
@@ -10,8 +10,9 @@ import qualified Data.Serialize as Serialize
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
-import Grammar.CommonTypes
-import Grammar.Numeric
+import Grammar.Common.List
+import Grammar.Common.Numeric
+import Grammar.Common.Types
 import qualified System.Directory as Dir
 import System.FilePath ((</>))
 import qualified System.FilePath as Path

@@ -4,7 +4,7 @@ import Test.Framework
 import Test.Framework.Providers.HUnit
 import Test.HUnit hiding (Test)
 import Data.Either.Validation
-import Grammar.Round
+import Grammar.Common.Round
 
 testList
   :: (Show a)

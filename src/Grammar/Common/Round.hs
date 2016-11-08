@@ -1,8 +1,8 @@
-module Grammar.Round where
+module Grammar.Common.Round where
 
-import Data.Either.Validation
-import Grammar.CommonTypes
 import Control.Lens (over, _2)
+import Data.Either.Validation
+import Grammar.Common.Types
 
 data Round e1 e2 a b = Round
   { roundTo :: a -> Validation [e1] b

@@ -1,8 +1,8 @@
 import Test.Framework
 import Test.Framework.Providers.HUnit
 import Test.HUnit hiding (Test)
-import Grammar.CommonTypes
-import Grammar.Contextualize
+import Grammar.Common.List
+import Grammar.Common.Types
 
 emptyUnitList :: [()]
 emptyUnitList = []

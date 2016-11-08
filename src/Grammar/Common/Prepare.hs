@@ -1,13 +1,11 @@
-module Grammar.Prepare where
+module Grammar.Common.Prepare where
 
 import Prelude hiding (Word)
 import Control.Lens hiding ((:>))
 import Data.Either.Validation
 import Data.Text (Text)
 import qualified Primary
-import Grammar.CommonTypes
-
-type Milestone = Maybe Verse :* Maybe Paragraph
+import Grammar.Common.Types
 
 toLocalVerse :: Primary.Verse -> Verse
 toLocalVerse (Primary.Verse c v) = Verse c v
