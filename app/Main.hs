@@ -19,8 +19,8 @@ import qualified Grammar.Greek.Script.Stage as Stage
 import Grammar.Greek.Script.Word (Word)
 import Grammar.Prepare
 import Grammar.Pretty
+import qualified Grammar.Greek.Script.Serialize as Serialize
 import qualified Grammar.Serialize as Serialize
-import qualified Grammar.SerializeStage as Serialize
 import qualified Primary
 
 queryOptionsParser :: Parser QueryOptions
@@ -127,7 +127,7 @@ showCategory c = do
 saveScript :: [Primary.Group] -> IO ()
 saveScript gs = case (traverse . _2) (roundTo Stage.script . over (traverse . _2) Stage.basicWord) . prepareGroups $ gs of
   Failure es -> mapM_ (putStrLn . show) es
-  Success (ss' :: [SourceId :* [Milestone :* Word]]) -> Serialize.serializeStage "../binary-greek-script/data" ss'
+  Success (ss' :: [SourceId :* [Milestone :* Word]]) -> Serialize.saveStage "../binary-greek-script/data" ss'
 
 runCommand :: Command -> IO ()
 runCommand (CommandSources) = handleGroups showWordCounts

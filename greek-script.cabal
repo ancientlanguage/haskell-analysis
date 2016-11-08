@@ -28,11 +28,11 @@ library
     Grammar.Greek.Script.Rounds.UnicodeSymbol
     Grammar.Greek.Script.Rounds.VocalicSyllable
     Grammar.Greek.Script.Rounds.WordPunctuationElision
+    Grammar.Greek.Script.Serialize
     Grammar.Greek.Script.Stage
     Grammar.Greek.Script.Types
     Grammar.Greek.Script.Word
     Grammar.Serialize
-    Grammar.SerializeStage
   ghc-options: -Wall -fwarn-tabs -O2
   default-extensions:
     OverloadedStrings,
