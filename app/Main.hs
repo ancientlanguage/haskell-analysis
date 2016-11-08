@@ -13,14 +13,14 @@ import Options.Applicative hiding (Failure, Success)
 
 import qualified ScriptQueries
 import Grammar.IO.QueryStage
-import Grammar.Round
-import Grammar.CommonTypes
+import Grammar.Common.Prepare
+import Grammar.Common.Pretty
+import Grammar.Common.Round
+import qualified Grammar.Common.Serialize as Serialize
+import Grammar.Common.Types
 import qualified Grammar.Greek.Script.Stage as Stage
 import Grammar.Greek.Script.Word (Word)
-import Grammar.Prepare
-import Grammar.Pretty
 import qualified Grammar.Greek.Script.Serialize as Serialize
-import qualified Grammar.Serialize as Serialize
 import qualified Primary
 
 queryOptionsParser :: Parser QueryOptions

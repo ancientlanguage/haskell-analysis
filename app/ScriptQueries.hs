@@ -9,13 +9,14 @@ import qualified Data.Map as Map
 import qualified Data.List as List
 
 import Grammar.IO.QueryStage
-import Grammar.CommonTypes
+import Grammar.Common.List
+import qualified Grammar.Common.Prepare as Prepare
+import Grammar.Common.Round
+import Grammar.Common.Types
 import qualified Grammar.Greek.Script.Stage as Stage
 import Grammar.Greek.Script.Types
 import Grammar.Greek.Script.Word
 import qualified Primary
-import qualified Grammar.Prepare as Prepare
-import Grammar.Round
 
 queryElision = pure . view (_2 . _1 . _2)
 
@@ -205,7 +206,7 @@ queryStageContextWords
     [b]
   -> (b :* [b] :* [b] -> [c])
   -> QueryOptions
-  -> [SourceId :* [Prepare.Milestone :* Primary.Word]]
+  -> [SourceId :* [Milestone :* Primary.Word]]
   -> IO ()
 queryStageContextWords contextSize stg itemQuery qo ws = queryStageContextWords2 contextSize 5 stg itemQuery qo Stage.basicWord Stage.fullWordText Stage.forgetHasWordPunctuation ws
 

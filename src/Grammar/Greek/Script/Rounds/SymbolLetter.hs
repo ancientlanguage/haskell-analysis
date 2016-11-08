@@ -1,7 +1,7 @@
 module Grammar.Greek.Script.Rounds.SymbolLetter where
 
-import Grammar.Round
-import Grammar.CommonTypes
+import Grammar.Common.Round
+import Grammar.Common.Types
 import Grammar.Greek.Script.Types
 
 symbolLetter :: RoundId Symbol (Letter :* Case :* Final)

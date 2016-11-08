@@ -1,8 +1,8 @@
 module Grammar.Greek.Script.Rounds.VocalicSyllable where
 
 import Control.Lens (over, _2)
-import Grammar.Round
-import Grammar.CommonTypes
+import Grammar.Common.Round
+import Grammar.Common.Types
 import Grammar.Greek.Script.Types
 
 vocalicSyllable

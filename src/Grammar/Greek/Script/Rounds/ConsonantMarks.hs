@@ -1,8 +1,8 @@
 module Grammar.Greek.Script.Rounds.ConsonantMarks where
 
 import Data.Either.Validation
-import Grammar.Round
-import Grammar.CommonTypes
+import Grammar.Common.Round
+import Grammar.Common.Types
 import Grammar.Greek.Script.Types
 
 data InvalidConsonantMarks = InvalidConsonantMarks (Consonant :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)

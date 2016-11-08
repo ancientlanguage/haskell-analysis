@@ -7,15 +7,15 @@ import Data.Maybe (isJust)
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
-import Grammar.Round
-import Grammar.CommonTypes
+import Grammar.Common.Prepare
+import Grammar.Common.Pretty
+import Grammar.Common.Round
+import Grammar.Common.Serialize
+import Grammar.Common.Types
 import Grammar.Greek.Script.Types
 import qualified Grammar.Greek.Script.Rounds as Rounds
 import qualified Grammar.Greek.Script.Serialize as Serialize
 import qualified Grammar.Greek.Script.Stage as Stage
-import Grammar.Pretty
-import Grammar.Prepare
-import Grammar.Serialize
 import Grammar.Test.Round
 import Grammar.Test.Stage
 

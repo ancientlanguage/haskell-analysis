@@ -2,8 +2,8 @@ module Grammar.Greek.Script.Rounds.Capitalization where
 
 import Control.Lens (over)
 import Data.Either.Validation
-import Grammar.Round
-import Grammar.CommonTypes
+import Grammar.Common.Round
+import Grammar.Common.Types
 import Grammar.Greek.Script.Types
 
 data InvalidUppercase = InvalidUppercase [Letter]

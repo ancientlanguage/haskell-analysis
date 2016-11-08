@@ -3,8 +3,8 @@ module Grammar.Greek.Script.Rounds.MarkSplit where
 import Control.Lens (over)
 import Data.Either.Validation
 import Data.List (sort)
-import Grammar.Round
-import Grammar.CommonTypes
+import Grammar.Common.Round
+import Grammar.Common.Types
 import Grammar.Greek.Script.Types
 
 data InvalidMarkCombo

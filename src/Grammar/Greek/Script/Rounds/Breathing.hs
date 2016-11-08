@@ -1,8 +1,8 @@
 module Grammar.Greek.Script.Rounds.Breathing where
 
 import Data.Either.Validation
-import Grammar.Round
-import Grammar.CommonTypes
+import Grammar.Common.Round
+import Grammar.Common.Types
 import Grammar.Greek.Script.Types
 
 data InvalidBreathing c v a

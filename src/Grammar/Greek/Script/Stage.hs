@@ -8,10 +8,10 @@ import Data.Text (Text)
 import qualified Data.Text as Text
 import Data.Void
 import qualified Primary
-import Grammar.Round (Round(..), RoundFwd(..), liftRoundIdTo, liftRoundIdFrom, liftRoundFwdFrom, (<+>))
-import qualified Grammar.Round as Round
-import Grammar.CommonTypes
-import Grammar.Prepare
+import Grammar.Common.Round (Round(..), RoundFwd(..), liftRoundIdTo, liftRoundIdFrom, liftRoundFwdFrom, (<+>))
+import qualified Grammar.Common.Round as Round
+import Grammar.Common.Prepare
+import Grammar.Common.Types
 import qualified Grammar.Greek.Script.Rounds as Rounds
 import Grammar.Greek.Script.Types
 import Grammar.Greek.Script.Word

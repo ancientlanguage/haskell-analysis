@@ -2,8 +2,8 @@ module Grammar.Greek.Script.Rounds.WordPunctuationElision where
 
 import Data.Either
 import Data.Either.Validation
-import Grammar.Round
-import Grammar.CommonTypes
+import Grammar.Common.Round
+import Grammar.Common.Types
 import Grammar.Greek.Script.Types
 
 data InvalidWordPunctuation

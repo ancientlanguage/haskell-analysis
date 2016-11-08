@@ -1,7 +1,7 @@
 module Grammar.Greek.Script.Rounds.LetterVowelConsonant where
 
-import Grammar.Round
-import Grammar.CommonTypes
+import Grammar.Common.Round
+import Grammar.Common.Types
 import Grammar.Greek.Script.Types
 
 letterVowelConsonant :: RoundId Letter (Vowel :+ Consonant)

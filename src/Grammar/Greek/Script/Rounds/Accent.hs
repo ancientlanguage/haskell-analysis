@@ -2,8 +2,9 @@ module Grammar.Greek.Script.Rounds.Accent where
 
 import Control.Lens (over, _1)
 import Data.Either.Validation
-import Grammar.Round
-import Grammar.CommonTypes
+import Grammar.Common.List
+import Grammar.Common.Round
+import Grammar.Common.Types
 import Grammar.Greek.Script.Types
 import Grammar.Greek.Script.Word
 
