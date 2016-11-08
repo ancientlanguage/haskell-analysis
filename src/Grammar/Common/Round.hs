@@ -19,6 +19,13 @@ data RoundFwd e a b = RoundFwd
   , roundFwdFrom :: b -> a
   }
 
+type RoundContext ctx e1 e2 a b =
+  Round
+  (ctx :* a :* e1)
+  (ctx :* b :* e2)
+  [ctx :* a]
+  [ctx :* b]
+
 liftRoundIdTo :: RoundId a b -> (a -> Validation [e] b)
 liftRoundIdTo r = pure . roundIdTo r
 
