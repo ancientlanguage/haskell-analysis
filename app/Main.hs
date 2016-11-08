@@ -16,8 +16,8 @@ import Grammar.IO.QueryStage
 import Grammar.Common.Prepare
 import Grammar.Common.Pretty
 import Grammar.Common.Round
-import qualified Grammar.Common.Serialize as Serialize
 import Grammar.Common.Types
+import qualified Grammar.IO.Serialize as Serialize
 import qualified Grammar.Greek.Script.Stage as Stage
 import Grammar.Greek.Script.Word (Word)
 import qualified Grammar.Greek.Script.Serialize as Serialize

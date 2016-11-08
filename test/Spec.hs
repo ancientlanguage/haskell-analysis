@@ -10,8 +10,8 @@ import qualified Data.Text.IO as Text
 import Grammar.Common.Prepare
 import Grammar.Common.Pretty
 import Grammar.Common.Round
-import Grammar.Common.Serialize
 import Grammar.Common.Types
+import Grammar.IO.Serialize
 import Grammar.Greek.Script.Types
 import qualified Grammar.Greek.Script.Rounds as Rounds
 import qualified Grammar.Greek.Script.Serialize as Serialize
