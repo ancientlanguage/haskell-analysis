@@ -1,5 +1,5 @@
 name: greek-script
-version: 0.1.0.0
+version: 1.0.0
 synopsis: Models of ancient Greek script verified against primary sources
 description: Please see README.md
 homepage: https://github.com/ancientlanguage/haskell-greek-script#readme
