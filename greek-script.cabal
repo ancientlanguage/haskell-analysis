@@ -52,6 +52,7 @@ library
     array,
     directory,
     filepath,
+    extra,
     test-framework,
     test-framework-hunit,
     HUnit,
