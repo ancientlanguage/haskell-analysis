@@ -2,6 +2,7 @@
 
 module Grammar.CommonTypes
   ( (:*)
+  , pattern (:^)
   , (:+)
   , SourceId(..)
   , Paragraph(..)
@@ -22,8 +23,12 @@ import qualified Primary as Primary ()
 type a :* b = (a, b)
 type a :+ b = Either a b
 
-infixr 6 :*
-infixr 5 :+
+pattern (:^) :: a -> b -> a :* b
+pattern x :^ y = (x, y)
+
+infixr 7 :*
+infixr 7 :^
+infixr 6 :+
 
 newtype Paragraph = Paragraph { getParagraph :: Int }
   deriving (Eq, Show, Ord, Generic)
