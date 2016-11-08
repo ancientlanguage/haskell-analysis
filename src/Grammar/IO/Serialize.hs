@@ -1,4 +1,4 @@
-module Grammar.Common.Serialize where
+module Grammar.IO.Serialize where
 
 import Control.Lens (over, _1, _2)
 import Control.Monad (filterM)

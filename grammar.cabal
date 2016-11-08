@@ -20,10 +20,10 @@ library
     Grammar.Common.Prepare
     Grammar.Common.Pretty
     Grammar.Common.Round
-    Grammar.Common.Serialize
     Grammar.Common.Types
     Grammar.IO.RandomSample
     Grammar.IO.QueryStage
+    Grammar.IO.Serialize
     Grammar.Test.Round
     Grammar.Test.Stage
   ghc-options: -Wall -fwarn-tabs -O2
