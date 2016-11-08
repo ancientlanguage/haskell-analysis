@@ -22,6 +22,7 @@ library
     Grammar.Prepare
     Grammar.Pretty
     Grammar.Round
+    Grammar.Serialize
     Grammar.Test.Round
     Grammar.Test.Stage
   ghc-options: -Wall -fwarn-tabs -O2
@@ -35,6 +36,9 @@ library
     containers,
     bytestring,
     text,
+    extra,
+    filepath,
+    directory,
     cereal,
     lens,
     either,
