@@ -8,10 +8,7 @@ import Data.Text (Text)
 import qualified Data.Text as Text
 import Data.Void
 import qualified Primary
-import Grammar.Common.Round (Round(..), RoundFwd(..), liftRoundIdTo, liftRoundIdFrom, liftRoundFwdFrom, (<+>))
-import qualified Grammar.Common.Round as Round
-import Grammar.Common.Prepare
-import Grammar.Common.Types
+import Grammar.Common
 import qualified Grammar.Greek.Script.Rounds as Rounds
 import Grammar.Greek.Script.Types
 import Grammar.Greek.Script.Word
@@ -43,13 +40,6 @@ forgetHasWordPunctuation
   -> [ctx :* [a]]
 forgetHasWordPunctuation = over (traverse . _2) fst
 
-type RoundContext ctx e1 e2 a b =
-  Round
-  (ctx :* a :* e1)
-  (ctx :* b :* e2)
-  [ctx :* a]
-  [ctx :* b]
-
 unicodeSymbol :: RoundContext ctx Rounds.InvalidChar Void
   ([Char] :* HasWordPunctuation)
   ([Symbol :+ Mark :+ WordPunctuation] :* HasWordPunctuation)
@@ -61,8 +51,8 @@ assocSymbolMark_WordPunctuation :: RoundContext ctx Void Void
   ([Symbol :+ (Mark :+ WordPunctuation)] :* HasWordPunctuation)
   ([(Symbol :+ Mark) :+ WordPunctuation] :* HasWordPunctuation)
 assocSymbolMark_WordPunctuation = Round
-  (traverseWithItemContext . _1 . travList $ liftRoundIdTo Round.sumAssocLeft)
-  (traverseWithItemContext . _1 . travList $ liftRoundIdFrom Round.sumAssocLeft)
+  (traverseWithItemContext . _1 . travList $ liftRoundIdTo sumAssocLeft)
+  (traverseWithItemContext . _1 . travList $ liftRoundIdFrom sumAssocLeft)
 
 wordPunctuationElision :: RoundContext ctx Rounds.InvalidWordPunctuation Void
   ([(Symbol :+ Mark) :+ WordPunctuation] :* HasWordPunctuation)
@@ -92,7 +82,7 @@ assocLetterFinal = Round
   (traverseWithItemContext . _1 . _1 . travList $ liftRoundIdTo round)
   (traverseWithItemContext . _1 . _1 . travList $ liftRoundIdFrom round)
   where
-  round = Round.RoundId to from
+  round = RoundId to from
   to ((l, (c, f)), ms) = ((l, f), (c, ms))
   from ((l, f), (c, ms)) = ((l, (c, f)), ms)
 
@@ -131,8 +121,8 @@ distVowelConsonantMarks :: RoundContext ctx Void Void
     ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 distVowelConsonantMarks = Round
-  (traverseWithItemContext . _1 . _1 . _1 . travList $ liftRoundIdTo Round.distLeftSumOverProd)
-  (traverseWithItemContext . _1 . _1 . _1 . travList $ liftRoundIdFrom Round.distLeftSumOverProd)
+  (traverseWithItemContext . _1 . _1 . _1 . travList $ liftRoundIdTo distLeftSumOverProd)
+  (traverseWithItemContext . _1 . _1 . _1 . travList $ liftRoundIdFrom distLeftSumOverProd)
 
 consonantMarks :: RoundContext ctx Rounds.InvalidConsonantMarks Void
   ((([ (Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark)
@@ -157,8 +147,8 @@ groupVowelConsonants :: RoundContext ctx Void Void
     ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 groupVowelConsonants = Round
-  (traverseWithItemContext . _1 . _1 . _1 $ liftRoundIdTo Round.groupSums)
-  (traverseWithItemContext . _1 . _1 . _1 $ liftRoundIdFrom Round.groupSums)
+  (traverseWithItemContext . _1 . _1 . _1 $ liftRoundIdTo groupSums)
+  (traverseWithItemContext . _1 . _1 . _1 $ liftRoundIdFrom groupSums)
 
 vowelSyllabicMark :: RoundContext ctx Void Void
   ((([ [Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark]
@@ -173,7 +163,7 @@ vowelSyllabicMark = Round
   (traverseWithItemContext . _1 . _1 . _1 . travList . _Left . travList $ liftRoundIdTo round)
   (traverseWithItemContext . _1 . _1 . _1 . travList . _Left . travList $ liftRoundIdFrom round)
   where
-  round = Round.RoundId to from
+  round = RoundId to from
   to (x, (y, (z, q))) = (x, (q, (y, z)))
   from (x, (q, (y, z))) = (x, (y, (z, q)))
 
@@ -194,8 +184,8 @@ swapConsonantVocalicSyllables :: RoundContext ctx Void Void
   ((([ [ConsonantRho] :+ [VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 swapConsonantVocalicSyllables = Round
-  (traverseWithItemContext . _1 . _1 . _1 . travList $ liftRoundIdTo Round.swapSum)
-  (traverseWithItemContext . _1 . _1 . _1 . travList $ liftRoundIdFrom Round.swapSum)
+  (traverseWithItemContext . _1 . _1 . _1 . travList $ liftRoundIdTo swapSum)
+  (traverseWithItemContext . _1 . _1 . _1 . travList $ liftRoundIdFrom swapSum)
 
 ungroupConsonantVocalicSyllables :: RoundContext ctx Void Void
   ((([ [ConsonantRho] :+ [VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] ]
@@ -203,8 +193,8 @@ ungroupConsonantVocalicSyllables :: RoundContext ctx Void Void
   ((([ ConsonantRho :+ (VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing) ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 ungroupConsonantVocalicSyllables = Round
-  (traverseWithItemContext . _1 . _1 . _1 $ liftRoundIdTo Round.ungroupSums)
-  (traverseWithItemContext . _1 . _1 . _1 $ liftRoundIdFrom Round.ungroupSums)
+  (traverseWithItemContext . _1 . _1 . _1 $ liftRoundIdTo ungroupSums)
+  (traverseWithItemContext . _1 . _1 . _1 $ liftRoundIdFrom ungroupSums)
 
 groupLeftConsonantVocalicSyllables :: RoundContext ctx Void Void
   ((([ ConsonantRho :+ (VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing) ]
@@ -212,8 +202,8 @@ groupLeftConsonantVocalicSyllables :: RoundContext ctx Void Void
   (((([ [ConsonantRho] :* (VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing) ] :* [ConsonantRho])
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 groupLeftConsonantVocalicSyllables = Round
-  (traverseWithItemContext . _1 . _1 . _1 $ liftRoundIdTo Round.groupLeft)
-  (traverseWithItemContext . _1 . _1 . _1 $ liftRoundIdFrom Round.groupLeft)
+  (traverseWithItemContext . _1 . _1 . _1 $ liftRoundIdTo groupLeft)
+  (traverseWithItemContext . _1 . _1 . _1 $ liftRoundIdFrom groupLeft)
 
 breathing :: RoundContext ctx [Rounds.InvalidBreathing ConsonantRho VocalicSyllable (Maybe ContextualAccent)] Void
   (((([ [ConsonantRho] :* VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing ] :* [ConsonantRho])
@@ -233,7 +223,7 @@ reorderWordProps = Round
   (traverseWithItemContext $ liftRoundIdTo round)
   (traverseWithItemContext $ liftRoundIdFrom round)
   where
-  round = Round.RoundId to from
+  round = RoundId to from
   to (((((x1, (x2, (x3, x4))), x5), x6), x7), x8) = ((fmap assocLeft x1, x8), (x5, (x2, (x3, (x4, (x6, x7))))))
   from ((x1, x8), (x5, (x2, (x3, (x4, (x6, x7)))))) = (((((fmap assocRight x1, (x2, (x3, x4))), x5), x6), x7), x8)
   assocLeft (x, (y, z)) = ((x, y), z)
@@ -256,7 +246,7 @@ word = Round
   (traverseWithItemContext $ liftRoundIdTo round)
   (traverseWithItemContext $ liftRoundIdFrom round)
   where
-  round = Round.RoundId to from
+  round = RoundId to from
   to ((ss, (mwa, hwp)), (fc, (mp, (cr, (ia, (cap, el)))))) = Word ia (toSyllables ss) fc mwa cr el mp cap hwp
   toSyllables = fmap (\(c, v) -> Syllable c v)
   from (Word ia ss fc mwa cr el mp cap hwp) = ((fromSyllables ss, (mwa, hwp)), (fc, (mp, (cr, (ia, (cap, el))))))
