@@ -7,6 +7,7 @@ module Grammar.Greek.Script.Word where
 import Prelude hiding (Word)
 import Control.Lens (makeLensesFor)
 import GHC.Generics (Generic)
+import Data.Data
 import Data.Serialize (Serialize)
 import Grammar.Greek.Script.Types
 
