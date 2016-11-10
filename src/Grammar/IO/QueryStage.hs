@@ -24,7 +24,7 @@ data QueryOptions = QueryOptions
   { queryResultOption :: ResultOption
   , queryMatch :: String
   , queryOmit :: String
-  , queryContextSize :: Int
+  , queryResultContextSize :: Int
   }
   deriving (Show)
 
@@ -101,11 +101,11 @@ queryStageWithContext
   -> ([MilestoneCtx :* s] -> [MilestoneCtx :* String])
   -> [SourceId :* [Milestone :* w]]
   -> IO ()
-queryStageWithContext resultContextSize stg itemQuery qo wordString wordText forget ws =
+queryStageWithContext queryContextSize stg itemQuery qo wordString wordText forget ws =
   mapM goSource ws
     >>= showKeyValues qo alignResultColumns . over (traverse . _2) concat . groupPairs . concat
   where
-  goSource (sid, ms) = continueForward (showSourceId sid) $ roundTo stg . over (traverse . _2) wordString . addMilestoneCtx resultContextSize wordText $ ms
+  goSource (sid, ms) = continueForward (showSourceId sid) $ roundTo stg . over (traverse . _2) wordString . addMilestoneCtx (queryResultContextSize qo) wordText $ ms
   showSourceId (SourceId g s) = Text.intercalate " " [g, s]
 
   continueForward sid (Failure es) = do
@@ -119,7 +119,7 @@ queryStageWithContext resultContextSize stg itemQuery qo wordString wordText for
     where
     addPrefix (x1,x2,x3,x4) = (Text.concat [ "  ", sid, " " ] `Text.append` x1,x2,x3,x4)
 
-  itemQueryWithContext = concatMap (\x -> fmap (\y -> (y, fst x)) (itemQuery x)) . contextualize (queryContextSize qo)
+  itemQueryWithContext = concatMap (\x -> fmap (\y -> (y, fst x)) (itemQuery x)) . contextualize queryContextSize
 
   showItems = fmap (prettyMilestoneCtx . fst) . forget
 
