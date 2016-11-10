@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 
@@ -15,7 +16,7 @@ data WordAccent = WordAccent
   , accentForce :: ForceAcute
   , accentExtra :: ExtraAccents
   }
-  deriving (Eq, Ord, Show, Generic)
+  deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize WordAccent
 makeLensesFor
   [ ("accentValue", "_accentValue")
@@ -29,7 +30,7 @@ data Syllable = Syllable
   { syllableConsonants :: [ConsonantRho]
   , syllableVowel :: VocalicSyllable
   }
-  deriving (Eq, Ord, Show, Generic)
+  deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize Syllable
 makeLensesFor
   [ ("syllableConsonants", "_syllableConsonants")
@@ -48,7 +49,7 @@ data Word = Word
   , wordCapitalization :: Capitalization
   , wordPunctuation :: HasWordPunctuation
   }
-  deriving (Eq, Ord, Show, Generic)
+  deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize Word
 makeLensesFor
   [ ("wordInitialAspiration", "_wordInitialAspiration")
