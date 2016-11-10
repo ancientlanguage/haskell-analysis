@@ -24,7 +24,7 @@ import qualified Grammar.Greek.Script.Serialize as Serialize
 import qualified Primary
 
 queryOptionsParser :: Parser QueryOptions
-queryOptionsParser = QueryOptions <$> resultOptionParser <*> matchParser <*> omitParser
+queryOptionsParser = QueryOptions <$> resultOptionParser <*> matchParser <*> omitParser <*> contextParser
   where
   resultOptionParser :: Parser ResultOption
   resultOptionParser = option auto
@@ -46,6 +46,13 @@ queryOptionsParser = QueryOptions <$> resultOptionParser <*> matchParser <*> omi
     <> short 'o'
     <> value ""
     <> metavar "HEADING"
+    )
+
+  contextParser = option auto
+    ( long "context"
+    <> short 'c'
+    <> value 5
+    <> metavar "{number of words of context in results}"
     )
 
 data Query = Query

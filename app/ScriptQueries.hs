@@ -194,21 +194,7 @@ queryStageContext
   -> QueryOptions
   -> [Primary.Group]
   -> IO ()
-queryStageContext ctxs stg f opt gs = queryStageContextWords ctxs stg f opt $ Prepare.prepareGroups gs
-
-queryStageContextWords
-  :: (Show e1, Ord c, Show c)
-  => Int
-  -> Round
-    (MilestoneCtx :* e1)
-    e2
-    [MilestoneCtx :* (String :* HasWordPunctuation)]
-    [b]
-  -> (b :* [b] :* [b] -> [c])
-  -> QueryOptions
-  -> [SourceId :* [Milestone :* Primary.Word]]
-  -> IO ()
-queryStageContextWords contextSize stg itemQuery qo ws = queryStageContextWords2 contextSize 5 stg itemQuery qo Stage.basicWord Stage.fullWordText Stage.forgetHasWordPunctuation ws
+queryStageContext contextSize stg itemQuery qo gs = queryStageWithContext contextSize stg itemQuery qo Stage.basicWord Stage.fullWordText Stage.forgetHasWordPunctuation $ Prepare.prepareGroups gs
 
 queryFinalConsonantNoElision
   :: ctx :* Word
