@@ -16,6 +16,7 @@ library
   hs-source-dirs: src
   exposed-modules:
     Grammar.Common
+    Grammar.Common.Decompose
     Grammar.Common.List
     Grammar.Common.Numeric
     Grammar.Common.Prepare
