@@ -24,6 +24,7 @@ data QueryOptions = QueryOptions
   { queryResultOption :: ResultOption
   , queryMatch :: String
   , queryOmit :: String
+  , queryContextSize :: Int
   }
   deriving (Show)
 
@@ -45,7 +46,7 @@ showKeyValues
   -> ([b] -> [Text])
   -> [(a, [b])]
   -> IO ()
-showKeyValues (QueryOptions ro keyMatch omitMatch) alignShow xs = do
+showKeyValues (QueryOptions ro keyMatch omitMatch _) alignShow xs = do
   case ro of
     Summary -> putStrLn "Showing summary"
     All -> putStrLn "Showing all results"
@@ -85,10 +86,9 @@ alignResultColumns xs = fmap (padCombine (maxes xs)) xs
       (max (baseLength x1) l1,max (baseLength x2) l2,max (baseLength x3) l3,max (baseLength x4) l4)
   baseLength = Text.length . Text.filter (not . Char.isMark)
 
-queryStageContextWords2
+queryStageWithContext
   :: (Show e1, Ord c, Show c)
   => Int
-  -> Int
   -> Round
     (MilestoneCtx :* e1)
     e2
@@ -101,7 +101,7 @@ queryStageContextWords2
   -> ([MilestoneCtx :* s] -> [MilestoneCtx :* String])
   -> [SourceId :* [Milestone :* w]]
   -> IO ()
-queryStageContextWords2 queryContextSize resultContextSize stg itemQuery qo wordString wordText forget ws =
+queryStageWithContext resultContextSize stg itemQuery qo wordString wordText forget ws =
   mapM goSource ws
     >>= showKeyValues qo alignResultColumns . over (traverse . _2) concat . groupPairs . concat
   where
@@ -119,7 +119,7 @@ queryStageContextWords2 queryContextSize resultContextSize stg itemQuery qo word
     where
     addPrefix (x1,x2,x3,x4) = (Text.concat [ "  ", sid, " " ] `Text.append` x1,x2,x3,x4)
 
-  itemQueryWithContext = concatMap (\x -> fmap (\y -> (y, fst x)) (itemQuery x)) . contextualize queryContextSize
+  itemQueryWithContext = concatMap (\x -> fmap (\y -> (y, fst x)) (itemQuery x)) . contextualize (queryContextSize qo)
 
   showItems = fmap (prettyMilestoneCtx . fst) . forget
 
