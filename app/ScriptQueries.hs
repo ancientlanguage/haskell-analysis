@@ -42,6 +42,13 @@ queryVowelMarks
   -> [Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark]
 queryVowelMarks = toListOf (_2 . _1 . _1 . _1 . traverse . _Left)
 
+queryVocalicSyllable
+  :: ctx
+    :* ((([ [VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] :+ [ConsonantRho] ]
+     :* Capitalization) :* Elision) :* HasWordPunctuation)
+  -> [[VocalicSyllable]]
+queryVocalicSyllable = over (traverse . traverse) (view _1) . toListOf (_2 . _1 . _1 . _1 . traverse . _Left)
+
 queryVowelMarkGroups
   :: ctx
     :* ((([ [Vowel :* Maybe ContextualAccent :* Maybe Breathing :* Maybe SyllabicMark]
@@ -213,6 +220,7 @@ queries = Map.fromList
   , ("letter-marks", queryStage Stage.toMarkGroups queryLetterMarks)
   , ("marks", queryStage Stage.toMarkGroups queryMarks)
   , ("letter-syllabic-mark", queryStage Stage.toMarkSplit queryLetterSyllabicMark)
+  , ("vocalic-syllable", queryStage Stage.toVocalicSyllable queryVocalicSyllable)
   , ("vowel-marks", queryStage Stage.toConsonantMarks queryVowelMarks)
   , ("vowel-mark-groups", queryStage Stage.toGroupVowelConsonants queryVowelMarkGroups)
   , ("crasis", queryStage Stage.toBreathing queryCrasis)

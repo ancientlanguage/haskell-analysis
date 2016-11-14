@@ -279,10 +279,13 @@ toGroupVowelConsonants
   = toConsonantMarks
   <+> groupVowelConsonants
 
-toBreathing
+toVocalicSyllable
   = toGroupVowelConsonants
   <+> vowelSyllabicMark
   <+> vocalicSyllable
+
+toBreathing
+  = toVocalicSyllable
   <+> swapConsonantVocalicSyllables
   <+> ungroupConsonantVocalicSyllables
   <+> groupLeftConsonantVocalicSyllables
