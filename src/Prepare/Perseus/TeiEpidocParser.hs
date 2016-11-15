@@ -33,7 +33,7 @@ contentTerm :: NodeParser Content
 contentTerm = ContentTerm <$> Xml.elementContentNS (teiNS "term")
 
 gap :: NodeParser Gap
-gap = build <$> Xml.elementAttrNS (teiNS "gap") (Xml.attribute "reason") Xml.end
+gap = build <$> Xml.elementAttrNS (teiNS "gap") (optional $ Xml.attribute "reason") Xml.end
   where
   build (x, _) = Gap x
 
@@ -83,25 +83,37 @@ textPartSubtype v = do
   _ <- Xml.attributeValue "type" "textpart"
   return num
 
+divType :: Text -> Xml.AttributeParser Integer
+divType v = do
+  n <- Xml.attribute "n"
+  num <- Xml.parseNested (Text.unpack v ++ " number") MP.integer n
+  _ <- Xml.attributeValue "type" v
+  return num
+
+divTypeOrSubtype :: Text -> Xml.AttributeParser Integer
+divTypeOrSubtype v
+  = MP.try (textPartSubtype v)
+  <|> divType v
+
 section :: NodeParser Section
 section = build <$> Xml.elementAttrNS (teiNS "div") attributes children
   where
   build (x, y) = Section x y
-  attributes = textPartSubtype "section"
-  children = Xml.elementNS (teiNS "p") (many content)
+  attributes = divTypeOrSubtype "section"
+  children = concat <$> many (Xml.elementNS (teiNS "p") (many content))
 
 chapter :: NodeParser Chapter
 chapter = build <$> Xml.elementAttrNS (teiNS "div") attributes children
   where
   build (x, y) = Chapter x y
-  attributes = textPartSubtype "chapter"
+  attributes = divTypeOrSubtype "chapter"
   children = many section
 
 book :: NodeParser Book
 book = build <$> Xml.elementAttrNS (teiNS "div") attributes children
   where
   build (x, (y, z)) = Book x y z
-  attributes = textPartSubtype "book"
+  attributes = divTypeOrSubtype "book"
   children = do
     h <- Xml.elementContentNS (teiNS "head")
     cs <- many chapter
@@ -127,14 +139,15 @@ edition = build <$> Xml.elementAttrNS (teiNS "div") attributes children
 body :: NodeParser Body
 body = Xml.elementNS (teiNS "body") children
   where
-  children = pure Body
-    <*> edition
+  children
+    = MP.try (BodyEdition <$> edition)
+    <|> (BodyDivision <$> division)
 
 teiText :: NodeParser TeiText
 teiText = build <$> Xml.elementAttrNS (teiNS "text") attributes children
   where
   build (l, b) = TeiText l b
-  attributes = Xml.attributeXml "lang"
+  attributes = optional (Xml.attributeXml "lang")
   children = body
 
 tei :: NodeParser Tei

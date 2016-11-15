@@ -10,7 +10,7 @@ data Milestone = Milestone
   deriving (Show)
 
 data Gap = Gap
-  { gapReason :: Text
+  { gapReason :: Maybe Text
   }
   deriving (Show)
 
@@ -83,13 +83,13 @@ data Edition = Edition
   }
   deriving (Show)
 
-data Body = Body
-  { bodyEdition :: Edition
-  }
+data Body
+  = BodyEdition Edition
+  | BodyDivision Division
   deriving (Show)
 
 data TeiText = TeiText
-  { teiTextLang :: Text
+  { teiTextLang :: Maybe Text
   , teiTextBody :: Body
   }
   deriving (Show)

@@ -10,7 +10,6 @@ parseSblgnt = testCase "parse sblgnt" $ do
     Left e -> assertFailure $ "loadParse failure:\n" ++ e
     Right _ -> return ()
 
--- tlg 01 02 03 04 05 06 07 08 09 10 11 12 13 14
 parsePerseusTeiEpidoc :: String -> String -> String -> Test
 parsePerseusTeiEpidoc g t v = testCase ("parse perseus tei epidoc: " ++ g ++ "." ++ t ++ "-" ++ v) $ do
   let xmlPath = "./data/xml-perseus-greek/data/" ++ g ++ "/" ++ t ++ "/" ++ g ++ "." ++ t ++ ".perseus-grc" ++ v ++ ".xml"
@@ -26,6 +25,15 @@ main = defaultMain
     , parsePerseusTeiEpidoc "tlg0032" "tlg003" "2"
     , parsePerseusTeiEpidoc "tlg0032" "tlg004" "2"
     , parsePerseusTeiEpidoc "tlg0032" "tlg005" "2"
+--    , parsePerseusTeiEpidoc "tlg0032" "tlg006" "1"
+--    , parsePerseusTeiEpidoc "tlg0032" "tlg007" "1"
+    , parsePerseusTeiEpidoc "tlg0032" "tlg008" "1"
+    , parsePerseusTeiEpidoc "tlg0032" "tlg009" "1"
+    , parsePerseusTeiEpidoc "tlg0032" "tlg010" "1"
+    , parsePerseusTeiEpidoc "tlg0032" "tlg011" "1"
+    , parsePerseusTeiEpidoc "tlg0032" "tlg012" "1"
+    , parsePerseusTeiEpidoc "tlg0032" "tlg013" "1"
+    , parsePerseusTeiEpidoc "tlg0032" "tlg014" "1"
     ]
-  , testGroup "SBLGNT" [ parseSblgnt ]
+--  , testGroup "SBLGNT" [ parseSblgnt ]
   ]
