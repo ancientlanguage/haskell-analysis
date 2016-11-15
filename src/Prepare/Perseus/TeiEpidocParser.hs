@@ -3,13 +3,11 @@ module Prepare.Perseus.TeiEpidocParser where
 import Prelude hiding (Word)
 import Data.Text (Text)
 import qualified Data.Text as Text
-import Data.XML.Types (Name)
 import Prepare.Perseus.TeiEpidocModel
 import Prepare.Perseus.TeiEpidocHeaderParser
 import Prepare.Perseus.TeiEpidocParserCommon
-import Prepare.Xml.Parser (NodeParser, (<|>), many, some, optional)
+import Prepare.Xml.Parser (NodeParser, (<|>), many, optional)
 import qualified Prepare.Xml.Parser as Xml
-import qualified Text.Megaparsec.Char as MP
 import qualified Text.Megaparsec.Lexer as MP
 import qualified Text.Megaparsec.Prim as MP
 
@@ -39,6 +37,25 @@ gap = build <$> Xml.elementAttrNS (teiNS "gap") (Xml.attribute "reason") Xml.end
 contentText :: NodeParser Content
 contentText = ContentText <$> Xml.content
 
+bibl :: NodeParser Bibl
+bibl = build <$> Xml.elementContentAttrNS (teiNS "bibl") attributes
+  where
+  build (x, t) = Bibl x t
+  attributes = optional (Xml.attribute "n")
+
+line :: NodeParser Line
+line = build <$> Xml.elementContentAttrNS (teiNS "l") attributes
+  where
+  build (x, y) = Line x y
+  attributes = optional (Xml.attribute "met")
+
+quote :: NodeParser Quote
+quote = build <$> Xml.elementAttrNS (teiNS "quote") attributes children
+  where
+  build (x, y) = Quote x y
+  attributes = Xml.attribute "type"
+  children = many line
+
 content :: NodeParser Content
 content
   = MP.try contentText
@@ -47,6 +64,8 @@ content
   <|> contentDel
   <|> (ContentGap <$> gap)
   <|> contentCorr
+  <|> (ContentQuote <$> quote)
+  <|> (ContentBibl <$> bibl)
 
 textPartSubtype :: Text -> Xml.AttributeParser Integer
 textPartSubtype v = do

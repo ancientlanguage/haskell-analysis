@@ -14,6 +14,24 @@ data Gap = Gap
   }
   deriving (Show)
 
+data Line = Line
+  { lineMet :: Maybe Text
+  , lineContent :: Text
+  }
+  deriving (Show)
+
+data Quote = Quote
+  { quoteType :: Text
+  , quoteLines :: [Line]
+  }
+  deriving (Show)
+
+data Bibl = Bibl
+  { biblN :: Maybe Text
+  , biblContent :: Text
+  }
+  deriving (Show)
+
 data Content
   = ContentMilestone Milestone
   | ContentText Text
@@ -21,6 +39,8 @@ data Content
   | ContentCorr Text
   | ContentDel Text
   | ContentGap Gap
+  | ContentQuote Quote
+  | ContentBibl Bibl
   deriving (Show)
 
 data Section = Section
