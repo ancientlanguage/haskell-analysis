@@ -62,5 +62,19 @@
             <state unit="section"/>
          </refsDecl>-->
       </encodingDesc>
+      <profileDesc>
+         <langUsage>
+            <language ident="grc">Greek</language>
+            <language ident="eng">English</language>
+         </langUsage>
+      </profileDesc>
+      <revisionDesc>
+         <change when="2016-10-31" who="Lisa Cerrato">further CTS work</change>
+         <change when="2016-03-21" who="Lisa Cerrato">bumped urn; CTS work</change>
+         <change when="2015-06-01" who="Thibault Clérice">preliminary CTS work</change>
+         <change when="1992-08-11" who="DAS">changed chapters to div2's</change>
+         <change when="1992-06-01" who="DAS">inserted section and chapter tags and TEI header; CheckMarked</change>
+         <change when="1992-06-01" who="EM and WPM">chopped into files</change>
+      </revisionDesc>
    </teiHeader>
 </TEI>

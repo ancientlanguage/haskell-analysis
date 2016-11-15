@@ -124,17 +124,41 @@ encodingDesc = Xml.elementNS (teiNS "encodingDesc") children
   children = pure EncodingDesc
     <*> many refsDecl
 
+language :: NodeParser Language
+language = build <$> Xml.elementContentAttrNS (teiNS "language") attributes
+  where
+  build (i, c) = Language i c
+  attributes = Xml.attribute "ident"
+
+langUsage :: NodeParser LangUsage
+langUsage = LangUsage <$> Xml.elementNS (teiNS "langUsage") (many language)
+
+profileDesc :: NodeParser ProfileDesc
+profileDesc = ProfileDesc <$> Xml.elementNS (teiNS "profileDesc") langUsage
+
+change :: NodeParser Change
+change = build <$> Xml.elementContentAttrNS (teiNS "change") attributes
+  where
+  build ((x, y), z) = Change x y z
+  attributes = pure (,)
+    <*> Xml.attribute "when"
+    <*> Xml.attribute "who"
+
+revisionDesc :: NodeParser RevisionDesc
+revisionDesc = RevisionDesc <$> Xml.elementNS (teiNS "revisionDesc") (many change)
+
 teiHeader :: NodeParser TeiHeader
 teiHeader = build <$> Xml.elementAttrNS (teiNS "teiHeader") attributes children
   where
-  build (t, (fd, ed)) = TeiHeader t fd ed
+  build (t, (fd, ed, pd, rd)) = TeiHeader t fd ed pd rd
   attributes = do
     t <- Xml.attribute "type"
     return t
-  children = do
-    fd <- fileDesc
-    ed <- encodingDesc
-    return (fd, ed)
+  children = pure (,,,)
+    <*> fileDesc
+    <*> encodingDesc
+    <*> profileDesc
+    <*> revisionDesc
 
 tei :: NodeParser Tei
 tei = Xml.elementNS (teiNS "TEI") children 

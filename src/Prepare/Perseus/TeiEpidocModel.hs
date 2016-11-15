@@ -86,10 +86,40 @@ data EncodingDesc = EncodingDesc
   }
   deriving (Show)
 
+data Language = Language
+  { languageIdent :: Text
+  , languageContent :: Text
+  }
+  deriving (Show)
+
+data LangUsage = LangUsage
+  { langUsageLanguages :: [Language]
+  }
+  deriving (Show)
+
+data ProfileDesc = ProfileDesc
+  { profileDescLangUsage :: LangUsage
+  }
+  deriving (Show)
+
+data Change = Change
+  { changeWhen :: Text
+  , changeWho :: Text
+  , changeWhat :: Text
+  }
+  deriving (Show)
+
+data RevisionDesc = RevisionDesc
+  { revisionDescChanges :: [Change]
+  }
+  deriving (Show)
+
 data TeiHeader = TeiHeader
   { teiHeaderType :: Text
   , teiHeaderFileDesc :: FileDesc
   , teiHeaderEncodingDesc :: EncodingDesc
+  , teiHeaderProfileDesc :: ProfileDesc
+  , teiHeaderRevisionDesc :: RevisionDesc
   }
   deriving (Show)
 
