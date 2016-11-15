@@ -3,23 +3,29 @@ module Prepare.Perseus.TeiEpidocParser where
 import Prelude hiding (Word)
 import Data.Text (Text)
 import qualified Data.Text as Text
-import Prepare.Sblgnt.Model
+import Data.XML.Types
+import Prepare.Perseus.TeiEpidocModel
 import Prepare.Xml.Parser (NodeParser, (<|>), many, some, optional)
 import qualified Prepare.Xml.Parser as Xml
 import qualified Text.Megaparsec.Char as MP
 import qualified Text.Megaparsec.Lexer as MP
 import qualified Text.Megaparsec.Prim as MP
-import Data.XML.Types
 
 teiNS :: Text -> Name
 teiNS t = Name t (Just "http://www.tei-c.org/ns/1.0") Nothing
 
-xmlNS :: Text -> Name
-xmlNS t = Name t (Just "http://www.w3.org/XML/1998/namespace") (Just "xml")
-
-tei :: NodeParser (Text, ())
-tei = Xml.elementAttrNS (teiNS "TEI") attributes children 
+teiHeader :: NodeParser TeiHeader
+teiHeader = build <$> Xml.elementAttrNS (teiNS "teiHeader") attributes children
   where
-  attributes = return ""
+  build (t, _) = TeiHeader t
+  attributes = do
+    t <- Xml.attribute "type"
+    return t
+  children = return ()
+
+tei :: NodeParser Tei
+tei = Xml.elementNS (teiNS "TEI") children 
+  where
   children = do
-    return $ ()
+    h <- teiHeader
+    return $ Tei h
