@@ -126,10 +126,11 @@ refsDeclState :: NodeParser [RefState]
 refsDeclState = Xml.elementNS (teiNS "refsDecl") (many refState)
 
 correction :: NodeParser Correction
-correction = build <$> Xml.elementContentAttrNS (teiNS "correction") attributes
+correction = build <$> Xml.elementAttrNS (teiNS "correction") attributes children
   where
   build (x, y) = Correction x y
   attributes = Xml.attribute "method"
+  children = Xml.elementContentNS (teiNS "p")
 
 editorialDecl :: NodeParser EditorialDecl
 editorialDecl = EditorialDecl <$> Xml.elementNS (teiNS "editorialDecl") correction 
