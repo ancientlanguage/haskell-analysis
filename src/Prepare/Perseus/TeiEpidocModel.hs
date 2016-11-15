@@ -9,13 +9,18 @@ data Milestone = Milestone
   }
   deriving (Show)
 
+data Gap = Gap
+  { gapReason :: Text
+  }
+  deriving (Show)
+
 data Content
   = ContentMilestone Milestone
   | ContentText Text
   | ContentAdd Text
   | ContentCorr Text
   | ContentDel Text
-  | ContentGap
+  | ContentGap Gap
   deriving (Show)
 
 data Section = Section

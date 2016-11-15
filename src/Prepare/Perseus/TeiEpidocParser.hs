@@ -22,6 +22,20 @@ milestone = build <$> Xml.elementAttrNS (teiNS "milestone") attributes Xml.end
     u <- Xml.attribute "unit"
     return $ Milestone u ed
 
+contentAdd :: NodeParser Content
+contentAdd = ContentAdd <$> Xml.elementContentNS (teiNS "add")
+
+contentDel :: NodeParser Content
+contentDel = ContentDel <$> Xml.elementContentNS (teiNS "del")
+
+contentCorr :: NodeParser Content
+contentCorr = ContentCorr <$> Xml.elementContentNS (teiNS "corr")
+
+gap :: NodeParser Gap
+gap = build <$> Xml.elementAttrNS (teiNS "gap") (Xml.attribute "reason") Xml.end
+  where
+  build (x, _) = Gap x
+
 contentText :: NodeParser Content
 contentText = ContentText <$> Xml.content
 
@@ -29,6 +43,10 @@ content :: NodeParser Content
 content
   = MP.try contentText
   <|> (ContentMilestone <$> milestone)
+  <|> contentAdd
+  <|> contentDel
+  <|> (ContentGap <$> gap)
+  <|> contentCorr
 
 textPartSubtype :: Text -> Xml.AttributeParser Integer
 textPartSubtype v = do
