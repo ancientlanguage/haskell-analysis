@@ -66,24 +66,26 @@ tryParse xmlPath = loadParse xmlPath tei logBook >>= \case
   Left _ -> return False
   Right _ -> return True
 
-showParsingFiles :: IO ()
-showParsingFiles = do
-  let perseusDir = "./data/xml-perseus-greek"
-  perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
-  results <- mapM (\x -> tryParse x >>= \y -> return (y, x)) $ perseusFiles
+showParsingFiles :: [FilePath] -> IO ()
+showParsingFiles files = do
+  results <- mapM (\x -> tryParse x >>= \y -> return (y, x)) $ files
   _ <- mapM_ (\(x, y) -> putStrLn $ (if x then "✓ " else "× ") ++ y) $ List.sort results
-  putStrLn $ show (length . filter (\(x, y) -> x) $ results) ++ " files parsed"
+  putStrLn $ show (length . filter (\(x, _) -> x) $ results) ++ " files parsed"
 
 main :: IO ()
 main = do
-  showParsingFiles
   -- let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
   -- _ <- printText ["Reading", Text.pack sblgntFile]
   -- result <- loadParse sblgntFile sblgnt emptyLog
   -- showResult outputSblgntBinary $ result
 
-  -- let perseusDir = "./data/xml-perseus-greek"
+  let perseusDir = "./data/xml-perseus-greek"
+  perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
+  let files = perseusFiles
+  showParsingFiles files
+
   -- let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
   -- papyriFiles <- find always (fileName ~~? "*.xml") papyriDir
+
   -- let files = sblgntFile : perseusFiles ++ papyriFiles
   -- mapM_ loadFile files
