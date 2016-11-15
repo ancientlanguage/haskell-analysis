@@ -141,7 +141,7 @@ encodingDesc = Xml.elementNS (teiNS "encodingDesc") children
   children = pure EncodingDesc
     <*> (Maybe.maybe [] id <$> optional (MP.try refsDeclCts))
     <*> optional editorialDecl
-    <*> refsDeclState
+    <*> (Maybe.maybe [] id <$> optional refsDeclState)
 
 language :: NodeParser Language
 language = build <$> Xml.elementContentAttrNS (teiNS "language") attributes
