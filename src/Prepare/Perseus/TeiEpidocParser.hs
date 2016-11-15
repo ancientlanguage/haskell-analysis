@@ -17,40 +17,33 @@ import qualified Text.Megaparsec.Prim as MP
 content :: NodeParser Content
 content = undefined
 
+textPartSubtype :: Text -> Xml.AttributeParser Integer
+textPartSubtype v = do
+  _ <- Xml.attributeValue "subtype" v
+  _ <- Xml.attributeValue "type" "textpart"
+  n <- Xml.attribute "n"
+  num <- Xml.parseNested (Text.unpack v ++ " number") MP.integer n
+  return num
+
 section :: NodeParser Section
 section = build <$> Xml.elementAttrNS (teiNS "div") attributes children
   where
   build (x, y) = Section x y
-  attributes = do
-    _ <- Xml.attributeValue "subtype" "section"
-    _ <- Xml.attributeValue "type" "textpart"
-    n <- Xml.attribute "n"
-    num <- Xml.parseNested "section number" MP.integer n
-    return num
+  attributes = textPartSubtype "section"
   children = Xml.elementNS (teiNS "p") (many content)
 
 chapter :: NodeParser Chapter
 chapter = build <$> Xml.elementAttrNS (teiNS "div") attributes children
   where
   build (x, y) = Chapter x y
-  attributes = do
-    _ <- Xml.attributeValue "subtype" "chapter"
-    _ <- Xml.attributeValue "type" "textpart"
-    n <- Xml.attribute "n"
-    num <- Xml.parseNested "chapter number" MP.integer n
-    return num
+  attributes = textPartSubtype "chapter"
   children = many section
 
 book :: NodeParser Book
 book = build <$> Xml.elementAttrNS (teiNS "div") attributes children
   where
   build (x, (y, z)) = Book x y z
-  attributes = do
-    _ <- Xml.attributeValue "subtype" "book"
-    _ <- Xml.attributeValue "type" "textpart"
-    n <- Xml.attribute "n"
-    num <- Xml.parseNested "book number" MP.integer n
-    return num
+  attributes = textPartSubtype "book"
   children = do
     h <- Xml.elementContentNS (teiNS "head")
     cs <- many chapter
