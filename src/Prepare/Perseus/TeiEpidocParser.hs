@@ -29,6 +29,9 @@ contentDel = ContentDel <$> Xml.elementContentNS (teiNS "del")
 contentCorr :: NodeParser Content
 contentCorr = ContentCorr <$> Xml.elementContentNS (teiNS "corr")
 
+contentTerm :: NodeParser Content
+contentTerm = ContentTerm <$> Xml.elementContentNS (teiNS "term")
+
 gap :: NodeParser Gap
 gap = build <$> Xml.elementAttrNS (teiNS "gap") (Xml.attribute "reason") Xml.end
   where
@@ -62,11 +65,12 @@ cit = Xml.elementNS (teiNS "cit") (Cit <$> quote <*> bibl)
 content :: NodeParser Content
 content
   = MP.try contentText
-  <|> (ContentMilestone <$> milestone)
   <|> contentAdd
   <|> contentDel
-  <|> (ContentGap <$> gap)
   <|> contentCorr
+  <|> contentTerm
+  <|> (ContentMilestone <$> milestone)
+  <|> (ContentGap <$> gap)
   <|> (ContentQuote <$> quote)
   <|> (ContentBibl <$> bibl)
   <|> (ContentCit <$> cit)

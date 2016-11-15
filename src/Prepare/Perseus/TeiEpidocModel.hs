@@ -44,6 +44,7 @@ data Content
   | ContentAdd Text
   | ContentCorr Text
   | ContentDel Text
+  | ContentTerm Text
   | ContentGap Gap
   | ContentQuote Quote
   | ContentBibl Bibl
