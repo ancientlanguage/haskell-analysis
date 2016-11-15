@@ -14,14 +14,46 @@ import qualified Text.Megaparsec.Prim as MP
 teiNS :: Text -> Name
 teiNS t = Name t (Just "http://www.tei-c.org/ns/1.0") Nothing
 
+xmlContent :: Text -> NodeParser Text
+xmlContent = Xml.elementContentNS . teiNS
+
+funder :: NodeParser Funder
+funder = build <$> Xml.elementContentAttrNS (teiNS "funder") attributes
+  where
+  build = uncurry Funder
+  attributes = Xml.attribute "n"
+
+respStmt :: NodeParser RespStmt
+respStmt = Xml.elementNS (teiNS "respStmt") children
+  where
+  children = do
+    r <- xmlContent "resp"
+    ns <- many (xmlContent "name")
+    return $ RespStmt r ns
+
+titleStmt :: NodeParser TitleStmt
+titleStmt = Xml.elementNS (teiNS "titleStmt") children
+  where
+  children = do
+    t <- xmlContent "title"
+    a <- xmlContent "author"
+    s <- xmlContent "sponsor"
+    p <- xmlContent "principal"
+    r <- respStmt
+    f <- funder
+    return $ TitleStmt t a s p r f
+
+fileDesc :: NodeParser FileDesc
+fileDesc = FileDesc <$> Xml.elementNS (teiNS "fileDesc") titleStmt
+
 teiHeader :: NodeParser TeiHeader
 teiHeader = build <$> Xml.elementAttrNS (teiNS "teiHeader") attributes children
   where
-  build (t, _) = TeiHeader t
+  build (t, fd) = TeiHeader t fd
   attributes = do
     t <- Xml.attribute "type"
     return t
-  children = return ()
+  children = fileDesc
 
 tei :: NodeParser Tei
 tei = Xml.elementNS (teiNS "TEI") children 
