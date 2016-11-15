@@ -1,5 +1,6 @@
 module Prepare.Perseus.TeiEpidocUnify where
 
+import Prelude hiding (getContents)
 import qualified Data.Char as Char
 import Data.Text (Text)
 import qualified Data.Text as Text
@@ -27,5 +28,31 @@ getSourceMetadata h = Primary.Source sid t (Just a) lic []
   a = Header.titleStmtAuthor titleStmt
   lic = []
 
+getSectionContents :: Section -> [Primary.Content]
+getSectionContents _ = []
+
+getChapterContents :: Chapter -> [Primary.Content]
+getChapterContents _ = []
+
+getBookContents :: Book -> [Primary.Content]
+getBookContents _ = []
+
+getDivisionContents :: Division -> [Primary.Content]
+getDivisionContents (DivisionBooks xs) = concatMap getBookContents xs
+getDivisionContents (DivisionChapters xs) = concatMap getChapterContents xs
+getDivisionContents (DivisionSections xs) = concatMap getSectionContents xs
+
+getEditionContents :: Edition -> [Primary.Content]
+getEditionContents (Edition _ _ d) = getDivisionContents d
+
+getBodyContents :: Body -> [Primary.Content]
+getBodyContents (BodyEdition e) = getEditionContents e
+getBodyContents (BodyDivision d) = getDivisionContents d
+
+getTextContents :: TeiText -> [Primary.Content]
+getTextContents = getBodyContents . teiTextBody
+
 unify :: Tei -> Primary.Source
-unify (Tei h t) = getSourceMetadata h
+unify (Tei h t) = meta { Primary.sourceContents = getTextContents t }
+  where
+  meta = getSourceMetadata h
