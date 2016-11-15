@@ -20,7 +20,15 @@ parsePerseusTeiEpidoc g t v = testCase ("parse perseus tei epidoc: " ++ g ++ "."
 main :: IO ()
 main = defaultMain
   [ testGroup "Perseus"
-    [ parsePerseusTeiEpidoc "tlg0032" "tlg001" "2"
+    [ parsePerseusTeiEpidoc "tlg0014" "tlg011" "1"
+    , parsePerseusTeiEpidoc "tlg0014" "tlg012" "1"
+    , parsePerseusTeiEpidoc "tlg0014" "tlg014" "1"
+    , parsePerseusTeiEpidoc "tlg0014" "tlg026" "1"
+    , parsePerseusTeiEpidoc "tlg0014" "tlg051" "1"
+    , parsePerseusTeiEpidoc "tlg0014" "tlg060" "1"
+    , parsePerseusTeiEpidoc "tlg0014" "tlg061" "1"
+
+    , parsePerseusTeiEpidoc "tlg0032" "tlg001" "2"
     , parsePerseusTeiEpidoc "tlg0032" "tlg002" "2"
     , parsePerseusTeiEpidoc "tlg0032" "tlg003" "2"
     , parsePerseusTeiEpidoc "tlg0032" "tlg004" "2"
