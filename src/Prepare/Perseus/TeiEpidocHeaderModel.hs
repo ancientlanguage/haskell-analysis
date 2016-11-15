@@ -37,10 +37,17 @@ data Imprint = Imprint
   }
   deriving (Show)
 
+data Editor = Editor
+  { editorRole :: Text
+  , editorName :: Text
+  }
+  deriving (Show)
+
 data Monogr = Monogr
-  { monogrAuthor :: Text
-  , monogrTitle :: Text
-  , monogrImprint :: Imprint 
+  { monogrAuthor :: Maybe Text
+  , monogrTitle :: Maybe Text
+  , monogrImprint :: Maybe Imprint
+  , monogrEditor :: Maybe Editor
   }
   deriving (Show)
 

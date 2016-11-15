@@ -1,6 +1,7 @@
 module Prepare.Perseus.TeiEpidocHeaderParser where
 
 import Prelude hiding (Word)
+import Data.Text (Text)
 import Prepare.Perseus.TeiEpidocHeaderModel
 import Prepare.Perseus.TeiEpidocParserCommon
 import Prepare.Xml.Parser (NodeParser, (<|>), many, optional)
@@ -38,13 +39,35 @@ imprint = Xml.elementNS (teiNS "imprint") children
     <*> xmlContent "publisher"
     <*> xmlContent "date"
 
+editor :: NodeParser Editor
+editor = build <$> Xml.elementContentAttrNS (teiNS "editor") attributes
+  where
+  build (x, y) = Editor x y
+  attributes = Xml.attribute "role"
+
+data MonogrProp
+  = MonogrPropAuthor Text
+  | MonogrPropTitle Text
+  | MonogrPropImprint Imprint
+  | MonogrPropEditor Editor
+
+foldMonogrProp :: [MonogrProp] -> Monogr
+foldMonogrProp = foldr go (Monogr Nothing Nothing Nothing Nothing)
+  where
+  go (MonogrPropAuthor x) m = m { monogrAuthor = Just x }
+  go (MonogrPropTitle x) m = m { monogrTitle = Just x }
+  go (MonogrPropImprint x) m = m { monogrImprint = Just x }
+  go (MonogrPropEditor x) m = m { monogrEditor = Just x }
+
 monogr :: NodeParser Monogr
 monogr = Xml.elementNS (teiNS "monogr") children
   where
-  children = pure Monogr
-    <*> xmlContent "author"
-    <*> xmlContent "title"
-    <*> imprint
+  children = foldMonogrProp <$> many
+    (( MonogrPropAuthor <$> xmlContent "author")
+    <|> (MonogrPropTitle <$> xmlContent "title")
+    <|> (MonogrPropImprint <$> imprint)
+    <|> (MonogrPropEditor <$> editor)
+    )
 
 biblStruct :: NodeParser BiblStruct
 biblStruct = BiblStruct <$> Xml.elementNS (teiNS "biblStruct") monogr
