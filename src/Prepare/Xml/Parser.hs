@@ -6,9 +6,11 @@
 module Prepare.Xml.Parser
   ( (<|>)
   , element
+  , elementNS
   , elementAttr
   , elementAttrNS
   , elementEmpty
+  , elementEmptyNS
   , attribute
   , attributeNS
   , attributeFull
@@ -16,7 +18,9 @@ module Prepare.Xml.Parser
   , content
   , onlyContent
   , elementContent
+  , elementContentNS
   , elementContentAttr
+  , elementContentAttrNS
   , noAttributes
   , end
   , parseRoot
@@ -189,10 +193,15 @@ wrapAttributeParser p = p <* end
 wrapNodeParser :: NodeParser a -> NodeParser a
 wrapNodeParser p = whitespace *> p <* end
 
+elementEmptyNS
+  :: Name
+  -> NodeParser ()
+elementEmptyNS n = const () <$> elementFullNS n end end
+
 elementEmpty
   :: Text
   -> NodeParser ()
-elementEmpty t = const () <$> elementFullNS (localName t) end end
+elementEmpty t = elementEmptyNS (localName t)
 
 elementAttrNS
   :: Name
@@ -210,24 +219,41 @@ elementAttr
   -> NodeParser (a, c)
 elementAttr t a c = elementAttrNS (localName t) a c
 
+elementContentAttrNS
+  :: Name
+  -> AttributeParser a
+  -> NodeParser (a, Text)
+elementContentAttrNS n a
+  = elementFullNS n (wrapAttributeParser a) onlyContent
+  <* whitespace
+
 elementContentAttr
   :: Text
   -> AttributeParser a
   -> NodeParser (a, Text)
-elementContentAttr t a
-  = elementFullNS (localName t) (wrapAttributeParser a) onlyContent
-  <* whitespace
+elementContentAttr t a = elementContentAttrNS (localName t) a
+
+elementNS
+  :: Name
+  -> NodeParser c
+  -> NodeParser c
+elementNS n c = snd <$> elementAttrNS n noAttributes c
 
 element 
   :: Text
   -> NodeParser c
   -> NodeParser c
-element t c = snd <$> elementAttr t noAttributes c
+element t c = elementNS (localName t) c
+
+elementContentNS
+  :: Name
+  -> NodeParser Text
+elementContentNS n = snd <$> elementContentAttrNS n noAttributes 
 
 elementContent
   :: Text
   -> NodeParser Text
-elementContent t = snd <$> elementContentAttr t noAttributes 
+elementContent t = elementContentNS (localName t)
 
 parseRoot
   :: FilePath
