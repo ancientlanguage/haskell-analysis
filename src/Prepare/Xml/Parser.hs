@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -6,8 +7,10 @@ module Prepare.Xml.Parser
   ( (<|>)
   , element
   , elementAttr
+  , elementAttrNS
   , elementEmpty
   , attribute
+  , attributeNS
   , attributeFull
   , attributeXml
   , content
@@ -129,12 +132,12 @@ elementNode :: Node -> Either XmlError Element
 elementNode (NodeElement e) = Right e
 elementNode _ = Left XmlError
 
-localElementName :: Text -> Element -> Either XmlError Element
-localElementName n e | elementName e == localName n = Right e
-localElementName _ _ = Left XmlError
+elementNameNS :: Name -> Element -> Either XmlError Element
+elementNameNS n e | elementName e == n = Right e
+elementNameNS _ _ = Left XmlError
 
-elementPlain :: Text -> NodeParser Element
-elementPlain t = tokenN $ elementNode >=> localElementName t
+elementPlainNS :: Name -> NodeParser Element
+elementPlainNS n = tokenN $ elementNode >=> elementNameNS n
 
 attributeName :: Name -> (Name, Text) -> Either XmlError Text
 attributeName n' (n, v) | n == n' = Right v
@@ -142,6 +145,9 @@ attributeName _ _ = Left XmlError
 
 attribute :: Text -> AttributeParser Text
 attribute = tokenN . attributeName . localName
+
+attributeNS :: Name -> AttributeParser Text
+attributeNS = tokenN . attributeName
 
 attributeFull :: Name -> AttributeParser Text
 attributeFull = tokenN . attributeName
@@ -166,13 +172,13 @@ parseNested lab p xs = do
     Left e -> unexpected . Label . NonEmpty.fromList $ lab ++ " " ++ parseErrorPretty e
     Right x -> return x
 
-elementFull
-  :: Text
+elementFullNS
+  :: Name
   -> AttributeParser a
   -> NodeParser c
   -> NodeParser (a, c)
-elementFull name attributeParser childrenParser = do
-  el <- elementPlain name
+elementFullNS name attributeParser childrenParser = do
+  el <- elementPlainNS name
   attributeResult <- parseNested "Attribute" attributeParser (elementAttributes el) 
   childrenResult <- parseNested "Child" childrenParser (elementNodes el)
   return (attributeResult, childrenResult)
@@ -186,23 +192,30 @@ wrapNodeParser p = whitespace *> p <* end
 elementEmpty
   :: Text
   -> NodeParser ()
-elementEmpty t = const () <$> elementFull t end end
+elementEmpty t = const () <$> elementFullNS (localName t) end end
+
+elementAttrNS
+  :: Name
+  -> AttributeParser a
+  -> NodeParser c
+  -> NodeParser (a, c)
+elementAttrNS n a c
+  = elementFullNS n (wrapAttributeParser a) (wrapNodeParser c)
+  <* whitespace
 
 elementAttr
   :: Text
   -> AttributeParser a
   -> NodeParser c
   -> NodeParser (a, c)
-elementAttr t a c
-  = elementFull t (wrapAttributeParser a) (wrapNodeParser c)
-  <* whitespace
+elementAttr t a c = elementAttrNS (localName t) a c
 
 elementContentAttr
   :: Text
   -> AttributeParser a
   -> NodeParser (a, Text)
 elementContentAttr t a
-  = elementFull t (wrapAttributeParser a) onlyContent
+  = elementFullNS (localName t) (wrapAttributeParser a) onlyContent
   <* whitespace
 
 element 

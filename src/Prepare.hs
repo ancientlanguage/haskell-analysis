@@ -1,12 +1,14 @@
 module Prepare
   ( loadParse
   , sblgnt
+  , tei
   , logBook
   , emptyLog
   )
   where
 
 import Prelude hiding (log)
+import Prepare.Perseus.TeiEpidocParser
 import Prepare.Sblgnt.Parser
 import Prepare.Xml.Events
 import Prepare.Xml.Parser

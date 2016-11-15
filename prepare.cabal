@@ -18,6 +18,7 @@ library
     Prepare,
     Prepare.Decompose,
     Prepare.Log,
+    Prepare.Perseus.TeiEpidocParser,
     Prepare.Sblgnt.Model,
     Prepare.Sblgnt.Parser,
     Prepare.Sblgnt.Unify,
