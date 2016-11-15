@@ -65,6 +65,7 @@ data Book = Book
 data Division
   = DivisionBooks [Book]
   | DivisionChapters [Chapter]
+  | DivisionSections [Section]
   deriving (Show)
 
 data Edition = Edition

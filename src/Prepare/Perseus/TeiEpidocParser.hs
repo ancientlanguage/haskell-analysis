@@ -102,7 +102,8 @@ book = build <$> Xml.elementAttrNS (teiNS "div") attributes children
 division :: NodeParser Division
 division
   = MP.try (DivisionBooks <$> many book)
-  <|> (DivisionChapters <$> many chapter)
+  <|> MP.try (DivisionChapters <$> many chapter)
+  <|> (DivisionSections <$> many section)
 
 edition :: NodeParser Edition
 edition = build <$> Xml.elementAttrNS (teiNS "div") attributes children
