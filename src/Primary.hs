@@ -20,16 +20,18 @@ data Language
   deriving (Show, Generic)
 instance Serialize Language
 
-data Verse = Verse
-  { verseChapter :: Integer
-  , verseVerse :: Integer
+data Division = Division
+  { divisionBook :: Maybe Integer
+  , divisionChapter :: Maybe Integer
+  , divisionVerse :: Maybe Integer
+  , divisionSection :: Maybe Integer
   }
   deriving (Show, Generic)
-instance Serialize Verse 
+instance Serialize Division
 
 data Milestone
   = MilestoneParagraph
-  | MilestoneVerse Verse
+  | MilestoneDivision Division
   deriving (Show, Generic)
 instance Serialize Milestone
 
