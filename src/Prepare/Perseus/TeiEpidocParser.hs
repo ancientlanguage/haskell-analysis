@@ -1,7 +1,6 @@
 module Prepare.Perseus.TeiEpidocParser where
 
 import Prelude hiding (Word)
-import Control.Monad (guard)
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Data.XML.Types (Name)
@@ -14,15 +13,29 @@ import qualified Text.Megaparsec.Char as MP
 import qualified Text.Megaparsec.Lexer as MP
 import qualified Text.Megaparsec.Prim as MP
 
+milestone :: NodeParser Milestone
+milestone = build <$> Xml.elementAttrNS (teiNS "milestone") attributes Xml.end
+  where
+  build (x, _) = x
+  attributes = do
+    ed <- Xml.attribute "ed"
+    u <- Xml.attribute "unit"
+    return $ Milestone u ed
+
+contentText :: NodeParser Content
+contentText = ContentText <$> Xml.content
+
 content :: NodeParser Content
-content = undefined
+content
+  = MP.try contentText
+  <|> (ContentMilestone <$> milestone)
 
 textPartSubtype :: Text -> Xml.AttributeParser Integer
 textPartSubtype v = do
-  _ <- Xml.attributeValue "subtype" v
-  _ <- Xml.attributeValue "type" "textpart"
   n <- Xml.attribute "n"
   num <- Xml.parseNested (Text.unpack v ++ " number") MP.integer n
+  _ <- Xml.attributeValue "subtype" v
+  _ <- Xml.attributeValue "type" "textpart"
   return num
 
 section :: NodeParser Section
@@ -50,21 +63,21 @@ book = build <$> Xml.elementAttrNS (teiNS "div") attributes children
     return (h, cs)
 
 edition :: NodeParser Edition
-edition = build <$> Xml.elementAttrNS (teiNS "div") attributes Xml.end
+edition = build <$> Xml.elementAttrNS (teiNS "div") attributes children
   where
-  build (x, _) = x
+  build ((n, l), y) = Edition n l y
   attributes = do
     n <- Xml.attribute "n"
     _ <- Xml.attributeValue "type" "edition"
     l <- Xml.attributeXml "lang"
-    return $ Edition n l
+    return (n, l)
+  children = many book
 
 body :: NodeParser Body
 body = Xml.elementNS (teiNS "body") children
   where
   children = pure Body
     <*> edition
-    <*> many book
 
 teiText :: NodeParser TeiText
 teiText = build <$> Xml.elementAttrNS (teiNS "text") attributes children

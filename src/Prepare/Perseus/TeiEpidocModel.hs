@@ -40,12 +40,12 @@ data Book = Book
 data Edition = Edition
   { editionN :: Text
   , editionLang :: Text
+  , editionBooks :: [Book]
   }
   deriving (Show)
 
 data Body = Body
   { bodyEdition :: Edition
-  , bodyBooks :: [Book]
   }
   deriving (Show)
 
