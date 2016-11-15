@@ -12,7 +12,7 @@ parseSblgnt = testCase "parse sblgnt" $ do
 
 parsePerseusTeiEpidoc :: Test
 parsePerseusTeiEpidoc = testCase "parse perseus tei epidoc" $ do
-  let xmlPath = "./data/tlg0032.tlg001.perseus-grc2.xml"
+  let xmlPath = "./data/xml-perseus-greek/data/tlg0032/tlg001/tlg0032.tlg001.perseus-grc2.xml"
   loadParse xmlPath tei logBook >>= \case
     Left e -> assertFailure $ "loadParse failure:\n" ++ e
     Right _ -> return ()
@@ -20,5 +20,5 @@ parsePerseusTeiEpidoc = testCase "parse perseus tei epidoc" $ do
 main :: IO ()
 main = defaultMain
   [ testGroup "Perseus" [ parsePerseusTeiEpidoc ]
---  , testGroup "SBLGNT" [ parseSblgnt ]
+  , testGroup "SBLGNT" [ parseSblgnt ]
   ]
