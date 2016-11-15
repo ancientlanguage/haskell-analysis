@@ -2,7 +2,7 @@ module Prepare.Perseus.TeiEpidocParserCommon where
 
 import Data.Text (Text)
 import Data.XML.Types
-import Prepare.Xml.Parser (NodeParser, (<|>), many, some, optional)
+import Prepare.Xml.Parser (NodeParser)
 import qualified Prepare.Xml.Parser as Xml
 
 teiNS :: Text -> Name

@@ -1,9 +1,9 @@
-resolver: lts-7.3
+resolver: lts-7.9
 packages:
 - '.'
 - location:
     git: https://github.com/ancientlanguage/haskell-primary-type.git
-    commit: 2c796f09fdc850e5526874b422e6b4a432a77209
+    commit: 1e2728bfdab70f152968a096dbbce43231354234
   extra-dep: true
 extra-deps: []
 flags: {}

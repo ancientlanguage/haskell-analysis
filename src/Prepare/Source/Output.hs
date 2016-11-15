@@ -78,7 +78,7 @@ sourceTypeModuleName :: ModuleName
 sourceTypeModuleName = ModuleName [ "PrimarySource", "AncientLanguage" ]
 
 sourceModule :: ModuleName -> Source -> Module
-sourceModule pm (Source sid st sl sc) = srcModule
+sourceModule pm (Source sid st _ sl sc) = srcModule
   where
   srcModule = Module srcModuleName termName srcContents []
   srcContents = Text.concat [ prologue, licenseText, contentsText, "\n" ]

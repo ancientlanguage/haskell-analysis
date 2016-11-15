@@ -37,6 +37,7 @@ bookSource lic (Sblgnt.Book bid btitle bp _) =
   Primary.Source
     (shortIdToLong bid)
     btitle
+    Nothing
     lic
     (concatMap flatParagraph bp)
 
