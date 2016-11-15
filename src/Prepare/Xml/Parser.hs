@@ -13,7 +13,6 @@ module Prepare.Xml.Parser
   , elementEmptyNS
   , attribute
   , attributeNS
-  , attributeFull
   , attributeXml
   , content
   , onlyContent
@@ -153,11 +152,8 @@ attribute = tokenN . attributeName . localName
 attributeNS :: Name -> AttributeParser Text
 attributeNS = tokenN . attributeName
 
-attributeFull :: Name -> AttributeParser Text
-attributeFull = tokenN . attributeName
-
 attributeXml :: Text -> AttributeParser Text
-attributeXml t = attributeFull n
+attributeXml t = attributeNS n
   where n = Name t (Just "http://www.w3.org/XML/1998/namespace") (Just "xml")
 
 content :: NodeParser Text

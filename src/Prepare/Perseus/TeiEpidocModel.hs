@@ -62,6 +62,30 @@ data FileDesc = FileDesc
   }
   deriving (Show)
 
+data CRefPattern = CRefPattern
+  { cRefPatternN :: Text
+  , cRefPatternMatchPattern :: Text
+  , cRefPatternReplacementPattern :: Text
+  , cRefPatternP :: Text
+  }
+  deriving (Show)
+
+data RefState = RefState
+  { refStateUnit :: Text
+  , refStateDelim :: Maybe Text
+  }
+  deriving (Show)
+
+data RefsDecl
+  = RefsDeclCts [CRefPattern]
+  | RefsDeclState [RefState]
+  deriving (Show)
+
+data EncodingDesc = EncodingDesc
+  { encodingDescRefsDecls :: [RefsDecl]
+  }
+  deriving (Show)
+
 data TeiHeader = TeiHeader
   { teiHeaderType :: Text
   , teiHeaderFileDesc :: FileDesc

@@ -1,6 +1,7 @@
 module Prepare.Perseus.TeiEpidocParser where
 
 import Prelude hiding (Word)
+import Control.Monad (guard)
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Data.XML.Types
@@ -78,6 +79,36 @@ fileDesc = Xml.elementNS (teiNS "fileDesc") children
     <*> xmlContent "extent"
     <*> publicationStmt
     <*> sourceDesc
+
+cRefPattern :: NodeParser CRefPattern
+cRefPattern = build <$> Xml.elementAttrNS (teiNS "cRefPattern") attributes children
+  where
+  build ((n, mp, rp), p) = CRefPattern n mp rp p
+  attributes = do
+    n <- Xml.attribute "n"
+    mp <- Xml.attribute "matchPattern"
+    rp <- Xml.attribute "replacementPattern"
+    return (n, mp, rp)
+  children = Xml.elementContentNS (teiNS "p")
+
+refsDeclCts :: NodeParser RefsDecl
+refsDeclCts = build <$> Xml.elementAttrNS (teiNS "refsDecl") attributes children
+  where
+  build (_, x) = x
+  attributes = do
+    n <- Xml.attribute "n"
+    guard (n == "CTS")
+    return ()
+  children = RefsDeclCts <$> many cRefPattern
+
+refsDecl :: NodeParser RefsDecl
+refsDecl = refsDeclCts -- <|> refsDeclState
+
+encodingDesc :: NodeParser EncodingDesc
+encodingDesc = Xml.elementNS (teiNS "encodingDesc") children
+  where
+  children = pure EncodingDesc
+    <*> many refsDecl
 
 teiHeader :: NodeParser TeiHeader
 teiHeader = build <$> Xml.elementAttrNS (teiNS "teiHeader") attributes children
