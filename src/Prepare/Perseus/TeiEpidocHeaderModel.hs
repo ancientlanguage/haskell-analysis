@@ -56,7 +56,7 @@ data SourceDesc = SourceDesc
 
 data FileDesc = FileDesc
   { fileDescTitleStmt :: TitleStmt
-  , fileDescExtent :: Text
+  , fileDescExtent :: Maybe Text
   , fileDescPublicationStmt :: PublicationStmt
   , fileDescSourceDesc :: SourceDesc
   }

@@ -65,7 +65,7 @@ fileDesc = Xml.elementNS (teiNS "fileDesc") children
   where
   children = pure FileDesc
     <*> titleStmt
-    <*> xmlContent "extent"
+    <*> optional (xmlContent "extent")
     <*> publicationStmt
     <*> sourceDesc
 
