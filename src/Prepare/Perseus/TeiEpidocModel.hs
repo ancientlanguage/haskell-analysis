@@ -42,10 +42,15 @@ data Book = Book
   }
   deriving (Show)
 
+data Division
+  = DivisionBooks [Book]
+  | DivisionChapters [Chapter]
+  deriving (Show)
+
 data Edition = Edition
   { editionN :: Text
   , editionLang :: Text
-  , editionBooks :: [Book]
+  , editionDivision :: Division
   }
   deriving (Show)
 

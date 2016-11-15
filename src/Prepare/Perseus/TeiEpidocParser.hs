@@ -80,6 +80,11 @@ book = build <$> Xml.elementAttrNS (teiNS "div") attributes children
     cs <- many chapter
     return (h, cs)
 
+division :: NodeParser Division
+division
+  = MP.try (DivisionBooks <$> many book)
+  <|> (DivisionChapters <$> many chapter)
+
 edition :: NodeParser Edition
 edition = build <$> Xml.elementAttrNS (teiNS "div") attributes children
   where
@@ -89,7 +94,7 @@ edition = build <$> Xml.elementAttrNS (teiNS "div") attributes children
     _ <- Xml.attributeValue "type" "edition"
     l <- Xml.attributeXml "lang"
     return (n, l)
-  children = many book
+  children = division
 
 body :: NodeParser Body
 body = Xml.elementNS (teiNS "body") children
