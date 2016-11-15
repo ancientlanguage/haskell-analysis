@@ -1,6 +1,7 @@
 module Prepare.Perseus.TeiEpidocHeaderParser where
 
 import Prelude hiding (Word)
+import qualified Data.Maybe as Maybe
 import Data.Text (Text)
 import Prepare.Perseus.TeiEpidocHeaderModel
 import Prepare.Perseus.TeiEpidocParserCommon
@@ -35,9 +36,11 @@ titleStmt = Xml.elementNS (teiNS "titleStmt") children
 imprint :: NodeParser Imprint
 imprint = Xml.elementNS (teiNS "imprint") children
   where
-  children = pure Imprint
-    <*> xmlContent "publisher"
-    <*> xmlContent "date"
+  children = do
+    pp <- optional $ xmlContent "pubPlace" 
+    p <- xmlContent "publisher"
+    d <- xmlContent "date"
+    return $ Imprint p d pp
 
 editor :: NodeParser Editor
 editor = build <$> Xml.elementContentAttrNS (teiNS "editor") attributes
@@ -103,12 +106,12 @@ cRefPattern = build <$> Xml.elementAttrNS (teiNS "cRefPattern") attributes child
     return (mp, n, rp)
   children = Xml.elementContentNS (teiNS "p")
 
-refsDeclCts :: NodeParser RefsDecl
+refsDeclCts :: NodeParser [CRefPattern]
 refsDeclCts = build <$> Xml.elementAttrNS (teiNS "refsDecl") attributes children
   where
   build (_, x) = x
   attributes = Xml.attributeValue "n" "CTS"
-  children = RefsDeclCts <$> many cRefPattern
+  children = many cRefPattern
 
 refState :: NodeParser RefState
 refState = build <$> Xml.elementAttrNS (teiNS "refState") attributes Xml.end
@@ -119,19 +122,25 @@ refState = build <$> Xml.elementAttrNS (teiNS "refState") attributes Xml.end
     u <- Xml.attribute "unit"
     return $ RefState u d
 
-refsDeclState :: NodeParser RefsDecl
-refsDeclState = RefsDeclState <$> Xml.elementNS (teiNS "refsDecl") (many refState)
+refsDeclState :: NodeParser [RefState]
+refsDeclState = Xml.elementNS (teiNS "refsDecl") (many refState)
 
-refsDecl :: NodeParser RefsDecl
-refsDecl
-  = MP.try refsDeclCts
-  <|> refsDeclState
+correction :: NodeParser Correction
+correction = build <$> Xml.elementContentAttrNS (teiNS "correction") attributes
+  where
+  build (x, y) = Correction x y
+  attributes = Xml.attribute "method"
+
+editorialDecl :: NodeParser EditorialDecl
+editorialDecl = EditorialDecl <$> Xml.elementNS (teiNS "editorialDecl") correction 
 
 encodingDesc :: NodeParser EncodingDesc
 encodingDesc = Xml.elementNS (teiNS "encodingDesc") children
   where
   children = pure EncodingDesc
-    <*> many refsDecl
+    <*> (Maybe.maybe [] id <$> optional (MP.try refsDeclCts))
+    <*> optional editorialDecl
+    <*> refsDeclState
 
 language :: NodeParser Language
 language = build <$> Xml.elementContentAttrNS (teiNS "language") attributes

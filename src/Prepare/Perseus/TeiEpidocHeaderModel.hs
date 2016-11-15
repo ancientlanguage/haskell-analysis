@@ -34,6 +34,7 @@ data PublicationStmt = PublicationStmt
 data Imprint = Imprint
   { imprintPublisher :: Text
   , imprintDate :: Text
+  , imprintPubPlace :: Maybe Text
   }
   deriving (Show)
 
@@ -83,13 +84,21 @@ data RefState = RefState
   }
   deriving (Show)
 
-data RefsDecl
-  = RefsDeclCts [CRefPattern]
-  | RefsDeclState [RefState]
+data Correction = Correction
+  { correctionMethod :: Text
+  , correctionContent :: Text
+  }
+  deriving (Show)
+
+data EditorialDecl = EditorialDecl
+  { editorialDeclCorrection :: Correction
+  }
   deriving (Show)
 
 data EncodingDesc = EncodingDesc
-  { encodingDescRefsDecls :: [RefsDecl]
+  { encodingDescRefsDeclCts :: [CRefPattern]
+  , encodingDescEditorialDecl :: Maybe EditorialDecl
+  , encodingDescRefsDeclState :: [RefState]
   }
   deriving (Show)
 

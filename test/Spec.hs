@@ -43,7 +43,7 @@ main = defaultMain
     , parsePerseusTeiEpidoc "tlg0032" "tlg013" "1"
     , parsePerseusTeiEpidoc "tlg0032" "tlg014" "1"
 
---    , parsePerseusTeiEpidoc "tlg0001" "tlg001" "2"
+   , parsePerseusTeiEpidoc "tlg0001" "tlg001" "2"
     ]
-  , testGroup "SBLGNT" [ parseSblgnt ]
+  -- , testGroup "SBLGNT" [ parseSblgnt ]
   ]
