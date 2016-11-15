@@ -4,7 +4,7 @@ import Prelude hiding (Word)
 import Control.Monad (guard)
 import Data.Text (Text)
 import qualified Data.Text as Text
-import Data.XML.Types
+import Data.XML.Types (Name)
 import Prepare.Perseus.TeiEpidocModel
 import Prepare.Perseus.TeiEpidocHeaderParser
 import Prepare.Perseus.TeiEpidocParserCommon
@@ -14,8 +14,32 @@ import qualified Text.Megaparsec.Char as MP
 import qualified Text.Megaparsec.Lexer as MP
 import qualified Text.Megaparsec.Prim as MP
 
+content :: NodeParser Content
+content = undefined
+
+section :: NodeParser Section
+section = build <$> Xml.elementAttrNS (teiNS "div") attributes children
+  where
+  build (x, y) = Section x y
+  attributes = do
+    _ <- Xml.attributeValue "subtype" "section"
+    _ <- Xml.attributeValue "type" "textpart"
+    n <- Xml.attribute "n"
+    num <- Xml.parseNested "section number" MP.integer n
+    return num
+  children = Xml.elementNS (teiNS "p") (many content)
+
 chapter :: NodeParser Chapter
-chapter = undefined
+chapter = build <$> Xml.elementAttrNS (teiNS "div") attributes children
+  where
+  build (x, y) = Chapter x y
+  attributes = do
+    _ <- Xml.attributeValue "subtype" "chapter"
+    _ <- Xml.attributeValue "type" "textpart"
+    n <- Xml.attribute "n"
+    num <- Xml.parseNested "chapter number" MP.integer n
+    return num
+  children = many section
 
 book :: NodeParser Book
 book = build <$> Xml.elementAttrNS (teiNS "div") attributes children

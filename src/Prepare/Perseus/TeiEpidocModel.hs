@@ -19,20 +19,14 @@ data Content
   deriving (Show)
 
 data Section = Section
-  { sectionNum :: Int
+  { sectionNum :: Integer
   , sectionContent :: [Content]
   }
   deriving (Show)
 
-data Verse = Verse
-  { verseNumber :: Int
-  , verseSections :: [Section]
-  }
-  deriving (Show)
-
 data Chapter = Chapter
-  { chapterNumber :: Int
-  , chapterVerses :: [Verse]
+  { chapterNumber :: Integer
+  , chapterVerses :: [Section]
   }
   deriving (Show)
 
