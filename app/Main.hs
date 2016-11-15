@@ -1,6 +1,9 @@
+{-# LANGUAGE ScopedTypeVariables #-}
+
 module Main where
 
 import qualified Data.ByteString as BS
+import qualified Data.List as List
 import qualified Data.Maybe as Maybe
 import qualified Data.Serialize as Serialize
 import qualified Data.Set as Set
@@ -58,17 +61,29 @@ showResult f (Right x) = f x
 printText :: [Text] -> IO ()
 printText = Text.putStrLn . Text.intercalate " "
 
+tryParse :: FilePath -> IO Bool
+tryParse xmlPath = loadParse xmlPath tei logBook >>= \case
+  Left _ -> return False
+  Right _ -> return True
+
+showParsingFiles :: IO ()
+showParsingFiles = do
+  let perseusDir = "./data/xml-perseus-greek"
+  perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
+  results <- mapM (\x -> tryParse x >>= \y -> return (y, x)) $ perseusFiles
+  _ <- mapM_ (\(x, y) -> putStrLn $ (if x then "✓ " else "× ") ++ y) $ List.sort results
+  putStrLn $ show (length . filter (\(x, y) -> x) $ results) ++ " files parsed"
+
 main :: IO ()
 main = do
-  let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
-  -- let sblgntFile = "./examples/sblgnt-test.xml"
-  _ <- printText ["Reading", Text.pack sblgntFile]
-  result <- loadParse sblgntFile sblgnt emptyLog
-  showResult outputSblgntBinary $ result
+  showParsingFiles
+  -- let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
+  -- _ <- printText ["Reading", Text.pack sblgntFile]
+  -- result <- loadParse sblgntFile sblgnt emptyLog
+  -- showResult outputSblgntBinary $ result
 
   -- let perseusDir = "./data/xml-perseus-greek"
   -- let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
-  -- perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
   -- papyriFiles <- find always (fileName ~~? "*.xml") papyriDir
   -- let files = sblgntFile : perseusFiles ++ papyriFiles
   -- mapM_ loadFile files
