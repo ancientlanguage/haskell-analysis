@@ -56,6 +56,9 @@ quote = build <$> Xml.elementAttrNS (teiNS "quote") attributes children
   attributes = Xml.attribute "type"
   children = many line
 
+cit :: NodeParser Cit
+cit = Xml.elementNS (teiNS "cit") (Cit <$> quote <*> bibl)
+
 content :: NodeParser Content
 content
   = MP.try contentText
@@ -66,6 +69,7 @@ content
   <|> contentCorr
   <|> (ContentQuote <$> quote)
   <|> (ContentBibl <$> bibl)
+  <|> (ContentCit <$> cit)
 
 textPartSubtype :: Text -> Xml.AttributeParser Integer
 textPartSubtype v = do

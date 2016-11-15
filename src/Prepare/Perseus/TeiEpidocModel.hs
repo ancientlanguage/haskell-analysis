@@ -32,6 +32,12 @@ data Bibl = Bibl
   }
   deriving (Show)
 
+data Cit = Cit
+  { citQuote :: Quote
+  , citBibl :: Bibl
+  }
+  deriving (Show)
+
 data Content
   = ContentMilestone Milestone
   | ContentText Text
@@ -41,6 +47,7 @@ data Content
   | ContentGap Gap
   | ContentQuote Quote
   | ContentBibl Bibl
+  | ContentCit Cit
   deriving (Show)
 
 data Section = Section
