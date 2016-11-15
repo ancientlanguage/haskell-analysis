@@ -14,7 +14,6 @@ cabal-version: >=1.10
 library
   hs-source-dirs: src
   exposed-modules:
-    Grammar.Greek.Script.Letter,
     Prepare,
     Prepare.Decompose,
     Prepare.Log,
