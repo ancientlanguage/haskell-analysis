@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE DeriveGeneric #-}
 
 module Primary where
@@ -49,6 +50,7 @@ instance Serialize Content
 data Source = Source
   { sourceId :: Text
   , sourceTitle :: Text
+  , sourceAuthor :: Maybe Text
   , sourceLicense :: [Text]
   , sourceContents :: [Content]
   }
