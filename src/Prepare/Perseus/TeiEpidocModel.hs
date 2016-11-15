@@ -25,19 +25,20 @@ data Section = Section
   deriving (Show)
 
 data Verse = Verse
-  { verseNum :: Int
+  { verseNumber :: Int
   , verseSections :: [Section]
   }
   deriving (Show)
 
 data Chapter = Chapter
-  { chapterNum :: Int
+  { chapterNumber :: Int
   , chapterVerses :: [Verse]
   }
   deriving (Show)
 
 data Book = Book
-  { bookHead :: Text
+  { bookNumber :: Integer
+  , bookHead :: Text
   , bookChapters :: [Chapter]
   }
   deriving (Show)

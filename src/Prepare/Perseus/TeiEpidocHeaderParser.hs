@@ -1,7 +1,6 @@
 module Prepare.Perseus.TeiEpidocHeaderParser where
 
 import Prelude hiding (Word)
-import Control.Monad (guard)
 import Prepare.Perseus.TeiEpidocHeaderModel
 import Prepare.Perseus.TeiEpidocParserCommon
 import Prepare.Xml.Parser (NodeParser, (<|>), many, optional)
@@ -85,10 +84,7 @@ refsDeclCts :: NodeParser RefsDecl
 refsDeclCts = build <$> Xml.elementAttrNS (teiNS "refsDecl") attributes children
   where
   build (_, x) = x
-  attributes = do
-    n <- Xml.attribute "n"
-    guard (n == "CTS")
-    return ()
+  attributes = Xml.attributeValue "n" "CTS"
   children = RefsDeclCts <$> many cRefPattern
 
 refState :: NodeParser RefState

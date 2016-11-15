@@ -12,6 +12,7 @@ module Prepare.Xml.Parser
   , elementEmpty
   , elementEmptyNS
   , attribute
+  , attributeValue
   , attributeNS
   , attributeXml
   , content
@@ -146,8 +147,15 @@ attributeName :: Name -> (Name, Text) -> Either XmlError Text
 attributeName n' (n, v) | n == n' = Right v
 attributeName _ _ = Left XmlError
 
+attributeNameValue :: Name -> Text -> (Name, Text) -> Either XmlError ()
+attributeNameValue n' v' (n, v) | n == n' && v == v' = Right ()
+attributeNameValue _ _ _ = Left XmlError
+
 attribute :: Text -> AttributeParser Text
 attribute = tokenN . attributeName . localName
+
+attributeValue :: Text -> Text -> AttributeParser ()
+attributeValue t v = tokenN $ attributeNameValue (localName t) v
 
 attributeNS :: Name -> AttributeParser Text
 attributeNS = tokenN . attributeName
