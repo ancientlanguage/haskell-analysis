@@ -24,8 +24,41 @@ data TitleStmt = TitleStmt
   }
   deriving (Show)
 
+data PublicationStmt = PublicationStmt
+  { publicationStmtPublisher :: Text
+  , publicationStmtPubPlace :: Text
+  , publicationStmtAuthority :: Text
+  }
+  deriving (Show)
+
+data Imprint = Imprint
+  { imprintPublisher :: Text
+  , imprintDate :: Text
+  }
+  deriving (Show)
+
+data Monogr = Monogr
+  { monogrAuthor :: Text
+  , monogrTitle :: Text
+  , monogrImprint :: Imprint 
+  }
+  deriving (Show)
+
+data BiblStruct = BiblStruct
+  { biblStructMonogr :: Monogr
+  }
+  deriving (Show)
+
+data SourceDesc = SourceDesc
+  { sourceDescBiblStruct :: BiblStruct
+  }
+  deriving (Show)
+
 data FileDesc = FileDesc
   { fileDescTitleStmt :: TitleStmt
+  , fileDescExtent :: Text
+  , fileDescPublicationStmt :: PublicationStmt
+  , fileDescSourceDesc :: SourceDesc
   }
   deriving (Show)
 

@@ -16,6 +16,24 @@
             </respStmt>
             <funder n="org:AnnCPB">The Annenberg CPB/Project</funder>
          </titleStmt>
+         <extent>about 548Kb</extent>
+         <publicationStmt>
+            <publisher>Trustees of Tufts University</publisher>
+            <pubPlace>Medford, MA</pubPlace>
+            <authority>Perseus Project</authority>
+         </publicationStmt>
+         <sourceDesc>
+            <biblStruct>
+               <monogr>
+                  <author>Xenophon</author>
+                  <title>Xenophontis opera omnia, vol. 1</title>
+                  <imprint>
+                     <publisher>Oxford, Clarendon Press</publisher>
+                     <date>1900 (repr. 1968)</date>
+                  </imprint>
+               </monogr>
+            </biblStruct>
+         </sourceDesc>
       </fileDesc>
    </teiHeader>
 </TEI>

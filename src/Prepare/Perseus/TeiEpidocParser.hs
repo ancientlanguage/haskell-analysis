@@ -26,25 +26,58 @@ funder = build <$> Xml.elementContentAttrNS (teiNS "funder") attributes
 respStmt :: NodeParser RespStmt
 respStmt = Xml.elementNS (teiNS "respStmt") children
   where
-  children = do
-    r <- xmlContent "resp"
-    ns <- many (xmlContent "name")
-    return $ RespStmt r ns
+  children = pure RespStmt
+    <*> xmlContent "resp"
+    <*> many (xmlContent "name")
 
 titleStmt :: NodeParser TitleStmt
 titleStmt = Xml.elementNS (teiNS "titleStmt") children
   where
-  children = do
-    t <- xmlContent "title"
-    a <- xmlContent "author"
-    s <- xmlContent "sponsor"
-    p <- xmlContent "principal"
-    r <- respStmt
-    f <- funder
-    return $ TitleStmt t a s p r f
+  children = pure TitleStmt
+    <*> xmlContent "title"
+    <*> xmlContent "author"
+    <*> xmlContent "sponsor"
+    <*> xmlContent "principal"
+    <*> respStmt
+    <*> funder
+
+imprint :: NodeParser Imprint
+imprint = Xml.elementNS (teiNS "imprint") children
+  where
+  children = pure Imprint
+    <*> xmlContent "publisher"
+    <*> xmlContent "date"
+
+monogr :: NodeParser Monogr
+monogr = Xml.elementNS (teiNS "monogr") children
+  where
+  children = pure Monogr
+    <*> xmlContent "author"
+    <*> xmlContent "title"
+    <*> imprint
+
+biblStruct :: NodeParser BiblStruct
+biblStruct = BiblStruct <$> Xml.elementNS (teiNS "biblStruct") monogr
+
+sourceDesc :: NodeParser SourceDesc
+sourceDesc = SourceDesc <$> Xml.elementNS (teiNS "sourceDesc") biblStruct
+
+publicationStmt :: NodeParser PublicationStmt
+publicationStmt = Xml.elementNS (teiNS "publicationStmt") children
+  where
+  children = pure PublicationStmt
+    <*> xmlContent "publisher"
+    <*> xmlContent "pubPlace"
+    <*> xmlContent "authority"
 
 fileDesc :: NodeParser FileDesc
-fileDesc = FileDesc <$> Xml.elementNS (teiNS "fileDesc") titleStmt
+fileDesc = Xml.elementNS (teiNS "fileDesc") children
+  where
+  children = pure FileDesc
+    <*> titleStmt
+    <*> xmlContent "extent"
+    <*> publicationStmt
+    <*> sourceDesc
 
 teiHeader :: NodeParser TeiHeader
 teiHeader = build <$> Xml.elementAttrNS (teiNS "teiHeader") attributes children
