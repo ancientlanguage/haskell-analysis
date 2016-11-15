@@ -85,10 +85,10 @@ cRefPattern = build <$> Xml.elementAttrNS (teiNS "cRefPattern") attributes child
   where
   build ((n, mp, rp), p) = CRefPattern n mp rp p
   attributes = do
-    n <- Xml.attribute "n"
     mp <- Xml.attribute "matchPattern"
+    n <- Xml.attribute "n"
     rp <- Xml.attribute "replacementPattern"
-    return (n, mp, rp)
+    return (mp, n, rp)
   children = Xml.elementContentNS (teiNS "p")
 
 refsDeclCts :: NodeParser RefsDecl
@@ -101,8 +101,22 @@ refsDeclCts = build <$> Xml.elementAttrNS (teiNS "refsDecl") attributes children
     return ()
   children = RefsDeclCts <$> many cRefPattern
 
+refState :: NodeParser RefState
+refState = build <$> Xml.elementAttrNS (teiNS "refState") attributes Xml.end
+  where
+  build (x, _) = x
+  attributes = do
+    d <- optional (Xml.attribute "delim")
+    u <- Xml.attribute "unit"
+    return $ RefState u d
+
+refsDeclState :: NodeParser RefsDecl
+refsDeclState = RefsDeclState <$> Xml.elementNS (teiNS "refsDecl") (many refState)
+
 refsDecl :: NodeParser RefsDecl
-refsDecl = refsDeclCts -- <|> refsDeclState
+refsDecl
+  = MP.try refsDeclCts
+  <|> refsDeclState
 
 encodingDesc :: NodeParser EncodingDesc
 encodingDesc = Xml.elementNS (teiNS "encodingDesc") children
@@ -113,11 +127,14 @@ encodingDesc = Xml.elementNS (teiNS "encodingDesc") children
 teiHeader :: NodeParser TeiHeader
 teiHeader = build <$> Xml.elementAttrNS (teiNS "teiHeader") attributes children
   where
-  build (t, fd) = TeiHeader t fd
+  build (t, (fd, ed)) = TeiHeader t fd ed
   attributes = do
     t <- Xml.attribute "type"
     return t
-  children = fileDesc
+  children = do
+    fd <- fileDesc
+    ed <- encodingDesc
+    return (fd, ed)
 
 tei :: NodeParser Tei
 tei = Xml.elementNS (teiNS "TEI") children 

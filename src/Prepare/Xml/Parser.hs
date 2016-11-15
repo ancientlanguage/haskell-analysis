@@ -179,7 +179,7 @@ elementFullNS
   -> NodeParser (a, c)
 elementFullNS name attributeParser childrenParser = do
   el <- elementPlainNS name
-  attributeResult <- parseNested "Attribute" attributeParser (elementAttributes el) 
+  attributeResult <- parseNested "Attribute" attributeParser (List.sort $ elementAttributes el) 
   childrenResult <- parseNested "Child" childrenParser (elementNodes el)
   return (attributeResult, childrenResult)
 

@@ -89,6 +89,7 @@ data EncodingDesc = EncodingDesc
 data TeiHeader = TeiHeader
   { teiHeaderType :: Text
   , teiHeaderFileDesc :: FileDesc
+  , teiHeaderEncodingDesc :: EncodingDesc
   }
   deriving (Show)
 
