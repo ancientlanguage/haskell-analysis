@@ -124,7 +124,7 @@ contentChunkJoin ctx xs = spacedText
 getChapter :: [Content] -> Maybe Integer
 getChapter = foldr go Nothing
   where
-  go (ContentMilestone (MilestoneVerse (Verse c _))) _ = Just c
+  go (ContentMilestone (MilestoneDivision (Division _ (Just c) _ _))) _ = Just c
   go _ r = r
 
 groupByChapter :: [[Content]] -> [[[Content]]]
@@ -141,10 +141,11 @@ content ctx (ContentWord w) = word ctx w
 
 milestone :: Output Milestone
 milestone _ MilestoneParagraph = "p"
-milestone ctx (MilestoneVerse v) = verse ctx v
+milestone ctx (MilestoneDivision v) = division ctx v
 
-verse :: Output Verse
-verse _ (Verse cn vn) = spacedText [ "v", num cn, num vn ]
+division :: Output Division
+division _ (Division _ (Just cn) (Just vn) _) = spacedText [ "v", num cn, num vn ]
+division _ (Division _ _ _ _) = spacedText [ "v", num (0 :: Int), num (0 :: Int) ]
 
 word :: Output Word
 word _ (Word p t s) | Text.null p, Text.null s = spacedText [ "w", quoted (decompose t) ]

@@ -22,6 +22,7 @@ library
     Prepare.Perseus.TeiEpidocModel,
     Prepare.Perseus.TeiEpidocParser,
     Prepare.Perseus.TeiEpidocParserCommon,
+    Prepare.Perseus.TeiEpidocUnify,
     Prepare.Sblgnt.Model,
     Prepare.Sblgnt.Parser,
     Prepare.Sblgnt.Unify,

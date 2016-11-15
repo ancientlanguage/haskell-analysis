@@ -3,7 +3,7 @@ packages:
 - '.'
 - location:
     git: https://github.com/ancientlanguage/haskell-primary-type.git
-    commit: 1e2728bfdab70f152968a096dbbce43231354234
+    commit: ec0d771f98d1a0f61c42dfbdc3d5a40965753bde
   extra-dep: true
 extra-deps: []
 flags: {}
