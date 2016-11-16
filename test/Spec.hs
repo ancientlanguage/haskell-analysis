@@ -80,22 +80,21 @@ vocalicSyllableTestGroup = testGroup "vocalic syllables" $
 
 finalTestGroup = testGroup "final forms" $
   [ testRoundFwd Rounds.final "medial and final sigma"
-    [ ((L_σ, NotFinal), ())
-    , ((L_σ, IsFinal), ())
-    ]
+    $ [ ((L_σ, NotFinal), ()), ((L_σ, IsFinal), ())] :^ NotElided
   , testRoundFwd Rounds.final "medial sigma, final alpha"
-    [ ((L_σ, NotFinal), ())
-    , ((L_α, IsFinal), ())
-    ]
+    $ [ ((L_σ, NotFinal), ()), ((L_α, IsFinal), ())] :^ NotElided
+  , testRoundFwd Rounds.final "medial sigma in final position with elision"
+    $ [ ((L_σ, NotFinal), ())] :^ IsElided
   , nonFinalSigmaFailure
   ]
   where
   nonFinalSigmaFailure = testCase "non-final sigma failure" $ do
     let
       input =
-        [ ((L_α, NotFinal), ())
-        , ((L_σ, NotFinal), ())
+        [ ((L_α, NotFinal), ()), ((L_σ, NotFinal), ())
         ]
+        :^
+        NotElided
     let x = (roundFwdTo Rounds.final) input
     assertEqual "expect fail on non-final sigma in final position" True (isJust $ x ^? _Failure)
 

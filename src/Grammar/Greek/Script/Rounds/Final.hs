@@ -1,6 +1,6 @@
 module Grammar.Greek.Script.Rounds.Final where
 
-import Control.Lens (over)
+import Control.Lens (over, _1)
 import Data.Either.Validation
 import Grammar.Common.Round
 import Grammar.Common.Types
@@ -11,12 +11,13 @@ data InvalidFinals
   | FinalInMedialPosition Letter
   deriving (Show)
 
-final :: RoundFwd [InvalidFinals] [(Letter :* Final) :* a] [Letter :* a]
+final :: RoundFwd [InvalidFinals] ([(Letter :* Final) :* a] :* Elision) ([Letter :* a] :* Elision)
 final = makeRoundFwd to from
   where
-  to xs = over _Success reverse $ case reverse xs of
-    [] -> Success []
-    ((q, a) : xs') -> pure (:) <*> pureFst a (checkFinal q) <*> ensureMedials xs'
+  to (xs, el@NotElided) = over (_Success . _1) reverse $ case reverse xs of
+    [] -> Success $ [] :^ el
+    ((q, a) : xs') -> pure (:^ el) <*> (pure (:) <*> pureFst a (checkFinal q) <*> ensureMedials xs')
+  to (xs, el@IsElided) = pure (:^ el) <*> (ensureMedials xs)
 
   pureFst a mq = pure (\x -> (x, a)) <*> mq
 
@@ -30,6 +31,9 @@ final = makeRoundFwd to from
     check (l, NotFinal) = Success l
     check (l, IsFinal) = Failure [FinalInMedialPosition l]
 
-  from xs = reverse $ case reverse xs of
+  from (xs, el@NotElided) = setWordFinal xs :^ el
+  from (xs, el@IsElided) = fmap (\(l, a) -> ((l :^ NotFinal), a)) xs :^ el
+
+  setWordFinal xs = reverse $ case reverse xs of
     [] -> []
     ((l, a) : xs') -> ((l, IsFinal), a) : fmap (\(l', a') -> ((l', NotFinal), a')) xs'

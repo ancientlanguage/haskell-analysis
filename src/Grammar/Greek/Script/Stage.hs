@@ -90,8 +90,8 @@ final :: RoundContext ctx [Rounds.InvalidFinals] Void
   (([(Letter :* Final) :* Case :* [Mark]] :* Elision) :* HasWordPunctuation)
   (([Letter :* Case :* [Mark]] :* Elision) :* HasWordPunctuation)
 final = Round
-  (traverseWithItemContext . _1 . _1 $ roundFwdTo Rounds.final)
-  (traverseWithItemContext . _1 . _1 $ liftRoundFwdFrom Rounds.final)
+  (traverseWithItemContext . _1 $ roundFwdTo Rounds.final)
+  (traverseWithItemContext . _1 $ liftRoundFwdFrom Rounds.final)
 
 capitalization :: RoundContext ctx Rounds.InvalidUppercase Void
   (([Letter :* Case :* [Mark]] :* Elision) :* HasWordPunctuation)
