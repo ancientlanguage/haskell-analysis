@@ -59,7 +59,7 @@ data Section = Section
 
 data Chapter = Chapter
   { chapterNumber :: Integer
-  , chapterVerses :: [Section]
+  , chapterSections :: [Section]
   }
   deriving (Show)
 

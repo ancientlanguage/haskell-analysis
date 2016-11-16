@@ -28,19 +28,27 @@ getSourceMetadata h = Primary.Source sid t (Just a) lic []
   a = Header.titleStmtAuthor titleStmt
   lic = []
 
-getSectionContents :: Section -> [Primary.Content]
-getSectionContents _ = []
+unifyContent :: Content -> [Primary.Content]
+unifyContent _ = []
 
-getChapterContents :: Chapter -> [Primary.Content]
-getChapterContents _ = []
+getSectionContents :: Primary.Division -> Section -> [Primary.Content]
+getSectionContents d (Section sn cs)
+  = Primary.ContentMilestone (Primary.MilestoneDivision (d { Primary.divisionSection = Just sn }))
+  : concatMap unifyContent cs
 
-getBookContents :: Book -> [Primary.Content]
-getBookContents _ = []
+getChapterContents :: Primary.Division -> Chapter -> [Primary.Content]
+getChapterContents d (Chapter cn ss) = concatMap (getSectionContents $ d { Primary.divisionChapter = Just cn}) ss
+
+getBookContents :: Primary.Division -> Book -> [Primary.Content]
+getBookContents d (Book bn _ cs) = concatMap (getChapterContents $ d { Primary.divisionBook = Just bn }) cs
+
+emptyDivision :: Primary.Division
+emptyDivision = Primary.Division Nothing Nothing Nothing Nothing
 
 getDivisionContents :: Division -> [Primary.Content]
-getDivisionContents (DivisionBooks xs) = concatMap getBookContents xs
-getDivisionContents (DivisionChapters xs) = concatMap getChapterContents xs
-getDivisionContents (DivisionSections xs) = concatMap getSectionContents xs
+getDivisionContents (DivisionBooks xs) = concatMap (getBookContents emptyDivision) xs
+getDivisionContents (DivisionChapters xs) = concatMap (getChapterContents emptyDivision) xs
+getDivisionContents (DivisionSections xs) = concatMap (getSectionContents emptyDivision) xs
 
 getEditionContents :: Edition -> [Primary.Content]
 getEditionContents (Edition _ _ d) = getDivisionContents d
