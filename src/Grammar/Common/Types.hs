@@ -24,15 +24,17 @@ data SourceId = SourceId
   deriving (Eq, Show, Ord, Generic)
 instance Serialize SourceId
 
-data Verse = Verse
-  { verseChapter :: Integer
-  , verseNumber :: Integer
+data Division = Division
+  { divisionBook :: Maybe Integer
+  , divisionChapter :: Maybe Integer
+  , divisionVerse :: Maybe Integer
+  , divisionSection :: Maybe Integer
   }
   deriving (Eq, Show, Ord, Generic)
-instance Serialize Verse
+instance Serialize Division
 
 newtype Paragraph = Paragraph { getParagraph :: Int }
   deriving (Eq, Show, Ord, Generic)
 instance Serialize Paragraph
 
-type Milestone = Maybe Verse :* Maybe Paragraph
+type Milestone = Maybe Division :* Maybe Paragraph

@@ -7,9 +7,15 @@ import Grammar.Common.Types
 textShow :: Show a => a -> Text
 textShow = Text.pack . show
 
-prettyMilestone :: Maybe Verse :* Maybe Paragraph -> Text
+prettyMilestone :: Maybe Division :* Maybe Paragraph -> Text
 prettyMilestone (Nothing, _) = ""
-prettyMilestone (Just (Verse c v), _) = Text.concat [textShow c, ":", textShow v]
+prettyMilestone (Just (Division b c v s), _)
+  = Text.intercalate "."
+  . filter (\x -> not . Text.null $ x)
+  $ [ms b, ms c, ms v, ms s]
+  where
+  ms Nothing = ""
+  ms (Just x) = textShow x
 
 prettySource :: Show a => SourceId :* Milestone :* a -> Text
 prettySource (SourceId g s, (m, x)) = Text.intercalate " " $

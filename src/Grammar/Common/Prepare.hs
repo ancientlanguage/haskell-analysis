@@ -7,8 +7,8 @@ import Data.Text (Text)
 import qualified Primary
 import Grammar.Common.Types
 
-toLocalVerse :: Primary.Verse -> Verse
-toLocalVerse (Primary.Verse c v) = Verse c v
+toLocalDivision :: Primary.Division -> Division
+toLocalDivision (Primary.Division b c v s) = Division b c v s
 
 emptyMilestone :: Milestone
 emptyMilestone = (Nothing, Nothing)
@@ -40,7 +40,7 @@ prepareContents = go emptyMilestone
   where
   go :: Milestone -> [Primary.Content] -> [Milestone :* Primary.Word]
   go _ [] = []
-  go m (Primary.ContentMilestone (Primary.MilestoneVerse x) : xs) = go (over _1 (const (Just (toLocalVerse x))) m) xs
+  go m (Primary.ContentMilestone (Primary.MilestoneDivision x) : xs) = go (over _1 (const (Just (toLocalDivision x))) m) xs
   go m (Primary.ContentMilestone Primary.MilestoneParagraph : xs) = go (over _2 nextParagraph m) xs
   go m (Primary.ContentWord w : xs) = (m , w) : go m xs
 
