@@ -33,19 +33,36 @@ getMilestoneContents :: Milestone -> [Primary.Content]
 getMilestoneContents (Milestone u _) | u == "para" = pure $ Primary.ContentMilestone Primary.MilestoneParagraph
 getMilestoneContents _ = []
 
+isGreekChar :: Char -> Bool
+isGreekChar x 
+  = x /= '\x037e' -- Greek question mark
+  && ((x >= '\x0370' && x <= '\x03ff')
+    || (x >= '\x1f00' && x <= '\x1fff'))
+
 buildPrimaryWord :: Text -> Primary.Word
-buildPrimaryWord t = Primary.Word pre core suff
+buildPrimaryWord t
+  = Primary.Word
+    (Text.filter (not . isPrefixApparatusChar) pre)
+    (Text.map unifyApostrophe core)
+    (Text.filter (not . isSuffixApparatusChar) suff)
   where
   pre = Text.takeWhile (not . isGreekChar) $ t
-  core = Text.map unifyApostrophe . Text.takeWhile isCore . Text.drop (Text.length pre) $ t
+  core = Text.takeWhile isCore . Text.drop (Text.length pre) $ t
   suff = Text.drop (Text.length pre + Text.length core) $ t
   isCore x = isGreekChar x || isApostrophe x
-  isGreekChar x
-    = (x >= '\x0370' && x <= '\x03ff')
-    || (x >= '\x1f00' && x <= '\x1fff')
   isApostrophe x = x == '\x02BC' || x == '\x2019' || x == '\x0027'
   unifyApostrophe x | isApostrophe x = '\x2019'
   unifyApostrophe x = x
+  isPrefixApparatusChar x
+    = x == '<'
+    || x == '['
+    || x == '†'
+  isSuffixApparatusChar x
+    = x == '['
+    || x == ']'
+    || x == '†'
+    || x == ']'
+    || x == '>'
 
 extractWords :: Text -> [Primary.Content]
 extractWords = fmap (Primary.ContentWord . buildPrimaryWord) . Text.words
@@ -78,10 +95,16 @@ mergeSuffixes = foldr go []
     | Text.null t' = Primary.ContentWord (Primary.Word p t (Text.concat [s, p', s'])) : cs
   go c cs = c : cs
 
+splitWordInSuffix :: Primary.Content -> [Primary.Content]
+splitWordInSuffix (Primary.ContentWord (Primary.Word p t s)) | Text.any isGreekChar s
+  = let (Primary.Word p' t' s') = buildPrimaryWord s
+  in fmap Primary.ContentWord [Primary.Word p t p', Primary.Word "" t' s']
+splitWordInSuffix c = [c]
+
 getSectionContents :: Primary.Division -> Section -> [Primary.Content]
 getSectionContents d (Section sn cs)
   = Primary.ContentMilestone (Primary.MilestoneDivision (d { Primary.divisionSection = Just sn }))
-  : (mergeSuffixes . concatMap unifyContent $ cs)
+  : (concatMap splitWordInSuffix . mergeSuffixes . concatMap unifyContent $ cs)
 
 getChapterContents :: Primary.Division -> Chapter -> [Primary.Content]
 getChapterContents d (Chapter cn ss) = concatMap (getSectionContents $ d { Primary.divisionChapter = Just cn}) ss

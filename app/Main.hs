@@ -73,10 +73,34 @@ showParsingFiles files = do
   _ <- mapM_ (\(x, y) -> putStrLn $ (if x then "✓ " else "× ") ++ y) . List.sort . fmap (\(x, y) -> (Either.isRight x, y)) $ results
   putStrLn $ show (length . filter (\(x, _) -> Either.isRight x) $ results) ++ " files parsed"
 
-dumpInvalidWords :: [Primary.Group] -> IO ()
-dumpInvalidWords gs = do
-  mapM_ dumpInvalids $ concatMap Primary.groupSources gs
+getPrimaryWords :: Primary.Content -> [Primary.Word]
+getPrimaryWords (Primary.ContentWord w) = [w]
+getPrimaryWords (Primary.ContentMilestone _) = []
 
+dumpAffixes :: [Primary.Group] -> IO ()
+dumpAffixes gs = do
+  _ <- putStrLn "Prefixes: "
+  mapM_ (Text.putStrLn . Text.append "  ") prefixes
+  _ <- putStrLn ""
+  _ <- putStrLn "Suffixes: "
+  mapM_ (Text.putStrLn . Text.append "  ") suffixes
+  where
+  prefixes
+    = Set.fromList
+    . fmap Primary.wordPrefix
+    $ words
+  suffixes
+    = Set.fromList
+    . fmap Primary.wordSuffix
+    $ words
+  words
+    = concatMap getPrimaryWords
+    . concatMap Primary.sourceContents
+    . concatMap Primary.groupSources
+    $ gs
+
+dumpInvalidWords :: [Primary.Group] -> IO ()
+dumpInvalidWords gs = mapM_ dumpInvalids $ concatMap Primary.groupSources gs
   where
   dumpInvalids s =
     let invalids = getInvalids (concatMap getPrimaryWords $ Primary.sourceContents s)
@@ -88,14 +112,18 @@ dumpInvalidWords gs = do
         mapM_ (Text.putStrLn . Text.append "  ") invalids
   getInvalids
     = Set.fromList
-    . fmap (\(Primary.Word x y z) -> Text.concat [x, y, z])
-    . filter (\(Primary.Word _ x _) -> Text.null x || not (Text.all isCore x))
-  getPrimaryWords (Primary.ContentWord w) = [w]
-  getPrimaryWords (Primary.ContentMilestone _) = []
-  isCore x
-    = (x >= '\x0370' && x <= '\x03ff')
-    || (x >= '\x1f00' && x <= '\x1fff')
-    || x == '\x2019' -- apostrophe
+    . fmap (\(Primary.Word x y z) -> Text.intercalate " || " [x, y, z])
+    . filter isInvalid
+  isInvalid (Primary.Word p t s)
+    = Text.null t
+    || not (Text.all isCore t)
+    || Text.any isGreekChar p
+    || Text.any isGreekChar s
+  isGreekChar x 
+    = x /= '\x037e' -- Greek question mark
+    && ((x >= '\x0370' && x <= '\x03ff')
+      || (x >= '\x1f00' && x <= '\x1fff'))
+  isCore x = isGreekChar x || x == '\x2019' -- apostrophe
 
 main :: IO ()
 main = do
@@ -113,8 +141,8 @@ main = do
     tryAdd (Left _) xs = xs
     tryAdd (Right x) xs = x : xs
   let successful = tryAdd sblgntResult [perseusGroup]
---  dumpInvalidWords successful
-  outputBinaryGroups successful
+  dumpInvalidWords successful
+--  outputBinaryGroups successful
 
   -- let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
   -- papyriFiles <- find always (fileName ~~? "*.xml") papyriDir
