@@ -32,8 +32,17 @@ getMilestoneContents :: Milestone -> [Primary.Content]
 getMilestoneContents (Milestone u _) | u == "para" = pure $ Primary.ContentMilestone Primary.MilestoneParagraph
 getMilestoneContents _ = []
 
+buildPrimaryWord :: Text -> Primary.Word
+buildPrimaryWord t = Primary.Word pre core suff
+  where
+  pre = Text.takeWhile Char.isPunctuation $ t
+  core = Text.dropWhile Char.isPunctuation $ t
+  suff = Text.dropWhile isCore core
+  isCore x = Char.isLetter x || Char.isMark x || isApostrophe x
+  isApostrophe x = x == '\x02BC' || x == '\x2019' || x == '\x0027' 
+
 extractWords :: Text -> [Primary.Content]
-extractWords _ = []
+extractWords = fmap (Primary.ContentWord . buildPrimaryWord) . Text.words
 
 getLineContents :: Line -> [Primary.Content]
 getLineContents (Line _ t) = extractWords t
@@ -89,3 +98,6 @@ unify :: Tei -> Primary.Source
 unify (Tei h t) = meta { Primary.sourceContents = getTextContents t }
   where
   meta = getSourceMetadata h
+
+perseusGroup :: Primary.Group
+perseusGroup = Primary.Group "Perseus" Primary.Greek "Perseus" ["Perseus texts"] []
