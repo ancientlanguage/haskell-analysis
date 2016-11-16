@@ -2,10 +2,10 @@
 
 module Main where
 
+import Prelude hiding (words)
 import qualified Data.ByteString as BS
 import qualified Data.Either as Either
 import qualified Data.List as List
-import qualified Data.Maybe as Maybe
 import qualified Data.Serialize as Serialize
 import qualified Data.Set as Set
 import Data.Text (Text)
@@ -73,7 +73,29 @@ showParsingFiles files = do
   _ <- mapM_ (\(x, y) -> putStrLn $ (if x then "✓ " else "× ") ++ y) . List.sort . fmap (\(x, y) -> (Either.isRight x, y)) $ results
   putStrLn $ show (length . filter (\(x, _) -> Either.isRight x) $ results) ++ " files parsed"
 
+dumpInvalidWords :: [Primary.Group] -> IO ()
+dumpInvalidWords gs = do
+  mapM_ dumpInvalids $ concatMap Primary.groupSources gs
 
+  where
+  dumpInvalids s =
+    let invalids = getInvalids (concatMap getPrimaryWords $ Primary.sourceContents s)
+    in
+      if List.null invalids
+      then return ()
+      else do
+        _ <- Text.putStrLn (Primary.sourceId s)
+        mapM_ (Text.putStrLn . Text.append "  ") invalids
+  getInvalids
+    = Set.fromList
+    . fmap (\(Primary.Word x y z) -> Text.concat [x, y, z])
+    . filter (\(Primary.Word _ x _) -> Text.null x || not (Text.all isCore x))
+  getPrimaryWords (Primary.ContentWord w) = [w]
+  getPrimaryWords (Primary.ContentMilestone _) = []
+  isCore x
+    = (x >= '\x0370' && x <= '\x03ff')
+    || (x >= '\x1f00' && x <= '\x1fff')
+    || x == '\x2019' -- apostrophe
 
 main :: IO ()
 main = do
@@ -91,6 +113,7 @@ main = do
     tryAdd (Left _) xs = xs
     tryAdd (Right x) xs = x : xs
   let successful = tryAdd sblgntResult [perseusGroup]
+--  dumpInvalidWords successful
   outputBinaryGroups successful
 
   -- let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"

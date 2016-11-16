@@ -14,9 +14,9 @@ makeId author title = Text.intercalate "_" [hack author, hack title]
   hack :: Text -> Text
   hack
     = Text.dropWhileEnd (\x -> Char.isPunctuation x || x == '_')
-    . Text.filter (\x -> Char.isLetter x || x == '_')
+    . Text.filter (\x -> Char.isLetter x || Char.isNumber x || x == '_')
     . Text.intercalate "_"
-    . Text.split (\x -> x == ' ' || x == '.')
+    . Text.split (\x -> x == ' ' || x == '.' || x == '-')
     . Text.replace "Greek" ""
     . Text.replace "Machine readable text" ""
 
@@ -36,10 +36,13 @@ getMilestoneContents _ = []
 buildPrimaryWord :: Text -> Primary.Word
 buildPrimaryWord t = Primary.Word pre core suff
   where
-  pre = Text.takeWhile Char.isPunctuation $ t
-  core = Text.map unifyApostrophe . Text.takeWhile isCore . Text.dropWhile Char.isPunctuation $ t
-  suff = Text.dropWhile isCore . Text.dropWhile Char.isPunctuation $ t
-  isCore x = Char.isLetter x || Char.isMark x || isApostrophe x
+  pre = Text.takeWhile (not . isCore) $ t
+  core = Text.map unifyApostrophe . Text.takeWhile isCore . Text.drop (Text.length pre) $ t
+  suff = Text.drop (Text.length pre + Text.length core) $ t
+  isCore x
+    = (x >= '\x0370' && x <= '\x03ff')
+    || (x >= '\x1f00' && x <= '\x1fff')
+    || isApostrophe x
   isApostrophe x = x == '\x02BC' || x == '\x2019' || x == '\x0027'
   unifyApostrophe x | isApostrophe x = '\x2019'
   unifyApostrophe x = x
@@ -68,10 +71,17 @@ unifyContent (ContentQuote q) = getQuoteContents q
 unifyContent (ContentBibl _) = []
 unifyContent (ContentCit c) = getCitContents c
 
+mergeSuffixes :: [Primary.Content] -> [Primary.Content]
+mergeSuffixes = foldr go []
+  where
+  go (Primary.ContentWord (Primary.Word p t s)) (Primary.ContentWord (Primary.Word p' t' s') : cs)
+    | Text.null t' = Primary.ContentWord (Primary.Word p t (Text.concat [s, p', s'])) : cs
+  go c cs = c : cs
+
 getSectionContents :: Primary.Division -> Section -> [Primary.Content]
 getSectionContents d (Section sn cs)
   = Primary.ContentMilestone (Primary.MilestoneDivision (d { Primary.divisionSection = Just sn }))
-  : concatMap unifyContent cs
+  : (mergeSuffixes . concatMap unifyContent $ cs)
 
 getChapterContents :: Primary.Division -> Chapter -> [Primary.Content]
 getChapterContents d (Chapter cn ss) = concatMap (getSectionContents $ d { Primary.divisionChapter = Just cn}) ss
