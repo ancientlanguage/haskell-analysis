@@ -13,7 +13,8 @@ makeId author title = Text.intercalate "_" [hack author, hack title]
   where
   hack :: Text -> Text
   hack
-    = Text.filter (\x -> Char.isLetter x || x == '_')
+    = Text.dropWhileEnd (\x -> Char.isPunctuation x || x == '_')
+    . Text.filter (\x -> Char.isLetter x || x == '_')
     . Text.intercalate "_"
     . Text.split (\x -> x == ' ' || x == '.')
     . Text.replace "Greek" ""
@@ -36,10 +37,12 @@ buildPrimaryWord :: Text -> Primary.Word
 buildPrimaryWord t = Primary.Word pre core suff
   where
   pre = Text.takeWhile Char.isPunctuation $ t
-  core = Text.dropWhile Char.isPunctuation $ t
-  suff = Text.dropWhile isCore core
+  core = Text.takeWhile isCore . Text.dropWhile Char.isPunctuation $ t
+  suff = Text.map unifyApostrophe . Text.dropWhile isCore . Text.dropWhile Char.isPunctuation $ t
   isCore x = Char.isLetter x || Char.isMark x || isApostrophe x
-  isApostrophe x = x == '\x02BC' || x == '\x2019' || x == '\x0027' 
+  isApostrophe x = x == '\x02BC' || x == '\x2019' || x == '\x0027'
+  unifyApostrophe x | isApostrophe x = '\x2019'
+  unifyApostrophe x = x
 
 extractWords :: Text -> [Primary.Content]
 extractWords = fmap (Primary.ContentWord . buildPrimaryWord) . Text.words
