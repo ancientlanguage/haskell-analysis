@@ -107,7 +107,7 @@ data Capitalization = IsCapitalized | NotCapitalized
   deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize Capitalization
 
-data Crasis = HasCrasis | NoCrasis
+data Crasis = HasCrasis Int | NoCrasis
   deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize Crasis
 

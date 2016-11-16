@@ -1,5 +1,6 @@
 module Grammar.Greek.Script.Rounds.Breathing where
 
+import Control.Lens (over)
 import Data.Either.Validation
 import Grammar.Common.Round
 import Grammar.Common.Types
@@ -7,35 +8,60 @@ import Grammar.Greek.Script.Types
 
 data InvalidBreathing c v a
   = InvalidInitialBreathing ([c] :* v :* a :* Maybe Breathing)
-  | InvalidMedialBreathing ([c] :* v :* a :* Maybe Breathing)
+  | InvalidInitialRough ([c] :* v :* a :* Maybe Breathing)
+  | InvalidMedialRough (Int :* [c] :* v :* a :* Maybe Breathing)
+  | MultipleCrasis [Crasis]
   deriving (Show)
 
-breathing :: RoundFwd [InvalidBreathing c v a]
+breathing :: forall c v a. RoundFwd [InvalidBreathing c v a]
   ([[c] :* v :* a :* Maybe Breathing])
   ([[c] :* v :* a] :* MarkPreservation :* Crasis :* InitialAspiration)
 breathing = makeRoundFwd to from
   where
-  to [] = Success ([], (PreserveMarks, (NoCrasis, NoInitialAspiration)))
-  to (x : xs) = (\(x', (v, a)) xs' -> (x' : xs', (v, a))) <$> checkInitial x <*> allMedial xs
+  to [] = Success $ [] :^ PreserveMarks :^ NoCrasis :^ NoInitialAspiration
+  to (x : xs) = case getInitial x of
+    Failure e1 -> Failure e1
+    Success (mp, (c, asp)) -> case getAllCrasis xs of
+      Failure e2 -> Failure e2
+      Success cs -> case validateAllCrasis c cs of
+        Failure e3 -> Failure e3
+        Success c' -> Success $ fmap dropBreathing (x : xs) :^ mp :^ c' :^ asp
 
-  checkInitial (cs@[] :^ v :^ a :^ Nothing) = Success $ (cs :^ v :^ a) :^ Unmarked :^ NoCrasis :^ NoInitialAspiration
-  checkInitial (cs@[] :^ v :^ a :^ Just B_Smooth) = Success $ (cs :^ v :^ a) :^ PreserveMarks :^ NoCrasis :^ NoInitialAspiration
-  checkInitial (cs@[] :^ v :^ a :^ Just B_Rough) = Success $ (cs :^ v :^ a) :^ PreserveMarks :^ NoCrasis :^ HasInitialAspiration
-  checkInitial (cs@(_ : _) :^ v :^ a :^ Nothing) = Success $ (cs :^ v :^ a) :^ PreserveMarks :^ NoCrasis :^ NoInitialAspiration
-  checkInitial (cs@(_ : _) :^ v :^ a :^ Just B_Smooth) = Success $ (cs :^ v :^ a) :^ PreserveMarks :^ HasCrasis :^ NoInitialAspiration
-  checkInitial x = Failure [InvalidInitialBreathing x]
+  dropBreathing (a, (b, (c, _))) = a :^ b :^ c
 
-  allMedial [] = Success []
-  allMedial (x : xs) = pure (:) <*> checkMedial x <*> allMedial xs
+  getInitial
+    :: [c] :* v :* a :* Maybe Breathing
+    -> Validation [InvalidBreathing c v a] (MarkPreservation :* Crasis :* InitialAspiration)
+  getInitial ([] :^ _ :^ _ :^ Nothing) = Success $ Unmarked :^ NoCrasis :^ NoInitialAspiration
+  getInitial ([] :^ _ :^ _ :^ Just B_Rough) = Success $ PreserveMarks :^ NoCrasis :^ HasInitialAspiration
+  getInitial ([] :^ _ :^ _ :^ Just B_Smooth) = Success $ PreserveMarks :^ NoCrasis :^ NoInitialAspiration
+  getInitial ((_ : _) :^ _ :^ _ :^ Just B_Smooth) = Success $ PreserveMarks :^ HasCrasis 0 :^ NoInitialAspiration
+  getInitial x@((_ : _) :^ _ :^ _ :^ Just B_Rough) = Failure [InvalidInitialRough x]
+  getInitial _ = Success $ PreserveMarks :^ NoCrasis :^ NoInitialAspiration
 
-  checkMedial (cs, (v, (a, Nothing))) = Success (cs, (v, a))
-  checkMedial x@(_, (_, (_, Just _))) = Failure [InvalidMedialBreathing x]
+  getCrasis :: Int :* [c] :* v :* a :* Maybe Breathing -> Validation [InvalidBreathing c v a] Crasis
+  getCrasis (p :^ _ :^ _ :^ _ :^ Just B_Smooth) = Success $ HasCrasis p
+  getCrasis x@(_ :^ _ :^ _ :^ _ :^ Just B_Rough) = Failure [InvalidMedialRough x]
+  getCrasis _ = Success NoCrasis
 
-  from ([], _) = []
-  from ((cs, (v, a)) : xs, ci) = cs :^ v :^ a :^ getBreathing cs ci : fmap (\(cs', (v', a')) -> cs' :^ v' :^ a' :^ Nothing) xs
+  getAllCrasis :: [[c] :* v :* a :* Maybe Breathing] -> Validation [InvalidBreathing c v a] [Crasis]
+  getAllCrasis = over _Success (filter isCrasis) . traverse getCrasis . zip [1..]
+    where
+    isCrasis (HasCrasis _) = True
+    isCrasis NoCrasis = False
 
-  getBreathing :: [c] -> (MarkPreservation :* Crasis :* InitialAspiration) -> Maybe Breathing
-  getBreathing [] (PreserveMarks :^ _ :^ HasInitialAspiration) = Just B_Rough
-  getBreathing [] (PreserveMarks :^ _ :^ NoInitialAspiration) = Just B_Smooth
-  getBreathing (_ : _) (PreserveMarks :^ HasCrasis :^ _) = Just B_Smooth
-  getBreathing _ _ = Nothing
+  validateAllCrasis :: Crasis -> [Crasis] -> Validation [InvalidBreathing c v s] Crasis
+  validateAllCrasis x [] = Success x
+  validateAllCrasis NoCrasis [x] = Success x
+  validateAllCrasis x xs = Failure [MultipleCrasis (x : xs)]
+
+  addBreathing b (x, (y, z)) = (x, (y, (z, b)))
+  applyCrasis p (p', q) | p == p' = addBreathing (Just B_Smooth) q
+  applyCrasis _ (_, q) = addBreathing Nothing q
+
+  aspirationToBreathing HasInitialAspiration = Just B_Rough
+  aspirationToBreathing NoInitialAspiration = Just B_Smooth
+
+  from ((x@([], _) : xs) :^ PreserveMarks :^ _ :^ asp) = addBreathing (aspirationToBreathing asp) x : fmap (addBreathing Nothing) xs
+  from (xs :^ PreserveMarks :^ HasCrasis p :^ _) = fmap (applyCrasis p) . zip [0..] $ xs
+  from (xs, _) = fmap (addBreathing Nothing) xs
