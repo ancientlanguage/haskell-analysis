@@ -141,8 +141,8 @@ main = do
     tryAdd (Left _) xs = xs
     tryAdd (Right x) xs = x : xs
   let successful = tryAdd sblgntResult [perseusGroup]
-  dumpInvalidWords successful
---  outputBinaryGroups successful
+--  dumpInvalidWords successful
+  outputBinaryGroups successful
 
   -- let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
   -- papyriFiles <- find always (fileName ~~? "*.xml") papyriDir

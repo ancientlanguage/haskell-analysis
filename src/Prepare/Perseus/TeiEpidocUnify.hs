@@ -2,6 +2,7 @@ module Prepare.Perseus.TeiEpidocUnify where
 
 import Prelude hiding (getContents)
 import qualified Data.Char as Char
+import qualified Data.List as List
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Prepare.Perseus.TeiEpidocHeaderModel as Header
@@ -16,9 +17,14 @@ makeId author title = Text.intercalate "_" [hack author, hack title]
     = Text.dropWhileEnd (\x -> Char.isPunctuation x || x == '_')
     . Text.filter (\x -> Char.isLetter x || Char.isNumber x || x == '_')
     . Text.intercalate "_"
-    . Text.split (\x -> x == ' ' || x == '.' || x == '-')
-    . Text.replace "Greek" ""
-    . Text.replace "Machine readable text" ""
+    . List.filter (\x -> Text.toLower x /= "(greek)")
+    . (\xs ->
+        if List.isSuffixOf ["machine", "readable", "text"] (fmap Text.toLower xs)
+        then List.take (length xs - 3) xs
+        else xs)
+    . Text.words
+    . Text.replace "-" " "
+    . Text.replace "." " "
 
 getSourceMetadata :: Header.TeiHeader -> Primary.Source
 getSourceMetadata h = Primary.Source sid t (Just a) lic []
