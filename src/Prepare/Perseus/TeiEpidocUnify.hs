@@ -28,8 +28,33 @@ getSourceMetadata h = Primary.Source sid t (Just a) lic []
   a = Header.titleStmtAuthor titleStmt
   lic = []
 
+getMilestoneContents :: Milestone -> [Primary.Content]
+getMilestoneContents (Milestone u _) | u == "para" = pure $ Primary.ContentMilestone Primary.MilestoneParagraph
+getMilestoneContents _ = []
+
+extractWords :: Text -> [Primary.Content]
+extractWords _ = []
+
+getLineContents :: Line -> [Primary.Content]
+getLineContents (Line _ t) = extractWords t
+
+getQuoteContents :: Quote -> [Primary.Content]
+getQuoteContents (Quote _ ls) = concatMap getLineContents ls
+
+getCitContents :: Cit -> [Primary.Content]
+getCitContents (Cit q _) = getQuoteContents q
+
 unifyContent :: Content -> [Primary.Content]
-unifyContent _ = []
+unifyContent (ContentMilestone m) = getMilestoneContents m
+unifyContent (ContentText t) = extractWords t
+unifyContent (ContentAdd t) = extractWords t
+unifyContent (ContentCorr t) = extractWords t
+unifyContent (ContentDel t) = extractWords t
+unifyContent (ContentTerm t) = extractWords t
+unifyContent (ContentGap _) = []
+unifyContent (ContentQuote q) = getQuoteContents q
+unifyContent (ContentBibl _) = []
+unifyContent (ContentCit c) = getCitContents c
 
 getSectionContents :: Primary.Division -> Section -> [Primary.Content]
 getSectionContents d (Section sn cs)
