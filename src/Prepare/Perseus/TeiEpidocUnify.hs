@@ -37,8 +37,8 @@ buildPrimaryWord :: Text -> Primary.Word
 buildPrimaryWord t = Primary.Word pre core suff
   where
   pre = Text.takeWhile Char.isPunctuation $ t
-  core = Text.takeWhile isCore . Text.dropWhile Char.isPunctuation $ t
-  suff = Text.map unifyApostrophe . Text.dropWhile isCore . Text.dropWhile Char.isPunctuation $ t
+  core = Text.map unifyApostrophe . Text.takeWhile isCore . Text.dropWhile Char.isPunctuation $ t
+  suff = Text.dropWhile isCore . Text.dropWhile Char.isPunctuation $ t
   isCore x = Char.isLetter x || Char.isMark x || isApostrophe x
   isApostrophe x = x == '\x02BC' || x == '\x2019' || x == '\x0027'
   unifyApostrophe x | isApostrophe x = '\x2019'
