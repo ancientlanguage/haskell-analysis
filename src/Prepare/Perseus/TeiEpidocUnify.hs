@@ -36,13 +36,13 @@ getMilestoneContents _ = []
 buildPrimaryWord :: Text -> Primary.Word
 buildPrimaryWord t = Primary.Word pre core suff
   where
-  pre = Text.takeWhile (not . isCore) $ t
+  pre = Text.takeWhile (not . isGreekChar) $ t
   core = Text.map unifyApostrophe . Text.takeWhile isCore . Text.drop (Text.length pre) $ t
   suff = Text.drop (Text.length pre + Text.length core) $ t
-  isCore x
+  isCore x = isGreekChar x || isApostrophe x
+  isGreekChar x
     = (x >= '\x0370' && x <= '\x03ff')
     || (x >= '\x1f00' && x <= '\x1fff')
-    || isApostrophe x
   isApostrophe x = x == '\x02BC' || x == '\x2019' || x == '\x0027'
   unifyApostrophe x | isApostrophe x = '\x2019'
   unifyApostrophe x = x
