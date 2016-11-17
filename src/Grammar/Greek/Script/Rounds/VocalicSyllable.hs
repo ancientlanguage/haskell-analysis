@@ -1,6 +1,6 @@
 module Grammar.Greek.Script.Rounds.VocalicSyllable where
 
-import Control.Lens (over, _1, _2, toListOf)
+import Control.Lens (over, _2, toListOf)
 import Grammar.Common.Round
 import Grammar.Common.Types
 import Grammar.Greek.Script.Types
@@ -38,7 +38,7 @@ vocalicSyllable capTop = RoundId to from
   toFold
     _
     (v1 :^ Nothing :^ Nothing :^ Nothing)
-    ((VS_Vowel v2 :^ Nothing :^ a2 :^ b2 :^ c) : xs)
+    ((VS_Vowel v2 :^ Nothing :^ a2 :^ b2 :^ _) : xs)
     | Just d <- tryDiphthong v1 v2
     = (VS_Diphthong d :^ Nothing :^ a2 :^ b2 :^ basicDiaeresisConvention) : xs
 
@@ -54,19 +54,19 @@ vocalicSyllable capTop = RoundId to from
   toFold
     _
     (v1 :^ Nothing :^ a1@(Just _) :^ Nothing)
-    ((VS_Vowel v2 :^ Nothing :^ Nothing :^ Nothing :^ c) : xs)
-    | Just d <- tryDiphthong v1 v2
+    ((VS_Vowel v2 :^ Nothing :^ Nothing :^ Nothing :^ _) : xs)
+    | Just _ <- tryDiphthong v1 v2
     = (VS_Vowel v1 :^ Nothing :^ a1 :^ Nothing :^ basicDiaeresisConvention)
     : (VS_Vowel v2 :^ Nothing :^ Nothing :^ Nothing :^ DiaeresisConvention AccentBreaksDiphthong EssentialDiaeresis)
     : xs
 
-  -- ἀίδιον, ἐυξέστου, ὑικὸν ?
+  -- ἀίδιον, ἐυξέστου, ὑικὸν
   -- εὐιπποτάτην, εὐιατότερα
   toFold
     _
     (v1 :^ Nothing :^ Nothing :^ b1@(Just _))
-    ((VS_Vowel v2 :^ Nothing :^ a2 :^ Nothing :^ c) : xs)
-    | Just d <- tryDiphthong v1 v2
+    ((VS_Vowel v2 :^ Nothing :^ a2 :^ Nothing :^ _) : xs)
+    | Just _ <- tryDiphthong v1 v2
     = (VS_Vowel v1 :^ Nothing :^ Nothing :^ b1 :^ basicDiaeresisConvention)
     : (VS_Vowel v2 :^ Nothing :^ a2 :^ Nothing :^ DiaeresisConvention AccentBreaksDiphthong EssentialDiaeresis)
     : xs
@@ -75,7 +75,7 @@ vocalicSyllable capTop = RoundId to from
   toFold
     _
     (v1 :^ Nothing :^ Nothing :^ Nothing)
-    ( (VS_Vowel v2 :^ Nothing :^ a2 :^ b2 :^ c2)
+    ( (VS_Vowel v2 :^ Nothing :^ a2 :^ b2 :^ _)
       : (VS_Vowel v3 :^ s3@(Just S_Diaeresis) :^ a3 :^ b3 :^ DiaeresisConvention dc3 UselessDiaeresis)
       : xs
     )
@@ -90,7 +90,7 @@ vocalicSyllable capTop = RoundId to from
   toFold
     _
     (v1 :^ Nothing :^ Nothing :^ Nothing)
-    ((VS_Vowel v2 :^ s2@(Just S_Diaeresis) :^ a2 :^ b2 :^ c) : xs)
+    ((VS_Vowel v2 :^ s2@(Just S_Diaeresis) :^ a2 :^ b2 :^ _) : xs)
     | Nothing <- tryDiphthong v1 v2
     = (VS_Vowel v1 :^ Nothing :^ Nothing :^ Nothing :^ basicDiaeresisConvention)
     : (VS_Vowel v2 :^ s2 :^ a2 :^ b2 :^ DiaeresisConvention AccentNotBreaksDiphthong UselessDiaeresis)
@@ -113,11 +113,6 @@ vocalicSyllable capTop = RoundId to from
   isIotaUpsilon V_ι = True
   isIotaUpsilon V_υ = True
   isIotaUpsilon _ = False
-
-  isNotIotaSubscript :: Maybe SyllabicMark -> Bool
-  isNotIotaSubscript (Just S_IotaSubscript) = False
-  isNotIotaSubscript (Just S_Diaeresis) = True
-  isNotIotaSubscript Nothing = True
 
   tryDiphthong :: Vowel -> Vowel -> Maybe Diphthong
   tryDiphthong V_α V_ι = Just D_αι
