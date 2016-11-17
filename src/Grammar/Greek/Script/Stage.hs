@@ -172,8 +172,16 @@ vocalicSyllableCore :: RoundId
   ([ ([VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] :* DiaeresisConvention) :+ [ConsonantRho] ] :* Capitalization)
 vocalicSyllableCore = RoundId to from
   where
-  to (xs, cap) = (over (travList . _Left) (roundIdTo $ Rounds.vocalicSyllable cap) xs, cap)
-  from (xs, cap) = (over (travList . _Left) (roundIdFrom $ Rounds.vocalicSyllable cap) xs, cap)
+  to (Left vs : xs, cap) =
+    ( Left (roundIdTo (Rounds.vocalicSyllable cap) vs)
+      : over (travList . _Left) (roundIdTo $ Rounds.vocalicSyllable NotCapitalized) xs
+    , cap)
+  to (xs, cap) = (over (travList . _Left) (roundIdTo $ Rounds.vocalicSyllable NotCapitalized) xs, cap)
+  from (Left vs : xs, cap) =
+    ( Left (roundIdFrom (Rounds.vocalicSyllable cap) vs)
+      : over (travList . _Left) (roundIdFrom $ Rounds.vocalicSyllable NotCapitalized) xs
+    , cap)
+  from (xs, cap) = (over (travList . _Left) (roundIdFrom $ Rounds.vocalicSyllable NotCapitalized) xs, cap)
 
 vocalicSyllable :: RoundContext ctx Void Void
   ((([ [Vowel :* Maybe SyllabicMark :* Maybe ContextualAccent :* Maybe Breathing]
