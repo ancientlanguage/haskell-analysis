@@ -8,14 +8,15 @@ import Grammar.Greek.Script.Types
 data BreakDiphthong = DoBreakDiphthong | NoBreakDiphthong
 
 vocalicSyllable
-  :: RoundId
-    [Vowel :* Maybe SyllabicMark :* Maybe ContextualAccent :* Maybe Breathing]
+  :: Capitalization
+  -> RoundId
+    ([Vowel :* Maybe SyllabicMark :* Maybe ContextualAccent :* Maybe Breathing])
     ([VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] :* DiaeresisConvention)
-vocalicSyllable = RoundId to from
+vocalicSyllable capTop = RoundId to from
   where
   to xs = sylls :^ conv
     where
-    combined = foldr toFold [] xs
+    combined = foldr (toFold capTop) [] xs
     sylls = over (traverse . _2) (\(_, (x2, (x3, _))) -> (x2, x3)) combined
     conv = mergeDiaeresisConventions $ toListOf (traverse . _2 . _2 . _2 . _2) combined
 
@@ -35,6 +36,7 @@ vocalicSyllable = RoundId to from
       (mergeUselessDiaeresis y1 y2)
 
   toFold
+    _
     (v1 :^ Nothing :^ Nothing :^ Nothing)
     ((VS_Vowel v2 :^ Nothing :^ a2 :^ b2 :^ c) : xs)
     | Just d <- tryDiphthong v1 v2
@@ -42,6 +44,7 @@ vocalicSyllable = RoundId to from
 
   -- ἰσχύι, πρώιμος, οἰσύινα
   toFold
+    _
     (v1 :^ Nothing :^ a1@(Just _) :^ Nothing)
     ((VS_Vowel v2 :^ Nothing :^ Nothing :^ Nothing :^ c) : xs)
     | Just d <- tryDiphthong v1 v2
@@ -52,6 +55,7 @@ vocalicSyllable = RoundId to from
   -- ἀίδιον, ἐυξέστου, ὑικὸν ?
   -- εὐιπποτάτην, εὐιατότερα
   toFold
+    _
     (v1 :^ Nothing :^ Nothing :^ b1@(Just _))
     ((VS_Vowel v2 :^ Nothing :^ a2 :^ Nothing :^ c) : xs)
     | Just d <- tryDiphthong v1 v2
@@ -61,6 +65,7 @@ vocalicSyllable = RoundId to from
 
   -- Ἁλληλουϊά
   toFold
+    _
     (v1 :^ Nothing :^ Nothing :^ Nothing)
     ( (VS_Vowel v2 :^ Nothing :^ a2 :^ b2 :^ c2)
       : (VS_Vowel v3 :^ s3@(Just S_Diaeresis) :^ a3 :^ b3 :^ DiaeresisConvention dc3 UselessDiaeresis)
@@ -75,6 +80,7 @@ vocalicSyllable = RoundId to from
   -- useless: Μωϋσῆς, διϋλίζοντες, διϊσχυρίζετο, διϊκνούμενος, εὐποιΐας
   -- essential: νηὶ, Διὶ
   toFold
+    _
     (v1 :^ Nothing :^ Nothing :^ Nothing)
     ((VS_Vowel v2 :^ s2@(Just S_Diaeresis) :^ a2 :^ b2 :^ c) : xs)
     | Nothing <- tryDiphthong v1 v2
@@ -82,10 +88,18 @@ vocalicSyllable = RoundId to from
     : (VS_Vowel v2 :^ s2 :^ a2 :^ b2 :^ DiaeresisConvention AccentNotBreaksDiphthong UselessDiaeresis)
     : xs
 
-  toFold (v :^ s@(Just S_IotaSubscript) :^ a :^ b) xs
+  toFold
+    _
+    (v :^ s@(Just S_IotaSubscript) :^ a :^ b)
+    xs
     | Just d <- tryImproperDiphthong v
     = (VS_ImproperDiphthong d :^ s :^ a :^ b :^ basicDiaeresisConvention) : xs
-  toFold (v, (s, (a, b))) xs = (VS_Vowel v :^ s :^ a :^ b :^ basicDiaeresisConvention) : xs
+
+  toFold
+    _
+    (v, (s, (a, b)))
+    xs
+    = (VS_Vowel v :^ s :^ a :^ b :^ basicDiaeresisConvention) : xs
 
   isIotaUpsilon :: Vowel -> Bool
   isIotaUpsilon V_ι = True
@@ -115,11 +129,12 @@ vocalicSyllable = RoundId to from
   tryImproperDiphthong V_ω = Just I_ω
   tryImproperDiphthong _ = Nothing
 
-  from (ss, c) = from' c ss
-  from' c = foldr (fromFold c) []
+  from (ss, conv) = from' capTop conv ss
+  from' cap conv = foldr (fromFold cap conv) []
 
   -- Δαυίδ, Νινευῖται
   fromFold
+    _
     _
     (VS_Vowel v1, a1) ((v2, (Nothing, a2)) : (v3, (Nothing, a3)) : xs)
     | isIotaUpsilon v2
@@ -128,6 +143,7 @@ vocalicSyllable = RoundId to from
 
   -- ἰσχύι, πρώιμος, οἰσύινα
   fromFold
+    _
     (DiaeresisConvention AccentBreaksDiphthong _)
     (VS_Vowel v1, (a1@(Just _), Nothing))
     ((v2, (Nothing, (Nothing, Nothing))) : xs)
@@ -136,6 +152,7 @@ vocalicSyllable = RoundId to from
 
   -- ἀίδιον, ἐυξέστου
   fromFold
+    _
     (DiaeresisConvention AccentBreaksDiphthong _)
     (VS_Vowel v1, (a1, b1@(Just _)))
     ((v2, (Nothing, q2)) : xs)
@@ -144,12 +161,14 @@ vocalicSyllable = RoundId to from
 
   fromFold
     _
+    _
     (VS_Vowel v1, a1) ((v2, (Nothing, a2)) : xs)
     | Just _ <- tryDiphthong v1 v2
     = (v1, (Nothing, a1)) : (v2, (Just S_Diaeresis, a2)) : xs
 
   -- Μωϋσῆς, διϋλίζοντες, διϊσχυρίζετο, διϊκνούμενος, εὐποιΐας
   fromFold
+    _
     (DiaeresisConvention _ UselessDiaeresis)
     (VS_Vowel v1, a1) ((v2, (Nothing, a2)) : xs)
     | isIotaUpsilon v2
@@ -157,13 +176,16 @@ vocalicSyllable = RoundId to from
 
   fromFold
     _
+    _
     (VS_Vowel v, a) xs
     = (v, (Nothing, a)) : xs
   fromFold
     _
+    _
     (VS_ImproperDiphthong v, a) xs
     = (improperDiphthongVowel v, (Just S_IotaSubscript, a)) : xs
   fromFold
+    _
     c
     (VS_Diphthong d, a) xs
     = consDiphthong c (diphthongVowels d) a xs

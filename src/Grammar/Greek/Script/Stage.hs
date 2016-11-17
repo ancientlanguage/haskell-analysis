@@ -167,6 +167,14 @@ vowelSyllabicMark = Round
   to (x, (y, (z, q))) = (x, (q, (y, z)))
   from (x, (q, (y, z))) = (x, (y, (z, q)))
 
+vocalicSyllableCore :: RoundId
+  ([ [Vowel :* Maybe SyllabicMark :* Maybe ContextualAccent :* Maybe Breathing] :+ [ConsonantRho] ] :* Capitalization)
+  ([ ([VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] :* DiaeresisConvention) :+ [ConsonantRho] ] :* Capitalization)
+vocalicSyllableCore = RoundId to from
+  where
+  to (xs, cap) = (over (travList . _Left) (roundIdTo $ Rounds.vocalicSyllable cap) xs, cap)
+  from (xs, cap) = (over (travList . _Left) (roundIdFrom $ Rounds.vocalicSyllable cap) xs, cap)
+
 vocalicSyllable :: RoundContext ctx Void Void
   ((([ [Vowel :* Maybe SyllabicMark :* Maybe ContextualAccent :* Maybe Breathing]
     :+ [ConsonantRho]
@@ -175,8 +183,11 @@ vocalicSyllable :: RoundContext ctx Void Void
   ((([ ([VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] :* DiaeresisConvention) :+ [ConsonantRho] ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 vocalicSyllable = Round
-  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left $ liftRoundIdTo $ Rounds.vocalicSyllable)
-  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left $ liftRoundIdFrom $ Rounds.vocalicSyllable)
+  (traverseWithItemContext . _1 . _1 $ to)
+  (traverseWithItemContext . _1 . _1 $ from)
+  where
+  to = liftRoundIdTo vocalicSyllableCore
+  from = liftRoundIdFrom vocalicSyllableCore
 
 swapConsonantVocalicSyllables :: RoundContext ctx Void Void
   ((([ [VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] :+ [ConsonantRho] ]
