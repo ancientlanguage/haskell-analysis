@@ -17,6 +17,7 @@ library
     Prepare,
     Prepare.Decompose,
     Prepare.Log,
+    Prepare.Perseus.Paths,
     Prepare.Perseus.TeiEpidocHeaderModel,
     Prepare.Perseus.TeiEpidocHeaderParser,
     Prepare.Perseus.TeiEpidocModel,

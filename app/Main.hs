@@ -16,6 +16,7 @@ import System.FilePath.Find
 import Prepare
 import Prepare.Sblgnt.Model (Sblgnt)
 import qualified Prepare.Sblgnt.Unify as Sblgnt
+import Prepare.Perseus.Paths (perseusShortList)
 import Prepare.Perseus.TeiEpidocModel (Tei)
 import qualified Prepare.Perseus.TeiEpidocUnify as Tei
 import qualified Primary as Primary
@@ -128,13 +129,21 @@ dumpInvalidWords gs = mapM_ dumpInvalids $ concatMap Primary.groupSources gs
 main :: IO ()
 main = do
   let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
-  _ <- putStrLn "Reading files…"
---  _ <- printText ["Reading", Text.pack sblgntFile]
+--  _ <- putStrLn "Reading files…"
+  _ <- printText ["Reading", Text.pack sblgntFile]
   sblgntResult <- (fmap . fmap) (Sblgnt.unify) $ loadParse sblgntFile sblgnt emptyLog
 
-  let perseusDir = "./data/xml-perseus-greek"
-  perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
-  perseusSources <- mapM ((fmap . fmap) Tei.unify . tryParse) perseusFiles
+--  let perseusDir = "./data/xml-perseus-greek"
+--  perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
+  let
+    parseUnify x = do
+      _ <- putStrLn $ "Reading " ++ x
+      t <- (fmap . fmap) Tei.unify . tryParse $ x
+      _ <- case t of
+        Left e -> putStrLn $ "  " ++ e
+        Right r -> Text.putStrLn $ Text.concat ["  ", Primary.sourceTitle r]
+      return t
+  perseusSources <- mapM parseUnify perseusShortList
   let perseusGroup = Tei.perseusGroup { Primary.groupSources = Either.rights perseusSources }
 
   let
