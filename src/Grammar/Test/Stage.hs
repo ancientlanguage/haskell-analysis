@@ -1,5 +1,6 @@
 module Grammar.Test.Stage where
 
+import Control.Lens (over, _2)
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Test.Framework
@@ -14,25 +15,27 @@ failMessage :: Text -> IO ()
 failMessage = assertFailure . Text.unpack
 
 testDataLoss
-  :: (Eq a, Show a)
-  => [Milestone :* a]
+  :: (Eq a)
+  => (a -> String)
+  -> [Milestone :* a]
   -> [Milestone :* a]
   -> IO ()
-testDataLoss xs ys = check . filter (\(x, y) -> x /= y) $ zip xs ys
+testDataLoss sh xs ys = check . filter (\(x, y) -> x /= y) $ zip xs ys
   where
   check [] = return ()
   check xs'@(_ : _) = failMessage $ Text.concat
     [ "data loss:"
-    , Text.concat $ fmap (\(x , y) -> Text.concat [ "\n initial:", prettyMilestoned x, "\n final  :", prettyMilestoned y ]) xs'
+    , Text.concat $ fmap (\(x , y) -> Text.concat [ "\n initial:", prettyMilestonedString (over _2 sh x), "\n final  :", prettyMilestonedString (over _2 sh y) ]) xs'
     ]
 
 testStage
-  :: (Show a1, Show a, Eq q, Show q)
-  => Round (Milestone :* a) (Milestone :* a1) t b
+  :: (Show a1, Show a, Eq q)
+  => (q -> String)
+  -> Round (Milestone :* a) (Milestone :* a1) t b
   -> (t -> [Milestone :* q])
   -> t
   -> IO ()
-testStage stg forget x = do
+testStage sh stg forget x = do
   let stageTo = roundTo stg
   let stageFrom = roundFrom stg
   case stageTo x of
@@ -46,28 +49,30 @@ testStage stg forget x = do
           [ "stage from failure:"
           , Text.concat $ fmap (Text.append "\n" . prettyMilestoned) es'
           ]
-        Success z -> testDataLoss (forget x) (forget z)
+        Success z -> testDataLoss sh (forget x) (forget z)
 
 testSourceStage
-  :: (Show a1, Show a, Eq q, Show q)
-  => Round (Milestone :* a) (Milestone :* a1) t b
+  :: (Show a1, Show a, Eq q)
+  => (q -> String)
+  -> Round (Milestone :* a) (Milestone :* a1) t b
   -> (t -> [Milestone :* q])
   -> (SourceId, t)
   -> Test
-testSourceStage stg forget (SourceId g s, ms) = testCase (Text.unpack . Text.intercalate " " $ [g, s]) $ testStage stg forget ms
+testSourceStage sh stg forget (SourceId g s, ms) = testCase (Text.unpack . Text.intercalate " " $ [g, s]) $ testStage sh stg forget ms
 
 testGroupStages
-  :: (Show a1, Show a, Eq q, Show q)
+  :: (Show a1, Show a, Eq q)
   => TestName
+  -> (q -> String)
   -> Round (Milestone :* a) (Milestone :* a1) t b
   -> (t -> [Milestone :* q])
   -> IO (Either String [(SourceId, t)])
   -> Test
-testGroupStages name stg forget load = buildTestBracketed $ do
+testGroupStages name sh stg forget load = buildTestBracketed $ do
   result <- load
   let
     sourceTests = case result of
       Left x -> [testCase "decode" $ assertFailure $ "decode failure:\n" ++ x]
-      Right gs -> fmap (testSourceStage stg forget) gs
+      Right gs -> fmap (testSourceStage sh stg forget) gs
   let sourceTestGroup = testGroup name sourceTests
   return (sourceTestGroup, return ())
