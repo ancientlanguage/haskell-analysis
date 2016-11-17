@@ -9,6 +9,12 @@ import qualified Prepare.Perseus.TeiEpidocHeaderModel as Header
 import Prepare.Perseus.TeiEpidocModel
 import qualified Primary as Primary
 
+dropSuffixIgnoreCase :: [Text] -> [Text] -> [Text]
+dropSuffixIgnoreCase ss xs =
+  if List.isSuffixOf ss (fmap Text.toLower xs)
+  then List.take (length xs - length ss) xs
+  else xs
+
 makeId :: Text -> Text -> Text
 makeId author title = Text.intercalate "_" [hack author, hack title]
   where
@@ -17,11 +23,9 @@ makeId author title = Text.intercalate "_" [hack author, hack title]
     = Text.dropWhileEnd (\x -> Char.isPunctuation x || x == '_')
     . Text.filter (\x -> Char.isLetter x || Char.isNumber x || x == '_')
     . Text.intercalate "_"
+    . dropSuffixIgnoreCase ["from", "minor", "works"]
     . List.filter (\x -> Text.toLower x /= "(greek)")
-    . (\xs ->
-        if List.isSuffixOf ["machine", "readable", "text"] (fmap Text.toLower xs)
-        then List.take (length xs - 3) xs
-        else xs)
+    . dropSuffixIgnoreCase ["machine", "readable", "text"]
     . Text.words
     . Text.replace "-" " "
     . Text.replace "." " "
