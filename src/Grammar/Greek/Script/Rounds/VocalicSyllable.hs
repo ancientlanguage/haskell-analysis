@@ -35,22 +35,26 @@ vocalicSyllable = RoundId to from
       (mergeUselessDiaeresis y1 y2)
 
 -- cases
--- νηὶ
--- ἴυγγα
--- ὑικὸν
--- ἰύγγων
--- Διὶ
--- νηὶ
--- οἰσύινα
+-- ἴυγγα, ἰύγγων
 -- Ὠιδείῳ
 -- Ἠιόνα
--- ἰσχύι
+  -- ἰσχύι, πρώιμος, οἰσύινα
+  -- εὐιατότερα, εὐιπποτάτην, ὑικὸν
 
   toFold
     (v1 :^ Nothing :^ Nothing :^ Nothing)
     ((VS_Vowel v2 :^ Nothing :^ a2 :^ b2 :^ c) : xs)
     | Just d <- tryDiphthong v1 v2
     = (VS_Diphthong d :^ Nothing :^ a2 :^ b2 :^ basicDiaeresisConvention) : xs
+
+  -- ἀίδιον, εὐιπποτάτην, εὐιατότερα
+  toFold
+    (v1 :^ Nothing :^ Nothing :^ b1@(Just _))
+    ((VS_Vowel v2 :^ Nothing :^ a2 :^ Nothing :^ c) : xs)
+    | Just d <- tryDiphthong v1 v2
+    = (VS_Vowel v1 :^ Nothing :^ Nothing :^ b1 :^ basicDiaeresisConvention)
+    : (VS_Vowel v2 :^ Nothing :^ a2 :^ Nothing :^ DiaeresisConvention AccentBreaksDiphthong EssentialDiaeresis)
+    : xs
 
   -- Ἁλληλουϊά
   toFold
@@ -65,7 +69,8 @@ vocalicSyllable = RoundId to from
     : (VS_Vowel v3 :^ s3 :^ a3 :^ b3 :^ DiaeresisConvention dc3 EssentialDiaeresis)
     : xs
 
-  -- Μωϋσῆς, διϋλίζοντες, διϊσχυρίζετο, διϊκνούμενος, εὐποιΐας
+  -- useless: Μωϋσῆς, διϋλίζοντες, διϊσχυρίζετο, διϊκνούμενος, εὐποιΐας
+  -- essential: νηὶ, Διὶ
   toFold
     (v1 :^ Nothing :^ Nothing :^ Nothing)
     ((VS_Vowel v2 :^ s2@(Just S_Diaeresis) :^ a2 :^ b2 :^ c) : xs)
@@ -142,43 +147,61 @@ vocalicSyllable = RoundId to from
   fromFold
     c
     (VS_Diphthong d, a) xs
-    = consDiphthong c (diphthongVowels (Nothing, (Nothing, Nothing)) (Nothing, a) d) xs
+    = consDiphthong c (diphthongVowels d) a xs
+
+  noMarks = Nothing :^ Nothing :^ Nothing
 
   consDiphthong
     :: DiaeresisConvention
-    -> (Vowel :* Maybe SyllabicMark :* a, Vowel :* Maybe SyllabicMark :* a)
-    -> [Vowel :* Maybe SyllabicMark :* a]
-    -> [Vowel :* Maybe SyllabicMark :* a]
+    -> (Vowel, Vowel)
+    -> Maybe ContextualAccent :* Maybe Breathing
+    -> [Vowel :* Maybe SyllabicMark :* Maybe ContextualAccent :* Maybe Breathing]
+    -> [Vowel :* Maybe SyllabicMark :* Maybe ContextualAccent :* Maybe Breathing]
+
+  -- εὐιπποτάτην, εὐιατότερα
+  consDiphthong
+    (DiaeresisConvention AccentBreaksDiphthong EssentialDiaeresis)
+    (v1, v2)
+    q
+    ((v3, (Nothing, a3)) : xs)
+    | Just _ <- tryDiphthong v2 v3
+    = (v1, noMarks) : (v2 :^ Nothing :^ q) : (v3, (Just S_Diaeresis, a3)) : xs
 
   -- Ἁλληλουϊά
   consDiphthong
     (DiaeresisConvention _ EssentialDiaeresis)
-    ((v1, q1), (v2, q2)) ((v3, (Nothing, a3)) : xs)
+    (v1, v2)
+    q
+    ((v3, (Nothing, a3)) : xs)
     | Just _ <- tryDiphthong v2 v3
-    = (v1, q1) : (v2, q2) : (v3, (Just S_Diaeresis, a3)) : xs
+    = (v1, noMarks) : (v2 :^ Nothing :^ q) : (v3, (Just S_Diaeresis, a3)) : xs
 
   -- εὐποιΐας
   consDiphthong
     (DiaeresisConvention _ UselessDiaeresis)
-    ((v1, q1), (v2, q2)) ((v3, (Nothing, a3)) : xs)
+    (v1, v2)
+    q
+    ((v3, (Nothing, a3)) : xs)
     | isIotaUpsilon v3
-    = (v1, q1) : (v2, q2) : (v3, (Just S_Diaeresis, a3)) : xs
+    = (v1, noMarks) : (v2 :^ Nothing :^ q) : (v3, (Just S_Diaeresis, a3)) : xs
 
   consDiphthong
     _
-    (x1, x2) xs
-    = x1 : x2 : xs
+    (v1, v2)
+    q
+    xs
+    = (v1, noMarks) : (v2 :^ Nothing :^ q) : xs
 
-  diphthongVowels :: q -> q -> Diphthong -> (Vowel :* q, Vowel :* q)
-  diphthongVowels a1 a2 D_αι = ((V_α, a1), (V_ι, a2))
-  diphthongVowels a1 a2 D_αυ = ((V_α, a1), (V_υ, a2))
-  diphthongVowels a1 a2 D_ει = ((V_ε, a1), (V_ι, a2))
-  diphthongVowels a1 a2 D_ευ = ((V_ε, a1), (V_υ, a2))
-  diphthongVowels a1 a2 D_ηυ = ((V_η, a1), (V_υ, a2))
-  diphthongVowels a1 a2 D_οι = ((V_ο, a1), (V_ι, a2))
-  diphthongVowels a1 a2 D_ου = ((V_ο, a1), (V_υ, a2))
-  diphthongVowels a1 a2 D_υι = ((V_υ, a1), (V_ι, a2))
-  diphthongVowels a1 a2 D_ωι = ((V_ω, a1), (V_ι, a2))
+  diphthongVowels :: Diphthong -> (Vowel, Vowel)
+  diphthongVowels D_αι = (V_α, V_ι)
+  diphthongVowels D_αυ = (V_α, V_υ)
+  diphthongVowels D_ει = (V_ε, V_ι)
+  diphthongVowels D_ευ = (V_ε, V_υ)
+  diphthongVowels D_ηυ = (V_η, V_υ)
+  diphthongVowels D_οι = (V_ο, V_ι)
+  diphthongVowels D_ου = (V_ο, V_υ)
+  diphthongVowels D_υι = (V_υ, V_ι)
+  diphthongVowels D_ωι = (V_ω, V_ι)
 
   improperDiphthongVowel :: ImproperDiphthong -> Vowel
   improperDiphthongVowel I_α = V_α
