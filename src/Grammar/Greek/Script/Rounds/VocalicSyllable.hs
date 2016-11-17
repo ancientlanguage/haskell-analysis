@@ -195,8 +195,8 @@ vocalicSyllable capTop = RoundId to from
   fromFold
     _
     _
-    (VS_ImproperDiphthong v, a) xs
-    = (improperDiphthongVowel v, (Just S_IotaSubscript, a)) : xs
+    (VS_ImproperDiphthong v, (a, b)) xs
+    = (improperDiphthongVowel v :^ Just S_IotaSubscript :^ a :^ b) : xs
   fromFold
     _
     c
