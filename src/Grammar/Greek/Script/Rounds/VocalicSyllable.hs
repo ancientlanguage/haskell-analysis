@@ -162,10 +162,10 @@ vocalicSyllable = RoundId to from
   consDiphthong
     (DiaeresisConvention AccentBreaksDiphthong EssentialDiaeresis)
     (v1, v2)
-    q
+    (a1, b1@(Just _))
     ((v3, (Nothing, a3)) : xs)
     | Just _ <- tryDiphthong v2 v3
-    = (v1, noMarks) : (v2 :^ Nothing :^ q) : (v3, (Just S_Diaeresis, a3)) : xs
+    = (v1, noMarks) : (v2 :^ Nothing :^ a1 :^ b1) : (v3, (Nothing, a3)) : xs
 
   -- Ἁλληλουϊά
   consDiphthong
