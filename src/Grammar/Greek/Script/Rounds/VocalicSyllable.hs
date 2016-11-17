@@ -42,6 +42,14 @@ vocalicSyllable capTop = RoundId to from
     | Just d <- tryDiphthong v1 v2
     = (VS_Diphthong d :^ Nothing :^ a2 :^ b2 :^ basicDiaeresisConvention) : xs
 
+  -- Ἅιδου, Ὠιδείῳ, Ἠιόνα
+  toFold
+    IsCapitalized
+    (v1 :^ Nothing :^ a1 :^ b1@(Just _))
+    ((VS_Vowel V_ι :^ Nothing :^ Nothing :^ Nothing :^ _) : xs)
+    | Just d <- tryImproperDiphthong v1
+    = (VS_ImproperDiphthong d :^ Nothing :^ a1 :^ b1 :^ basicDiaeresisConvention) : xs
+
   -- ἰσχύι, πρώιμος, οἰσύινα
   toFold
     _
@@ -140,6 +148,16 @@ vocalicSyllable capTop = RoundId to from
     | isIotaUpsilon v2
     , isIotaUpsilon v3
     = (v1, (Nothing, a1)) : (v2, (Nothing, a2)) : (v3, (Nothing, a3)) : xs
+
+  -- Ἅιδου, Ὠιδείῳ, Ἠιόνα
+  fromFold
+    IsCapitalized
+    _
+    (VS_ImproperDiphthong v :^ a :^ b@(Just _))
+    xs
+    = (improperDiphthongVowel v :^ Nothing :^ a :^ b)
+    : (V_ι :^ noMarks)
+    : xs
 
   -- ἰσχύι, πρώιμος, οἰσύινα
   fromFold
