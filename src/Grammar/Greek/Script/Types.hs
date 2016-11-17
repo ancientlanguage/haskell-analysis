@@ -68,7 +68,8 @@ instance Serialize AccentPosition
 
 data ExtraAccents
   = NoExtraAccents
-  | SingleExtraAccent
+  | ExtraAcuteUltima
+  | ExtraAcutePenult
   deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize ExtraAccents
 
