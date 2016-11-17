@@ -47,7 +47,8 @@ vocalicSyllable = RoundId to from
     | Just d <- tryDiphthong v1 v2
     = (VS_Diphthong d :^ Nothing :^ a2 :^ b2 :^ basicDiaeresisConvention) : xs
 
-  -- ἀίδιον, εὐιπποτάτην, εὐιατότερα
+  -- ἀίδιον, ἐυξέστου
+  -- εὐιπποτάτην, εὐιατότερα
   toFold
     (v1 :^ Nothing :^ Nothing :^ b1@(Just _))
     ((VS_Vowel v2 :^ Nothing :^ a2 :^ Nothing :^ c) : xs)
@@ -122,6 +123,14 @@ vocalicSyllable = RoundId to from
     | isIotaUpsilon v2
     , isIotaUpsilon v3
     = (v1, (Nothing, a1)) : (v2, (Nothing, a2)) : (v3, (Nothing, a3)) : xs
+
+  -- ἀίδιον, ἐυξέστου
+  fromFold
+    (DiaeresisConvention AccentBreaksDiphthong _)
+    (VS_Vowel v1, (a1, b1@(Just _)))
+    ((v2, (Nothing, q2)) : xs)
+    | Just _ <- tryDiphthong v1 v2
+    = (v1 :^ Nothing :^ a1 :^ b1) : (v2 :^ Nothing :^ q2) : xs
 
   fromFold
     _
