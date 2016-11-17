@@ -41,6 +41,9 @@ liftRoundFwd (RoundFwd to from) = Round to (pure . from)
 makeRoundFwd :: (a -> Validation e b) -> (b -> a) -> RoundFwd e a b
 makeRoundFwd to from = RoundFwd (over _Failure pure . to) (from)
 
+joinRoundId :: RoundId a b -> RoundId b c -> RoundId a c
+joinRoundId (RoundId f1 g1) (RoundId f2 g2) = RoundId (f2 . f1) (g1 . g2)
+
 joinValidation :: Validation [e1] (Validation [e2] a) -> Validation [e1 :+ e2] a
 joinValidation (Failure es) = Failure (fmap Left es)
 joinValidation (Success (Failure es)) = Failure (fmap Right es)
