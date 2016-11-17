@@ -8,7 +8,7 @@ decodeGroups :: BS.ByteString -> Either String [Group]
 decodeGroups = Serialize.decode
 
 groupsPath :: FilePath
-groupsPath = "../binary-primary/data/groups.data"
+groupsPath = "./modules/binary-primary/data/groups.data"
 
 readGroups :: IO (Either String [Group])
 readGroups = decodeGroups <$> BS.readFile groupsPath
