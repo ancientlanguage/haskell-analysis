@@ -141,6 +141,7 @@ main = do
     tryAdd (Left _) xs = xs
     tryAdd (Right x) xs = x : xs
   let successful = tryAdd sblgntResult [perseusGroup]
+--  dumpAffixes successful
 --  dumpInvalidWords successful
   outputBinaryGroups successful
 

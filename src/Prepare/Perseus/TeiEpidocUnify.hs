@@ -48,9 +48,9 @@ isGreekChar x
 buildPrimaryWord :: Text -> Primary.Word
 buildPrimaryWord t
   = Primary.Word
-    (Text.filter (not . isPrefixApparatusChar) pre)
+    (removePrefixApparatusMarks pre)
     (Text.map unifyApostrophe core)
-    (Text.filter (not . isSuffixApparatusChar) suff)
+    (removeSuffixApparatusMarks suff)
   where
   pre = Text.takeWhile (not . isGreekChar) $ t
   core = Text.takeWhile isCore . Text.drop (Text.length pre) $ t
@@ -59,10 +59,12 @@ buildPrimaryWord t
   isApostrophe x = x == '\x02BC' || x == '\x2019' || x == '\x0027'
   unifyApostrophe x | isApostrophe x = '\x2019'
   unifyApostrophe x = x
+  removePrefixApparatusMarks = Text.filter (not . isPrefixApparatusChar) . Text.replace "[;" ""
   isPrefixApparatusChar x
     = x == '<'
     || x == '['
     || x == '†'
+  removeSuffixApparatusMarks = Text.filter (not . isSuffixApparatusChar) . Text.replace "];" ""
   isSuffixApparatusChar x
     = x == '['
     || x == ']'
