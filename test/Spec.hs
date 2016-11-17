@@ -102,7 +102,7 @@ greekGroups =
   [ unicodeSymbolTestGroup
   , vocalicSyllableTestGroup
   , finalTestGroup
-  , testGroupStages "script stage" Stage.script Stage.forgetHasWordPunctuation (fmap (over _Right Stage.start) $ Serialize.readGroups)
+  , testGroupStages "script stage" id Stage.script Stage.forgetHasWordPunctuation (fmap (over _Right Stage.start) $ Serialize.readGroups)
   ]
 
 main :: IO ()
