@@ -47,6 +47,7 @@ data Word = Word
   , wordCrasis :: Crasis
   , wordElision :: Elision
   , wordMarkPreservation :: MarkPreservation
+  , wordDiaeresisConvention :: DiaeresisConvention
   , wordCapitalization :: Capitalization
   , wordPunctuation :: HasWordPunctuation
   }
@@ -60,6 +61,7 @@ makeLensesFor
   , ("wordCrasis", "_wordCrasis")
   , ("wordElision", "_wordElision")
   , ("wordMarkPreservation", "_wordMarkPreservation")
+  , ("wordDiaeresisConvention", "_wordDiaeresisConvention")
   , ("wordCapitalization", "_wordCapitalization")
   , ("wordPunctuation", "_wordPunctuation")
   ]

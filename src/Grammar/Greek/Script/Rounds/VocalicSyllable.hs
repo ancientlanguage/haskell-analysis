@@ -7,6 +7,21 @@ import Grammar.Greek.Script.Types
 
 data BreakDiphthong = DoBreakDiphthong | NoBreakDiphthong
 
+mergeAccentBreaksDiphthong :: AccentBreaksDiphthong -> AccentBreaksDiphthong -> AccentBreaksDiphthong
+mergeAccentBreaksDiphthong AccentBreaksDiphthong _ = AccentBreaksDiphthong
+mergeAccentBreaksDiphthong _ x = x
+
+mergeUselessDiaeresis :: UselessDiaeresis -> UselessDiaeresis -> UselessDiaeresis
+mergeUselessDiaeresis UselessDiaeresis _ = UselessDiaeresis
+mergeUselessDiaeresis _ x = x
+
+mergeDiaeresisConventions :: [DiaeresisConvention] -> DiaeresisConvention
+mergeDiaeresisConventions = foldr go basicDiaeresisConvention
+  where
+  go (DiaeresisConvention x1 y1) (DiaeresisConvention x2 y2) = DiaeresisConvention
+    (mergeAccentBreaksDiphthong x1 x2)
+    (mergeUselessDiaeresis y1 y2)
+
 vocalicSyllable
   :: Capitalization
   -> RoundId
@@ -19,21 +34,6 @@ vocalicSyllable capTop = RoundId to from
     combined = foldr (toFold capTop) [] xs
     sylls = over (traverse . _2) (\(_, (x2, (x3, _))) -> (x2, x3)) combined
     conv = mergeDiaeresisConventions $ toListOf (traverse . _2 . _2 . _2 . _2) combined
-
-  mergeAccentBreaksDiphthong :: AccentBreaksDiphthong -> AccentBreaksDiphthong -> AccentBreaksDiphthong
-  mergeAccentBreaksDiphthong AccentBreaksDiphthong _ = AccentBreaksDiphthong
-  mergeAccentBreaksDiphthong _ x = x
-
-  mergeUselessDiaeresis :: UselessDiaeresis -> UselessDiaeresis -> UselessDiaeresis
-  mergeUselessDiaeresis UselessDiaeresis _ = UselessDiaeresis
-  mergeUselessDiaeresis _ x = x
-
-  mergeDiaeresisConventions :: [DiaeresisConvention] -> DiaeresisConvention
-  mergeDiaeresisConventions = foldr go basicDiaeresisConvention
-    where
-    go (DiaeresisConvention x1 y1) (DiaeresisConvention x2 y2) = DiaeresisConvention
-      (mergeAccentBreaksDiphthong x1 x2)
-      (mergeUselessDiaeresis y1 y2)
 
   toFold
     _
