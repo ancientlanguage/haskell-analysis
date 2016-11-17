@@ -34,20 +34,22 @@ vocalicSyllable = RoundId to from
       (mergeAccentBreaksDiphthong x1 x2)
       (mergeUselessDiaeresis y1 y2)
 
--- cases
--- ἴυγγα, ἰύγγων
--- Ὠιδείῳ
--- Ἠιόνα
-  -- ἰσχύι, πρώιμος, οἰσύινα
-  -- εὐιατότερα, εὐιπποτάτην, ὑικὸν
-
   toFold
     (v1 :^ Nothing :^ Nothing :^ Nothing)
     ((VS_Vowel v2 :^ Nothing :^ a2 :^ b2 :^ c) : xs)
     | Just d <- tryDiphthong v1 v2
     = (VS_Diphthong d :^ Nothing :^ a2 :^ b2 :^ basicDiaeresisConvention) : xs
 
-  -- ἀίδιον, ἐυξέστου
+  -- ἰσχύι, πρώιμος, οἰσύινα
+  toFold
+    (v1 :^ Nothing :^ a1@(Just _) :^ Nothing)
+    ((VS_Vowel v2 :^ Nothing :^ Nothing :^ Nothing :^ c) : xs)
+    | Just d <- tryDiphthong v1 v2
+    = (VS_Vowel v1 :^ Nothing :^ a1 :^ Nothing :^ basicDiaeresisConvention)
+    : (VS_Vowel v2 :^ Nothing :^ Nothing :^ Nothing :^ DiaeresisConvention AccentBreaksDiphthong EssentialDiaeresis)
+    : xs
+
+  -- ἀίδιον, ἐυξέστου, ὑικὸν ?
   -- εὐιπποτάτην, εὐιατότερα
   toFold
     (v1 :^ Nothing :^ Nothing :^ b1@(Just _))
@@ -123,6 +125,14 @@ vocalicSyllable = RoundId to from
     | isIotaUpsilon v2
     , isIotaUpsilon v3
     = (v1, (Nothing, a1)) : (v2, (Nothing, a2)) : (v3, (Nothing, a3)) : xs
+
+  -- ἰσχύι, πρώιμος, οἰσύινα
+  fromFold
+    (DiaeresisConvention AccentBreaksDiphthong _)
+    (VS_Vowel v1, (a1@(Just _), Nothing))
+    ((v2, (Nothing, (Nothing, Nothing))) : xs)
+    | Just _ <- tryDiphthong v1 v2
+    = (v1 :^ Nothing :^ a1 :^ Nothing) : (v2 :^ Nothing :^ Nothing :^ Nothing) : xs
 
   -- ἀίδιον, ἐυξέστου
   fromFold
