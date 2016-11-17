@@ -132,12 +132,13 @@ showCategory c = do
     Nothing -> putStrLn $ "Invalid query category: " ++ c
 
 saveScript :: [Primary.Group] -> IO ()
-saveScript gs = case (traverse . _2) (roundTo Stage.script . over (traverse . _2) Stage.basicWord) . prepareGroups $ gs of
-  Failure es -> mapM_ (putStrLn . show) es
-  Success (ss' :: [SourceId :* [Milestone :* Word]]) -> do
-    let dataPath = "../binary-greek-script/data"
-    _ <- Serialize.saveStage dataPath ss'
-    Serialize.verifyLoadStage dataPath ss'
+saveScript = undefined
+-- saveScript gs = case (traverse . _2) (roundTo Stage.script . over (traverse . _2) Stage.basicWord) . prepareGroups $ gs of
+--   Failure es -> mapM_ (putStrLn . show) es
+--   Success (ss' :: [SourceId :* [Milestone :* Word]]) -> do
+--     let dataPath = "../binary-greek-script/data"
+--     _ <- Serialize.saveStage dataPath ss'
+--     Serialize.verifyLoadStage dataPath ss'
 
 runCommand :: Command -> IO ()
 runCommand (CommandSources) = handleGroups showWordCounts

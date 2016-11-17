@@ -172,11 +172,11 @@ vocalicSyllable :: RoundContext ctx Void Void
     :+ [ConsonantRho]
     ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
-  ((([ [VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] :+ [ConsonantRho] ]
+  ((([ ([VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] :* DiaeresisConvention) :+ [ConsonantRho] ]
     :* Capitalization) :* Elision) :* HasWordPunctuation)
 vocalicSyllable = Round
-  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left $ liftRoundIdTo $ Rounds.vocalicSyllable (Nothing, Nothing))
-  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left $ liftRoundIdFrom $ Rounds.vocalicSyllable (Nothing, Nothing))
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left $ liftRoundIdTo $ Rounds.vocalicSyllable)
+  (traverseWithItemContext . _1 . _1 . _1 . travList . _Left $ liftRoundIdFrom $ Rounds.vocalicSyllable)
 
 swapConsonantVocalicSyllables :: RoundContext ctx Void Void
   ((([ [VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] :+ [ConsonantRho] ]
@@ -284,15 +284,17 @@ toVocalicSyllable
   <+> vowelSyllabicMark
   <+> vocalicSyllable
 
-toBreathing
-  = toVocalicSyllable
-  <+> swapConsonantVocalicSyllables
-  <+> ungroupConsonantVocalicSyllables
-  <+> groupLeftConsonantVocalicSyllables
-  <+> breathing
-  <+> reorderWordProps
+script = toVocalicSyllable
 
-script
-  = toBreathing
-  <+> accent
-  <+> word
+-- toBreathing
+--   = toVocalicSyllable
+--   <+> swapConsonantVocalicSyllables
+--   <+> ungroupConsonantVocalicSyllables
+--   <+> groupLeftConsonantVocalicSyllables
+--   <+> breathing
+--   <+> reorderWordProps
+
+-- script
+--   = toBreathing
+--   <+> accent
+--   <+> word

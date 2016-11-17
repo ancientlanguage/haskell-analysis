@@ -1,26 +1,58 @@
 module Grammar.Greek.Script.Rounds.VocalicSyllable where
 
-import Control.Lens (over, _2)
+import Control.Lens (over, _1, _2, toListOf)
 import Grammar.Common.Round
 import Grammar.Common.Types
 import Grammar.Greek.Script.Types
 
-vocalicSyllable
-  :: a
-  -> RoundId
-    [Vowel :* Maybe SyllabicMark :* a]
-    [VocalicSyllable :* a]
-vocalicSyllable defaultA = RoundId to from
-  where
-  to = over (traverse . _2) snd . foldr toFold []
+data BreakDiphthong = DoBreakDiphthong | NoBreakDiphthong
 
-  toFold (v1, (Nothing, _)) ((VS_Vowel v2, m2@(Nothing, _)) : xs)
+vocalicSyllable
+  :: RoundId
+    [Vowel :* Maybe SyllabicMark :* Maybe ContextualAccent :* Maybe Breathing]
+    ([VocalicSyllable :* Maybe ContextualAccent :* Maybe Breathing] :* DiaeresisConvention)
+vocalicSyllable = RoundId to from
+  where
+  to xs = sylls :^ conv
+    where
+    combined = foldr toFold [] xs
+    sylls = over (traverse . _2) (\(_, (x2, (x3, _))) -> (x2, x3)) combined
+    conv = mergeDiaeresisConventions $ toListOf (traverse . _2 . _2 . _2 . _2) combined
+
+  mergeAccentBreaksDiphthong :: AccentBreaksDiphthong -> AccentBreaksDiphthong -> AccentBreaksDiphthong
+  mergeAccentBreaksDiphthong AccentBreaksDiphthong _ = AccentBreaksDiphthong
+  mergeAccentBreaksDiphthong _ x = x
+
+  mergeUselessDiaeresis :: UselessDiaeresis -> UselessDiaeresis -> UselessDiaeresis
+  mergeUselessDiaeresis UselessDiaeresis _ = UselessDiaeresis
+  mergeUselessDiaeresis _ x = x
+
+  mergeDiaeresisConventions :: [DiaeresisConvention] -> DiaeresisConvention
+  mergeDiaeresisConventions = foldr go basicDiaeresisConvention
+    where
+    go (DiaeresisConvention x1 y1) (DiaeresisConvention x2 y2) = DiaeresisConvention
+      (mergeAccentBreaksDiphthong x1 x2)
+      (mergeUselessDiaeresis y1 y2)
+
+  toFold
+    (v1 :^ Nothing :^ Nothing :^ Nothing)
+    ((VS_Vowel v2 :^ s2@Nothing :^ a2 :^ b2 :^ c) : xs)
     | Just d <- tryDiphthong v1 v2
-    = (VS_Diphthong d, m2) : xs
-  toFold (v, m@(Just S_IotaSubscript, _)) xs
+    = (VS_Diphthong d :^ s2 :^ a2 :^ b2 :^ basicDiaeresisConvention) : xs
+  toFold (v :^ s@(Just S_IotaSubscript) :^ a :^ b) xs
     | Just d <- tryImproperDiphthong v
-    = (VS_ImproperDiphthong d, m) : xs
-  toFold (v, m) xs = (VS_Vowel v, m) : xs
+    = (VS_ImproperDiphthong d :^ s :^ a :^ b :^ basicDiaeresisConvention) : xs
+  toFold (v, (s, (a, b))) xs = (VS_Vowel v :^ s :^ a :^ b :^ basicDiaeresisConvention) : xs
+
+  isIotaUpsilon :: Vowel -> Bool
+  isIotaUpsilon V_ι = True
+  isIotaUpsilon V_υ = True
+  isIotaUpsilon _ = False
+
+  isNotIotaSubscript :: Maybe SyllabicMark -> Bool
+  isNotIotaSubscript (Just S_IotaSubscript) = False
+  isNotIotaSubscript (Just S_Diaeresis) = True
+  isNotIotaSubscript Nothing = True
 
   tryDiphthong :: Vowel -> Vowel -> Maybe Diphthong
   tryDiphthong V_α V_ι = Just D_αι
@@ -40,7 +72,8 @@ vocalicSyllable defaultA = RoundId to from
   tryImproperDiphthong V_ω = Just I_ω
   tryImproperDiphthong _ = Nothing
 
-  from = foldr fromFold []
+  from (ss, _) = from' ss
+  from' = foldr fromFold []
 
   -- Δαυίδ, Νινευῖται
   fromFold (VS_Vowel v1, a1) ((v2, (Nothing, a2)) : (v3, (Nothing, a3)) : xs)
@@ -55,7 +88,7 @@ vocalicSyllable defaultA = RoundId to from
 
   fromFold (VS_Vowel v, a) xs = (v, (Nothing, a)) : xs
   fromFold (VS_ImproperDiphthong v, a) xs = (improperDiphthongVowel v, (Just S_IotaSubscript, a)) : xs
-  fromFold (VS_Diphthong d, a) xs = consDiphthong (diphthongVowels (Nothing, defaultA) (Nothing, a) d) xs
+  fromFold (VS_Diphthong d, a) xs = consDiphthong (diphthongVowels (Nothing, (Nothing, Nothing)) (Nothing, a) d) xs
 
   consDiphthong
     :: (Vowel :* Maybe SyllabicMark :* a, Vowel :* Maybe SyllabicMark :* a)
@@ -68,11 +101,6 @@ vocalicSyllable defaultA = RoundId to from
     = (v1, q1) : (v2, q2) : (v3, (Just S_Diaeresis, a3)) : xs
 
   consDiphthong (x1, x2) xs = x1 : x2 : xs
-
-  isIotaUpsilon :: Vowel -> Bool
-  isIotaUpsilon V_ι = True
-  isIotaUpsilon V_υ = True
-  isIotaUpsilon _ = False
 
   diphthongVowels :: q -> q -> Diphthong -> (Vowel :* q, Vowel :* q)
   diphthongVowels a1 a2 D_αι = ((V_α, a1), (V_ι, a2))

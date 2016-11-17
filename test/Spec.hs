@@ -26,57 +26,57 @@ unicodeSymbolTestGroup = testGroup "Unicode-Symbol" $ concat
   where
   tr = testRoundFwd Rounds.unicodeSymbol
 
-vocalicSyllableTestGroup = testGroup "vocalic syllables" $
-  [ test "Μωϋσῆς"
-    [ (V_ω, Nothing)
-    , (V_υ, Just S_Diaeresis)
-    ]
-  , test "διϋλίζοντες"
-    [ (V_ι, Nothing)
-    , (V_υ, Just S_Diaeresis)
-    ]
-  , test "πρωῒ"
-    [ (V_ω, Nothing)
-    , (V_ι, Just S_Diaeresis)
-    ]
-  , test "διϊσχυρίζετο"
-    [ (V_ι, Nothing)
-    , (V_ι, Just S_Diaeresis)
-    ]
-  , testDest "Ἁλληλουϊά"
-    [ (V_ο, Nothing)
-    , (V_υ, Nothing)
-    , (V_ι, Just S_Diaeresis)
-    , (V_α, Nothing)
-    ]
-    [ VS_Diphthong D_ου
-    , VS_Vowel V_ι
-    , VS_Vowel V_α
-    ]
-  , testDest "Δαυίδ"
-    [ (V_α, Nothing)
-    , (V_υ, Nothing)
-    , (V_ι, Nothing)
-    ]
-    [ VS_Vowel V_α
-    , VS_Diphthong D_υι
-    ]
-  , testDest "εὐποιΐας"
-    [ (V_ο, Nothing)
-    , (V_ι, Nothing)
-    , (V_ι, Just S_Diaeresis)
-    , (V_α, Nothing)
-    ]
-    [ VS_Diphthong D_οι
-    , VS_Vowel V_ι
-    , VS_Vowel V_α
-    ]
-  ]
-  where
-  test n vs = testRoundId (Rounds.vocalicSyllable ()) n $ mapUnit3 vs
-  mapUnit3 = fmap (\(x, y) -> (x, (y, ())))
-  mapUnit2 = fmap (\x -> (x, ()))
-  testDest n vs ds = testRoundIdDest (Rounds.vocalicSyllable ()) n (mapUnit3 vs) (mapUnit2 ds)
+-- vocalicSyllableTestGroup = testGroup "vocalic syllables" $
+--   [ test "Μωϋσῆς"
+--     [ (V_ω, Nothing)
+--     , (V_υ, Just S_Diaeresis)
+--     ]
+--   , test "διϋλίζοντες"
+--     [ (V_ι, Nothing)
+--     , (V_υ, Just S_Diaeresis)
+--     ]
+--   , test "πρωῒ"
+--     [ (V_ω, Nothing)
+--     , (V_ι, Just S_Diaeresis)
+--     ]
+--   , test "διϊσχυρίζετο"
+--     [ (V_ι, Nothing)
+--     , (V_ι, Just S_Diaeresis)
+--     ]
+--   , testDest "Ἁλληλουϊά"
+--     [ (V_ο, Nothing)
+--     , (V_υ, Nothing)
+--     , (V_ι, Just S_Diaeresis)
+--     , (V_α, Nothing)
+--     ]
+--     [ VS_Diphthong D_ου
+--     , VS_Vowel V_ι
+--     , VS_Vowel V_α
+--     ]
+--   , testDest "Δαυίδ"
+--     [ (V_α, Nothing)
+--     , (V_υ, Nothing)
+--     , (V_ι, Nothing)
+--     ]
+--     [ VS_Vowel V_α
+--     , VS_Diphthong D_υι
+--     ]
+--   , testDest "εὐποιΐας"
+--     [ (V_ο, Nothing)
+--     , (V_ι, Nothing)
+--     , (V_ι, Just S_Diaeresis)
+--     , (V_α, Nothing)
+--     ]
+--     [ VS_Diphthong D_οι
+--     , VS_Vowel V_ι
+--     , VS_Vowel V_α
+--     ]
+--   ]
+--   where
+--   test n vs = testRoundId (Rounds.vocalicSyllable ()) n $ mapUnit3 vs
+--   mapUnit3 = fmap (\(x, y) -> (x, (y, ())))
+--   mapUnit2 = fmap (\x -> (x, ()))
+--   testDest n vs ds = testRoundIdDest (Rounds.vocalicSyllable ()) n (mapUnit3 vs) (mapUnit2 ds)
 
 finalTestGroup = testGroup "final forms" $
   [ testRoundFwd Rounds.final "medial and final sigma"
@@ -100,7 +100,7 @@ finalTestGroup = testGroup "final forms" $
 
 greekGroups =
   [ unicodeSymbolTestGroup
-  , vocalicSyllableTestGroup
+  -- , vocalicSyllableTestGroup
   , finalTestGroup
   , testGroupStages "script stage" id Stage.script Stage.forgetHasWordPunctuation (fmap (over _Right Stage.start) $ Serialize.readGroups)
   ]

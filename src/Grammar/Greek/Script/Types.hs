@@ -97,6 +97,24 @@ data ImproperDiphthong = I_α | I_η | I_ω
   deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize ImproperDiphthong
 
+data AccentBreaksDiphthong = AccentBreaksDiphthong | AccentNotBreaksDiphthong
+  deriving (Eq, Ord, Show, Generic, Data, Typeable)
+instance Serialize AccentBreaksDiphthong
+
+data UselessDiaeresis = UselessDiaeresis | EssentialDiaeresis
+  deriving (Eq, Ord, Show, Generic, Data, Typeable)
+instance Serialize UselessDiaeresis
+
+data DiaeresisConvention = DiaeresisConvention
+  { diaeresisConventionAccent :: AccentBreaksDiphthong
+  , diaeresisConventionUseless :: UselessDiaeresis
+  }
+  deriving (Eq, Ord, Show, Generic, Data, Typeable)
+instance Serialize DiaeresisConvention
+
+basicDiaeresisConvention :: DiaeresisConvention
+basicDiaeresisConvention = DiaeresisConvention AccentNotBreaksDiphthong EssentialDiaeresis
+
 data VocalicSyllable
   = VS_Vowel Vowel
   | VS_Diphthong Diphthong
