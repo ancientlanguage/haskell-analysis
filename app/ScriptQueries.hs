@@ -98,16 +98,6 @@ queryAccentReverseIndex
   -> [[Int :* ContextualAccent]]
 queryAccentReverseIndex = pure . toAccentReverseIndex . fmap snd . view (_2 . _1 . _1)
 
-queryForceAcute
-  :: ctx :* Word
-  -> [ForceAcute]
-queryForceAcute = toListOf (_2 . _wordAccent . _Just . _accentForce)
-
-queryAccentPosition
-  :: ctx :* Word
-  -> [Maybe (BasicAccent :* AccentPosition)]
-queryAccentPosition = pure . over _Just (\x -> (accentValue x, accentPosition x)) . view (_2 . _wordAccent)
-
 queryFinalConsonants
   :: ctx :* Word
   -> [[ConsonantRho]]
@@ -214,6 +204,27 @@ queryFinalConsonantNoElision (_, w) = result
   el = wordElision w
   fc = wordFinalConsonants w
 
+queryWordBasicAccent :: ctx :* Word -> [[BasicAccent]]
+queryWordBasicAccent (_, w) = [toListOf (_wordAccent . _Just . _accentValue) w]
+
+queryWordExtraAccent :: ctx :* Word -> [[ExtraAccents]]
+queryWordExtraAccent (_, w) = [toListOf (_wordAccent . _Just . _accentExtra) w]
+
+queryWordAccentPosition :: ctx :* Word -> [[AccentPosition]]
+queryWordAccentPosition (_, w) = [toListOf (_wordAccent . _Just . _accentPosition) w]
+
+queryWordForceAcute :: ctx :* Word -> [ForceAcute]
+queryWordForceAcute = toListOf (_2 . _wordAccent . _Just . _accentForce)
+
+queryWordAccentWithPosition :: ctx :* Word -> [Maybe (BasicAccent :* AccentPosition)]
+queryWordAccentWithPosition = pure . over _Just (\x -> (accentValue x, accentPosition x)) . view (_2 . _wordAccent)
+
+queryWordInitialAspiration :: ctx :* Word -> [InitialAspiration]
+queryWordInitialAspiration (_, w) = toListOf (_wordInitialAspiration) w
+
+queryWordDiaeresisConvention :: ctx :* Word -> [DiaeresisConvention]
+queryWordDiaeresisConvention (_, w) = toListOf _wordDiaeresisConvention w
+
 queries :: Map String (QueryOptions -> [Primary.Group] -> IO ())
 queries = Map.fromList
   [ ("elision", queryStage Stage.toElision queryElision)
@@ -227,8 +238,6 @@ queries = Map.fromList
   , ("mark-preservation", queryStage Stage.toBreathing queryMarkPreservation)
   , ("accent-reverse-index", queryStage Stage.toBreathing queryAccentReverseIndex)
   , ("accent-reverse-index-punctuation", queryStage Stage.toBreathing queryAccentReverseIndexPunctuation)
-  , ("force-acute", queryStage Stage.script queryForceAcute)
-  , ("accent-position", queryStage Stage.script queryAccentPosition)
   , ("final-consonants", queryStage Stage.script queryFinalConsonants)
   , ("elision-syllables", queryStage Stage.script queryElisionSyllables)
   , ("final-syllable", queryStage Stage.script queryFinalSyllable)
@@ -236,4 +245,11 @@ queries = Map.fromList
   , ("elision-next-syllable", queryStageContext 1 Stage.script queryElisionNextSyllable)
   , ("de-next", queryStageContext 1 Stage.script queryDeNext)
   , ("final-consonant-no-elision", queryStage Stage.script queryFinalConsonantNoElision)
+  , ("word-basic-accent", queryStage Stage.script queryWordBasicAccent)
+  , ("word-extra-accent", queryStage Stage.script queryWordExtraAccent)
+  , ("word-accent-position", queryStage Stage.script queryWordAccentPosition)
+  , ("word-force-acute", queryStage Stage.script queryWordForceAcute)
+  , ("word-accent-with-position", queryStage Stage.script queryWordAccentWithPosition)
+  , ("word-initial-aspiration", queryStage Stage.script queryWordInitialAspiration)
+  , ("word-diaeresis-convention", queryStage Stage.script queryWordDiaeresisConvention)
   ]
