@@ -39,8 +39,8 @@ getSourceMetadata h = Primary.Source sid t (Just a) lic []
   a = Header.titleStmtAuthor titleStmt
   lic = []
 
-getMilestoneContents :: Milestone -> [Primary.Content]
-getMilestoneContents (Milestone u _) | u == "para" = pure $ Primary.ContentMilestone Primary.MilestoneParagraph
+getMilestoneContents :: Milestone -> [Either Primary.Milestone Text]
+getMilestoneContents (Milestone u _) | u == "para" = [Left Primary.MilestoneParagraph]
 getMilestoneContents _ = []
 
 isGreekChar :: Char -> Bool
@@ -79,22 +79,22 @@ buildPrimaryWord t
 extractWords :: Text -> [Primary.Content]
 extractWords = fmap (Primary.ContentWord . buildPrimaryWord) . Text.words
 
-getLineContents :: Line -> [Primary.Content]
-getLineContents (Line _ t) = extractWords t
+getLineContents :: Line -> [Either Primary.Milestone Text]
+getLineContents (Line _ t) = [Right t]
 
-getQuoteContents :: Quote -> [Primary.Content]
+getQuoteContents :: Quote -> [Either Primary.Milestone Text]
 getQuoteContents (Quote _ ls) = concatMap getLineContents ls
 
-getCitContents :: Cit -> [Primary.Content]
+getCitContents :: Cit -> [Either Primary.Milestone Text]
 getCitContents (Cit q _) = getQuoteContents q
 
-unifyContent :: Content -> [Primary.Content]
+unifyContent :: Content -> [Either Primary.Milestone Text]
 unifyContent (ContentMilestone m) = getMilestoneContents m
-unifyContent (ContentText t) = extractWords t
-unifyContent (ContentAdd t) = extractWords t
-unifyContent (ContentCorr t) = extractWords t
-unifyContent (ContentDel t) = extractWords t
-unifyContent (ContentTerm t) = extractWords t
+unifyContent (ContentText t) = [Right t]
+unifyContent (ContentAdd t) = [Right t]
+unifyContent (ContentCorr t) = [Right t]
+unifyContent (ContentDel t) = [Right t]
+unifyContent (ContentTerm t) = [Right t]
 unifyContent (ContentGap _) = []
 unifyContent (ContentQuote q) = getQuoteContents q
 unifyContent (ContentBibl _) = []
@@ -116,7 +116,15 @@ splitWordInSuffix c = [c]
 getSectionContents :: Primary.Division -> Section -> [Primary.Content]
 getSectionContents d (Section sn cs)
   = Primary.ContentMilestone (Primary.MilestoneDivision (d { Primary.divisionSection = Just sn }))
-  : (concatMap splitWordInSuffix . mergeSuffixes . concatMap unifyContent $ cs)
+  : results
+  where
+  results = process . groupRight . concatMap unifyContent $ cs
+  process (x, ys) = textContent x ++ concatMap (\(m, xs) -> Primary.ContentMilestone m : textContent xs) ys
+  textContent = concatMap splitWordInSuffix . mergeSuffixes . extractWords . Text.concat
+  groupRight :: [Either a b] -> ([b], [(a, [b])])
+  groupRight = foldr go ([], [])
+  go (Left x) (ms, ys) = ([], (x, ms) : ys)
+  go (Right m) (ms, ys) = (m : ms, ys)
 
 getChapterContents :: Primary.Division -> Chapter -> [Primary.Content]
 getChapterContents d (Chapter cn ss) = concatMap (getSectionContents $ d { Primary.divisionChapter = Just cn}) ss
