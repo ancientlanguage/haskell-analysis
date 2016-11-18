@@ -1,0 +1,7 @@
+Showing summary
+4 headings
+
+HasCrasis 0 570
+HasCrasis 1 5
+HasCrasis 2 11
+NoCrasis 328490
