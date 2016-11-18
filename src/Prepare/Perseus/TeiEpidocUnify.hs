@@ -83,7 +83,7 @@ getLineContents :: Line -> [Either Primary.Milestone Text]
 getLineContents (Line _ t) = [Right t]
 
 getQuoteContents :: Quote -> [Either Primary.Milestone Text]
-getQuoteContents (Quote _ ls) = concatMap getLineContents ls
+getQuoteContents (Quote _ ls) = Right " " : concatMap getLineContents ls ++ [Right " "]
 
 getCitContents :: Cit -> [Either Primary.Milestone Text]
 getCitContents (Cit q _) = getQuoteContents q
