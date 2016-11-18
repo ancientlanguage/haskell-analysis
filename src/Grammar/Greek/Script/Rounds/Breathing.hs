@@ -62,6 +62,7 @@ breathing = makeRoundFwd to from
   aspirationToBreathing HasInitialAspiration = Just B_Rough
   aspirationToBreathing NoInitialAspiration = Just B_Smooth
 
-  from ((x@([], _) : xs) :^ PreserveMarks :^ _ :^ asp) = addBreathing (aspirationToBreathing asp) x : fmap (addBreathing Nothing) xs
+  from ((x@([], _) : xs) :^ PreserveMarks :^ NoCrasis :^ asp) = addBreathing (aspirationToBreathing asp) x : fmap (addBreathing Nothing) xs
+  from ((x@([], _) : xs) :^ PreserveMarks :^ HasCrasis p :^ asp) = addBreathing (aspirationToBreathing asp) x : (fmap (applyCrasis p) . zip [1..] $ xs)
   from (xs :^ PreserveMarks :^ HasCrasis p :^ _) = fmap (applyCrasis p) . zip [0..] $ xs
   from (xs, _) = fmap (addBreathing Nothing) xs
