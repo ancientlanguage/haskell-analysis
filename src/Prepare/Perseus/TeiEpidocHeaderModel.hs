@@ -20,7 +20,7 @@ data TitleStmt = TitleStmt
   , titleStmtSponsor :: Text
   , titleStmtPrincipal :: Text
   , titleStmtRespStmt :: RespStmt
-  , titleStmtFunder :: Funder
+  , titleStmtFunder :: Maybe Funder
   }
   deriving (Show)
 
@@ -53,12 +53,14 @@ data Monogr = Monogr
   deriving (Show)
 
 data BiblStruct = BiblStruct
-  { biblStructMonogr :: Monogr
+  { biblStructDefault :: Maybe Text
+  , biblStructMonogr :: Monogr
   }
   deriving (Show)
 
 data SourceDesc = SourceDesc
-  { sourceDescBiblStruct :: BiblStruct
+  { sourceDescDefault :: Maybe Text
+  , sourceDescBiblStruct :: BiblStruct
   }
   deriving (Show)
 
@@ -104,12 +106,14 @@ data EncodingDesc = EncodingDesc
 
 data Language = Language
   { languageIdent :: Text
+  , languageUsage :: Maybe Text
   , languageContent :: Text
   }
   deriving (Show)
 
 data LangUsage = LangUsage
-  { langUsageLanguages :: [Language]
+  { langUsageDefault :: Maybe Text
+  , langUsageLanguages :: [Language]
   }
   deriving (Show)
 

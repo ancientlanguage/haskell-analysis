@@ -16,6 +16,7 @@ data Gap = Gap
 data QuoteLine = QuoteLine
   { quoteLineMet :: Maybe Text
   , quoteLineContent :: Text
+  , quoteLineAna :: Maybe Text
   }
   deriving (Show)
 
@@ -28,6 +29,7 @@ data Quote = Quote
 data Bibl = Bibl
   { biblN :: Maybe Text
   , biblContent :: Text
+  , biblDefault :: Maybe Text
   }
   deriving (Show)
 
@@ -97,7 +99,7 @@ data Chapter = Chapter
 
 data Book = Book
   { bookNumber :: Integer
-  , bookHead :: Text
+  , bookHead :: Maybe Text
   , bookChapters :: [Chapter]
   }
   deriving (Show)
@@ -127,9 +129,24 @@ data Body
   | BodyDivision Division
   deriving (Show)
 
+data Interp = Interp
+  { interpId :: Text
+  , interpValue :: Text
+  }
+  deriving (Show)
+
+data InterpGrp = InterpGrp
+  { interpGrpType :: Text
+  , interpGrpLang :: Text
+  , interpGrpInterps :: [Interp]
+  }
+  deriving (Show)
+
 data TeiText = TeiText
   { teiTextLang :: Maybe Text
   , teiTextBody :: Body
+  , teiTextN :: Maybe Text
+  , teiTextIntrpGrp :: Maybe InterpGrp
   }
   deriving (Show)
 

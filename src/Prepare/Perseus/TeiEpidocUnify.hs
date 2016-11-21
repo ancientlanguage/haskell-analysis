@@ -80,7 +80,7 @@ extractWords :: Text -> [Primary.Content]
 extractWords = fmap (Primary.ContentWord . buildPrimaryWord) . Text.words
 
 getQuoteLineContents :: QuoteLine -> [Either Primary.Milestone Text]
-getQuoteLineContents (QuoteLine _ t) = [Right $ Text.concat [" ", t, " "]]
+getQuoteLineContents (QuoteLine _ t _) = [Right $ Text.concat [" ", t, " "]]
 
 getQuoteContents :: Quote -> [Either Primary.Milestone Text]
 getQuoteContents (Quote _ ls) = Right " " : concatMap getQuoteLineContents ls ++ [Right " "]

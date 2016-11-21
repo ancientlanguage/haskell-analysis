@@ -5,7 +5,7 @@ import Control.Lens (over, _Just)
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Prepare.Perseus.TeiEpidocModel
-import Prepare.Perseus.TeiEpidocHeaderParser
+import qualified Prepare.Perseus.TeiEpidocHeaderParser as Header
 import Prepare.Perseus.TeiEpidocParserCommon
 import Prepare.Xml.Parser (NodeParser, (<|>), many, optional)
 import qualified Prepare.Xml.Parser as Xml
@@ -62,14 +62,20 @@ plainText = Xml.content
 bibl :: NodeParser Bibl
 bibl = build <$> Xml.elementContentAttrNS (teiNS "bibl") attributes
   where
-  build (x, t) = Bibl x t
-  attributes = optional (Xml.attribute "n")
+  build ((d, n), t) = Bibl n t d
+  attributes = do
+    d <- optional (Xml.attribute "default")
+    n <- optional (Xml.attribute "n")
+    return (d, n)
 
 quoteLine :: NodeParser QuoteLine
 quoteLine = build <$> Xml.elementContentAttrNS (teiNS "l") attributes
   where
-  build (x, y) = QuoteLine x y
-  attributes = optional (Xml.attribute "met")
+  build ((a, m), c) = QuoteLine m c a
+  attributes = do
+    a <- optional (Xml.attribute "ana")
+    m <- optional (Xml.attribute "met")
+    return (a, m)
 
 quote :: NodeParser Quote
 quote = build <$> Xml.elementAttrNS (teiNS "quote") attributes children
@@ -134,7 +140,7 @@ book = build <$> Xml.elementAttrNS (teiNS "div") attributes children
   build (x, (y, z)) = Book x y z
   attributes = divTypeOrSubtype "book"
   children = do
-    h <- Xml.elementContentNS (teiNS "head")
+    h <- optional (Xml.elementContentNS (teiNS "head"))
     cs <- many chapter
     return (h, cs)
 
@@ -193,16 +199,38 @@ body = Xml.elementNS (teiNS "body") children
     = MP.try (BodyEdition <$> edition)
     <|> (BodyDivision <$> division)
 
+interp :: NodeParser Interp
+interp = build <$> Xml.elementContentAttrNS (teiNS "interp") attributes
+  where
+  build (i, v) = Interp i v
+  attributes = Xml.attributeXml "id"
+
+interpGrp :: NodeParser InterpGrp
+interpGrp = build <$> Xml.elementAttrNS (teiNS "interpGrp") attributes children
+  where
+  build ((t, l), v) = InterpGrp t l v
+  attributes = do
+    t <- Xml.attribute "type"
+    l <- Xml.attributeXml "lang"
+    return (t, l)
+  children = many interp
+
 teiText :: NodeParser TeiText
 teiText = build <$> Xml.elementAttrNS (teiNS "text") attributes children
   where
-  build (l, b) = TeiText l b
-  attributes = optional (Xml.attributeXml "lang")
-  children = body
+  build ((n, l), (i, b)) = TeiText l b n i
+  attributes = do
+    n <- optional (Xml.attribute "n")
+    l <- optional (Xml.attributeXml "lang")
+    return (n, l)
+  children = do
+    i <- optional interpGrp
+    b <- body
+    return (i, b)
 
 tei :: NodeParser Tei
 tei = Xml.elementNS (teiNS "TEI") children 
   where
   children = pure Tei
-    <*> teiHeader
+    <*> Header.teiHeader
     <*> teiText

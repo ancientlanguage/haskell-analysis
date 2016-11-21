@@ -31,7 +31,7 @@ titleStmt = Xml.elementNS (teiNS "titleStmt") children
     <*> xmlContent "sponsor"
     <*> xmlContent "principal"
     <*> respStmt
-    <*> funder
+    <*> optional funder
 
 imprint :: NodeParser Imprint
 imprint = Xml.elementNS (teiNS "imprint") children
@@ -62,21 +62,43 @@ foldMonogrProp = foldr go (Monogr Nothing Nothing Nothing Nothing)
   go (MonogrPropImprint x) m = m { monogrImprint = Just x }
   go (MonogrPropEditor x) m = m { monogrEditor = Just x }
 
+monogrChildren :: NodeParser Monogr
+monogrChildren = foldMonogrProp <$> many
+  (( MonogrPropAuthor <$> xmlContent "author")
+  <|> (MonogrPropTitle <$> xmlContent "title")
+  <|> (MonogrPropImprint <$> imprint)
+  <|> (MonogrPropEditor <$> editor)
+  )
+
 monogr :: NodeParser Monogr
-monogr = Xml.elementNS (teiNS "monogr") children
-  where
-  children = foldMonogrProp <$> many
-    (( MonogrPropAuthor <$> xmlContent "author")
-    <|> (MonogrPropTitle <$> xmlContent "title")
-    <|> (MonogrPropImprint <$> imprint)
-    <|> (MonogrPropEditor <$> editor)
-    )
+monogr = Xml.elementNS (teiNS "monogr") monogrChildren
 
 biblStruct :: NodeParser BiblStruct
-biblStruct = BiblStruct <$> Xml.elementNS (teiNS "biblStruct") monogr
+biblStruct = build <$> Xml.elementAttrNS (teiNS "biblStruct") attributes monogr
+  where
+  build (a, b) = BiblStruct a b
+  attributes = optional (Xml.attribute "default")
+
+bibl :: NodeParser BiblStruct
+bibl = build <$> Xml.elementAttrNS (teiNS "bibl") attributes children
+  where
+  build (a, m) = BiblStruct a m
+  attributes = optional (Xml.attribute "default")
+  children = do
+    a <- xmlContent "author"
+    t <- xmlContent "title"
+    p <- xmlContent "publisher"
+    d <- xmlContent "date"
+    return $ Monogr (Just a) (Just t) (Just (Imprint p d Nothing)) Nothing
 
 sourceDesc :: NodeParser SourceDesc
-sourceDesc = SourceDesc <$> Xml.elementNS (teiNS "sourceDesc") biblStruct
+sourceDesc = build <$> Xml.elementAttrNS (teiNS "sourceDesc") attributes children
+  where
+  build (a, b) = SourceDesc a b
+  attributes = optional (Xml.attribute "default")
+  children
+    = MP.try biblStruct
+    <|> bibl
 
 publicationStmt :: NodeParser PublicationStmt
 publicationStmt = Xml.elementNS (teiNS "publicationStmt") children
@@ -146,11 +168,17 @@ encodingDesc = Xml.elementNS (teiNS "encodingDesc") children
 language :: NodeParser Language
 language = build <$> Xml.elementContentAttrNS (teiNS "language") attributes
   where
-  build (i, c) = Language i c
-  attributes = Xml.attribute "ident"
+  build ((i, u), c) = Language i u c
+  attributes = do
+    i <- Xml.attribute "ident"
+    u <- optional (Xml.attribute "usage")
+    return (i, u)
 
 langUsage :: NodeParser LangUsage
-langUsage = LangUsage <$> Xml.elementNS (teiNS "langUsage") (many language)
+langUsage = build <$> Xml.elementAttrNS (teiNS "langUsage") attributes (many language)
+  where
+  build (a, b) = LangUsage a b
+  attributes = optional (Xml.attribute "default")
 
 profileDesc :: NodeParser ProfileDesc
 profileDesc = ProfileDesc <$> Xml.elementNS (teiNS "profileDesc") langUsage
