@@ -100,17 +100,21 @@ getApparatusCorrContents (ApparatusCorr t) = [t]
 getTermContents :: Term -> [Text]
 getTermContents (Term t) = [t]
 
+getSpeakerContents :: Speaker -> [Text]
+getSpeakerContents (Speaker _ p) = [p]
+
 unifyContent :: Content -> [Either Primary.Milestone Text]
-unifyContent (ContentMilestone m) = fmap Left (getMilestoneContents m)
+unifyContent (ContentMilestone m) = fmap Left $ getMilestoneContents m
 unifyContent (ContentText t) = [Right t]
-unifyContent (ContentAdd t) = fmap Right (getApparatusAddContents t)
-unifyContent (ContentCorr t) = fmap Right (getApparatusCorrContents t)
-unifyContent (ContentDel t) = fmap Right (getApparatusDelContents t)
-unifyContent (ContentTerm t) = fmap Right (getTermContents t)
+unifyContent (ContentAdd t) = fmap Right $ getApparatusAddContents t
+unifyContent (ContentCorr t) = fmap Right $ getApparatusCorrContents t
+unifyContent (ContentDel t) = fmap Right $ getApparatusDelContents t
+unifyContent (ContentTerm t) = fmap Right $ getTermContents t
 unifyContent (ContentGap _) = []
 unifyContent (ContentQuote q) = getQuoteContents q
 unifyContent (ContentBibl _) = []
 unifyContent (ContentCit c) = getCitContents c
+unifyContent (ContentSpeaker s) = fmap Right $ getSpeakerContents s
 
 mergeSuffixes :: [Primary.Content] -> [Primary.Content]
 mergeSuffixes = foldr go []

@@ -51,6 +51,12 @@ data ApparatusAdd = ApparatusAdd Text
 data Term = Term Text
   deriving (Show)
 
+data Speaker = Speaker
+  { speakerSpeaker :: Text
+  , speakerContent :: Text
+  }
+  deriving (Show)
+
 data Content
   = ContentMilestone Milestone
   | ContentText Text
@@ -62,6 +68,7 @@ data Content
   | ContentQuote Quote
   | ContentBibl Bibl
   | ContentCit Cit
+  | ContentSpeaker Speaker
   deriving (Show)
 
 data LineRender = LineRender_DisplayNumAndIndent

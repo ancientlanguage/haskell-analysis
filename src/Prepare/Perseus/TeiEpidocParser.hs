@@ -87,6 +87,17 @@ quote = build <$> Xml.elementAttrNS (teiNS "quote") attributes children
 cit :: NodeParser Cit
 cit = Xml.elementNS (teiNS "cit") (Cit <$> quote <*> bibl)
 
+speaker :: NodeParser Speaker
+speaker = Xml.elementNS (teiNS "sp") children
+  where
+  children = do
+    s <- xmlContent "speaker"
+    p <- xmlContent "p"
+    return $ Speaker s p
+
+speakerContents :: NodeParser [Content]
+speakerContents = pure . ContentSpeaker <$> speaker
+
 content :: NodeParser Content
 content
   = MP.try (ContentText <$> plainText)
@@ -120,12 +131,15 @@ divTypeOrSubtype v
   = MP.try (textPartSubtype v)
   <|> divType v
 
+paragraph :: NodeParser [Content]
+paragraph = Xml.elementNS (teiNS "p") (many content)
+
 section :: NodeParser Section
 section = build <$> Xml.elementAttrNS (teiNS "div") attributes children
   where
   build (x, y) = Section x y
   attributes = divTypeOrSubtype "section"
-  children = concat <$> many (Xml.elementNS (teiNS "p") (many content))
+  children = concat <$> many (paragraph <|> speakerContents)
 
 chapter :: NodeParser Chapter
 chapter = build <$> Xml.elementAttrNS (teiNS "div") attributes children
