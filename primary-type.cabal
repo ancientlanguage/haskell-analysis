@@ -1,5 +1,5 @@
 name: primary-type
-version: 2.0.0
+version: 3.0.0
 synopsis: Types for primary sources of ancient language texts
 description: Please see README.md
 homepage: https://github.com/ancientlanguage/haskell-primary-type#readme
