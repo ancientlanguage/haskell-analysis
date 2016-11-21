@@ -29,6 +29,7 @@ consonantMarks = makeRoundFwd to from
   to (C_φ, (Nothing, (Nothing, Nothing))) = Success CR_φ
   to (C_χ, (Nothing, (Nothing, Nothing))) = Success CR_χ
   to (C_ψ, (Nothing, (Nothing, Nothing))) = Success CR_ψ
+  to (C_ϝ, (Nothing, (Nothing, Nothing))) = Success CR_ϝ
   to x = Failure $ InvalidConsonantMarks x
 
   from CR_β = (C_β, (Nothing, (Nothing, Nothing)))
@@ -49,3 +50,4 @@ consonantMarks = makeRoundFwd to from
   from CR_φ = (C_φ, (Nothing, (Nothing, Nothing)))
   from CR_χ = (C_χ, (Nothing, (Nothing, Nothing)))
   from CR_ψ = (C_ψ, (Nothing, (Nothing, Nothing)))
+  from CR_ϝ = (C_ϝ, (Nothing, (Nothing, Nothing)))

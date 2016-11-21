@@ -31,6 +31,7 @@ letterVowelConsonant = RoundId to from
   to L_χ = Right C_χ
   to L_ψ = Right C_ψ
   to L_ω = Left V_ω
+  to L_ϝ = Right C_ϝ
 
   from (Left V_α) = L_α
   from (Right C_β) = L_β
@@ -56,3 +57,4 @@ letterVowelConsonant = RoundId to from
   from (Right C_χ) = L_χ
   from (Right C_ψ) = L_ψ
   from (Left V_ω) = L_ω
+  from (Right C_ϝ) = L_ϝ

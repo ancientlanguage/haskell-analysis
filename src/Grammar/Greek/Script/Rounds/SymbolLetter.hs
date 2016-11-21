@@ -56,6 +56,7 @@ symbolLetter = RoundId to from
   to S_χ = (L_χ, (Lowercase, NotFinal))
   to S_ψ = (L_ψ, (Lowercase, NotFinal))
   to S_ω = (L_ω, (Lowercase, NotFinal))
+  to S_ϝ = (L_ϝ, (Lowercase, NotFinal))
 
   from (L_α, (Uppercase, _)) = S_Α
   from (L_β, (Uppercase, _)) = S_Β
@@ -106,3 +107,4 @@ symbolLetter = RoundId to from
   from (L_χ, (Lowercase, _)) = S_χ
   from (L_ψ, (Lowercase, _)) = S_ψ
   from (L_ω, (Lowercase, _)) = S_ω
+  from (L_ϝ, (_, _)) = S_ϝ

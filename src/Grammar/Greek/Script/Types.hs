@@ -12,6 +12,7 @@ data Symbol
   | S_Ν | S_Ξ | S_Ο | S_Π | S_Ρ | S_Σ       | S_Τ | S_Υ | S_Φ | S_Χ | S_Ψ | S_Ω
   | S_α | S_β | S_γ | S_δ | S_ε | S_ζ | S_η | S_θ | S_ι | S_κ | S_λ | S_μ
   | S_ν | S_ξ | S_ο | S_π | S_ρ | S_σ | S_ς | S_τ | S_υ | S_φ | S_χ | S_ψ | S_ω
+  | S_ϝ
   deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize Symbol
 
@@ -27,6 +28,7 @@ instance Serialize WordPunctuation
 data Letter
   = L_α | L_β | L_γ | L_δ | L_ε | L_ζ | L_η | L_θ | L_ι | L_κ | L_λ | L_μ
   | L_ν | L_ξ | L_ο | L_π | L_ρ | L_σ | L_τ | L_υ | L_φ | L_χ | L_ψ | L_ω
+  | L_ϝ
   deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize Letter
 
@@ -42,7 +44,7 @@ data Vowel = V_α | V_ε | V_η | V_ι | V_ο | V_υ | V_ω
   deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize Vowel
 
-data Consonant = C_β | C_γ | C_δ | C_ζ | C_θ | C_κ | C_λ | C_μ | C_ν | C_ξ | C_π | C_ρ | C_σ | C_τ | C_φ | C_χ | C_ψ
+data Consonant = C_β | C_γ | C_δ | C_ζ | C_θ | C_κ | C_λ | C_μ | C_ν | C_ξ | C_π | C_ρ | C_σ | C_τ | C_φ | C_χ | C_ψ | C_ϝ
   deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize Consonant
 
@@ -62,7 +64,7 @@ data BasicAccent = AB_Acute | AB_Circumflex
   deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize BasicAccent
 
-data AccentPosition = Ultima | Penult | Antepenult
+data AccentPosition = Ultima | Penult | Antepenult | Preantepenult
   deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize AccentPosition
 
@@ -85,7 +87,7 @@ data SyllabicMark = S_IotaSubscript | S_Diaeresis
   deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize SyllabicMark
 
-data ConsonantRho = CR_β | CR_γ | CR_δ | CR_ζ | CR_θ | CR_κ | CR_λ | CR_μ | CR_ν | CR_ξ | CR_π | CR_ρ Breathing | CR_σ | CR_τ | CR_φ | CR_χ | CR_ψ
+data ConsonantRho = CR_β | CR_γ | CR_δ | CR_ζ | CR_θ | CR_κ | CR_λ | CR_μ | CR_ν | CR_ξ | CR_π | CR_ρ Breathing | CR_σ | CR_τ | CR_φ | CR_χ | CR_ψ | CR_ϝ
   deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize ConsonantRho
 

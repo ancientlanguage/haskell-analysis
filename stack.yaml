@@ -3,11 +3,11 @@ packages:
 - '.'
 - location:
     git: https://github.com/ancientlanguage/haskell-primary-type.git
-    commit: ec0d771f98d1a0f61c42dfbdc3d5a40965753bde
+    commit: bf5642c7641ba149182e380795b95e5aba58471e
   extra-dep: true
 - location:
     git: https://github.com/ancientlanguage/haskell-grammar.git
-    commit: 782e1df8a074824183ab1c987bf3c567cbbd84a8
+    commit: b0712b8422e301d955d396f00cb67cea6d9ad8c6
   extra-dep: true
 extra-deps: []
 flags: {}

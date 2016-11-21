@@ -58,6 +58,7 @@ symbolToChar S_φ = 'φ'
 symbolToChar S_χ = 'χ'
 symbolToChar S_ψ = 'ψ'
 symbolToChar S_ω = 'ω'
+symbolToChar S_ϝ = 'ϝ'
 
 
 unicodeSymbol :: RoundFwd InvalidChar Char (Symbol :+ Mark :+ WordPunctuation)
@@ -116,6 +117,7 @@ unicodeSymbol = makeRoundFwd to from
   to 'χ' = validSymbol S_χ
   to 'ψ' = validSymbol S_ψ
   to 'ω' = validSymbol S_ω
+  to 'ϝ' = validSymbol S_ϝ
   to '\x0300' = validMark M_Grave -- COMBINING GRAVE ACCENT
   to '\x0301' = validMark M_Acute -- COMBINING ACUTE ACCENT
   to '\x0308' = validMark M_Diaeresis -- COMBINING DIAERESIS

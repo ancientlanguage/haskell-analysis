@@ -44,6 +44,7 @@ accent = Round (over _Failure pure . to) (over _Failure pure . from)
   toPair ([(2,AC_Circumflex)], _) = Success $ StandardAccent AB_Circumflex Antepenult
   toPair ([(2,AC_Acute)], _) = Success $ StandardAccent AB_Acute Antepenult
   toPair ([(2,AC_Acute),(0,AC_Acute)], NoWordPunctuation) = Success $ ExtraAcuteUlt AB_Acute Antepenult
+  toPair ([(3,AC_Acute),(1,AC_Acute)], NoWordPunctuation) = Success $ ExtraAcuteUlt AB_Acute Preantepenult
   toPair x = Failure $ InvalidContextualAccent x
 
   from = over (_Success . _1) reverse . fromTriple . over _1 (reverse . fmap (\x -> (x, Nothing)))
@@ -60,6 +61,7 @@ accent = Round (over _Failure pure . to) (over _Failure pure . from)
   fromTriple (x1 : x2 : (s3, _) : xs, (StandardAccent AB_Circumflex Antepenult, hp)) = Success (x1 : x2 : (s3, Just AC_Circumflex) : xs, hp)
   fromTriple ((s1, _) : x2 : (s3, _) : xs, (ExtraAcuteUlt AB_Acute Antepenult, hp@NoWordPunctuation)) = Success ((s1, Just AC_Acute) : x2 : (s3, Just AC_Acute) : xs, hp)
   fromTriple (x1 : (s2, _) : (s3, _) : xs, (ExtraAcutePen AB_Circumflex Antepenult, hp@NoWordPunctuation)) = Success (x1 : (s2, Just AC_Acute) : (s3, Just AC_Circumflex) : xs, hp)
+  fromTriple (x1 : (s2, _) : x3 : (s4, _) : xs, (ExtraAcuteUlt AB_Acute Preantepenult, hp@NoWordPunctuation)) = Success (x1 : (s2, Just AC_Acute) : x3 : (s4, Just AC_Acute) : xs, hp)
   fromTriple (_, x) = Failure $ InvalidWordAccent x
 
 getAccents :: [ s :* Maybe ContextualAccent ] -> [Maybe ContextualAccent]
