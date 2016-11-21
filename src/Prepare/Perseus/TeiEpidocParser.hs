@@ -46,10 +46,10 @@ bibl = build <$> Xml.elementContentAttrNS (teiNS "bibl") attributes
   build (x, t) = Bibl x t
   attributes = optional (Xml.attribute "n")
 
-line :: NodeParser Line
-line = build <$> Xml.elementContentAttrNS (teiNS "l") attributes
+quoteLine :: NodeParser QuoteLine
+quoteLine = build <$> Xml.elementContentAttrNS (teiNS "l") attributes
   where
-  build (x, y) = Line x y
+  build (x, y) = QuoteLine x y
   attributes = optional (Xml.attribute "met")
 
 quote :: NodeParser Quote
@@ -57,7 +57,7 @@ quote = build <$> Xml.elementAttrNS (teiNS "quote") attributes children
   where
   build (x, y) = Quote x y
   attributes = Xml.attribute "type"
-  children = many line
+  children = many quoteLine
 
 cit :: NodeParser Cit
 cit = Xml.elementNS (teiNS "cit") (Cit <$> quote <*> bibl)

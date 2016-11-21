@@ -14,15 +14,15 @@ data Gap = Gap
   }
   deriving (Show)
 
-data Line = Line
-  { lineMet :: Maybe Text
-  , lineContent :: Text
+data QuoteLine = QuoteLine
+  { quoteLineMet :: Maybe Text
+  , quoteLineContent :: Text
   }
   deriving (Show)
 
 data Quote = Quote
   { quoteType :: Text
-  , quoteLines :: [Line]
+  , quoteLines :: [QuoteLine]
   }
   deriving (Show)
 

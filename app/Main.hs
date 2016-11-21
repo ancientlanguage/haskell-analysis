@@ -6,6 +6,7 @@ import Prelude hiding (words)
 import qualified Data.ByteString as BS
 import qualified Data.Either as Either
 import qualified Data.List as List
+import qualified Data.Maybe as Maybe
 import qualified Data.Serialize as Serialize
 import qualified Data.Set as Set
 import Data.Text (Text)
@@ -64,9 +65,7 @@ printText :: [Text] -> IO ()
 printText = Text.putStrLn . Text.intercalate " "
 
 tryParseTei :: FilePath -> IO (Either String Tei)
-tryParseTei xmlPath = loadParse xmlPath tei logBook >>= \case
-  Left x -> return . Left $ show x
-  Right x -> return . Right $ x
+tryParseTei xmlPath = loadParse xmlPath tei logBook
 
 showParsingFiles :: [FilePath] -> IO ()
 showParsingFiles files = do
@@ -138,7 +137,12 @@ loadAllGroups = do
       t <- (fmap . fmap) Tei.unify . tryParseTei $ x
       _ <- case t of
         Left e -> putStrLn $ "  " ++ e
-        Right r -> Text.putStrLn $ Text.concat ["  ", Primary.sourceTitle r]
+        Right r -> Text.putStrLn $ Text.concat 
+          [ "  "
+          , Maybe.maybe "-" id . Primary.sourceAuthor $ r
+          , " -- "
+          , Text.intercalate " " . Text.words . Primary.sourceTitle $ r
+          ]
       return t
   perseusSources <- mapM parseUnify perseusShortList
   let perseusGroup = Tei.perseusGroup { Primary.groupSources = Either.rights perseusSources }
@@ -149,10 +153,8 @@ loadAllGroups = do
   let successful = tryAdd sblgntResult [perseusGroup]
   return successful
 
-tryLoadAllPerseus :: IO ()
-tryLoadAllPerseus = do
-   let perseusDir = "./data/xml-perseus-greek"
-   perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
+showAllLoadResults :: [FilePath] -> IO ()
+showAllLoadResults files = do
    let
      handleSingle x = do
        _ <- putStrLn ""
@@ -161,19 +163,23 @@ tryLoadAllPerseus = do
        case y of
          Left e -> putStrLn $ "ERROR: " ++ take 1000 e
          Right _ -> putStrLn $ "SUCCESS"
-   mapM_ handleSingle perseusFiles
+   mapM_ handleSingle files
+
+showSingleLoadResult :: FilePath -> IO ()
+showSingleLoadResult file =
+  tryParseTei file >>= \case
+    Left e -> putStrLn $ e
+    Right _ -> putStrLn "Success!"
 
 main :: IO ()
 main = do
---  all <- loadAllGroups
---  dumpAffixes all
---  dumpInvalidWords all
---  outputBinaryGroups all
+  successful <- loadAllGroups
+--  dumpAffixes successful
+--  dumpInvalidWords successful
+  outputBinaryGroups successful
 
-  tryLoadAllPerseus
-
-  -- let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
-  -- papyriFiles <- find always (fileName ~~? "*.xml") papyriDir
-
-  -- let files = sblgntFile : perseusFiles ++ papyriFiles
-  -- mapM_ loadFile files
+  -- let perseusDir = "./data/xml-perseus-greek"
+  -- perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
+  -- -- let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
+  -- -- papyriFiles <- find always (fileName ~~? "*.xml") papyriDir
+  -- showSingleLoadResult "./data/xml-perseus-greek/data/tlg0001/tlg001/tlg0001.tlg001.perseus-grc2.xml"
