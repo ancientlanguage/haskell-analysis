@@ -5,7 +5,8 @@ getPerseusPath g t v = "./data/xml-perseus-greek/data/" ++ g ++ "/" ++ t ++ "/" 
 
 perseusShortList :: [FilePath]
 perseusShortList =
-  [ getPerseusPath "tlg0014" "tlg005" "1"
+  [ getPerseusPath "tlg0001" "tlg001" "2"
+  , getPerseusPath "tlg0014" "tlg005" "1"
   , getPerseusPath "tlg0014" "tlg011" "1"
   , getPerseusPath "tlg0014" "tlg012" "1"
   , getPerseusPath "tlg0014" "tlg014" "1"
