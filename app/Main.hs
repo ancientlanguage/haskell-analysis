@@ -63,14 +63,14 @@ showResult f (Right x) = f x
 printText :: [Text] -> IO ()
 printText = Text.putStrLn . Text.intercalate " "
 
-tryParse :: FilePath -> IO (Either String Tei)
-tryParse xmlPath = loadParse xmlPath tei logBook >>= \case
+tryParseTei :: FilePath -> IO (Either String Tei)
+tryParseTei xmlPath = loadParse xmlPath tei logBook >>= \case
   Left x -> return . Left $ show x
   Right x -> return . Right $ x
 
 showParsingFiles :: [FilePath] -> IO ()
 showParsingFiles files = do
-  results <- mapM (\x -> tryParse x >>= \y -> return (y, x)) $ files
+  results <- mapM (\x -> tryParseTei x >>= \y -> return (y, x)) $ files
   _ <- mapM_ (\(x, y) -> putStrLn $ (if x then "✓ " else "× ") ++ y) . List.sort . fmap (\(x, y) -> (Either.isRight x, y)) $ results
   putStrLn $ show (length . filter (\(x, _) -> Either.isRight x) $ results) ++ " files parsed"
 
@@ -132,12 +132,10 @@ loadAllGroups = do
   _ <- printText ["Reading", Text.pack sblgntFile]
   sblgntResult <- (fmap . fmap) (Sblgnt.unify) $ loadParse sblgntFile sblgnt emptyLog
 
---  let perseusDir = "./data/xml-perseus-greek"
---  perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
   let
     parseUnify x = do
       _ <- putStrLn $ "Reading " ++ x
-      t <- (fmap . fmap) Tei.unify . tryParse $ x
+      t <- (fmap . fmap) Tei.unify . tryParseTei $ x
       _ <- case t of
         Left e -> putStrLn $ "  " ++ e
         Right r -> Text.putStrLn $ Text.concat ["  ", Primary.sourceTitle r]
@@ -151,12 +149,28 @@ loadAllGroups = do
   let successful = tryAdd sblgntResult [perseusGroup]
   return successful
 
+tryLoadAllPerseus :: IO ()
+tryLoadAllPerseus = do
+   let perseusDir = "./data/xml-perseus-greek"
+   perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
+   let
+     handleSingle x = do
+       _ <- putStrLn ""
+       _ <- putStrLn x
+       y <- tryParseTei x
+       case y of
+         Left e -> putStrLn $ "ERROR: " ++ take 1000 e
+         Right _ -> putStrLn $ "SUCCESS"
+   mapM_ handleSingle perseusFiles
+
 main :: IO ()
 main = do
-  all <- loadAllGroups
+--  all <- loadAllGroups
 --  dumpAffixes all
 --  dumpInvalidWords all
-  outputBinaryGroups all
+--  outputBinaryGroups all
+
+  tryLoadAllPerseus
 
   -- let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
   -- papyriFiles <- find always (fileName ~~? "*.xml") papyriDir
