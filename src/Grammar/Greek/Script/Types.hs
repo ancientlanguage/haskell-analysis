@@ -52,7 +52,8 @@ data EndOfSentence = IsEndOfSentence | NotEndOfSentence
   deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize EndOfSentence
 
-data Elision = IsElided | NotElided
+-- For Aphaeresis (Inverse Elision), see Smyth 76
+data Elision = IsElided | Aphaeresis | NotElided
   deriving (Eq, Ord, Show, Generic, Data, Typeable)
 instance Serialize Elision
 

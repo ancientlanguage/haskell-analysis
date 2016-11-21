@@ -14,10 +14,13 @@ data InvalidFinals
 final :: RoundFwd [InvalidFinals] ([(Letter :* Final) :* a] :* Elision) ([Letter :* a] :* Elision)
 final = makeRoundFwd to from
   where
-  to (xs, el@NotElided) = over (_Success . _1) reverse $ case reverse xs of
+  to (xs, el@NotElided) = toHandleFinal xs el
+  to (xs, el@Aphaeresis) = toHandleFinal xs el
+  to (xs, el@IsElided) = pure (:^ el) <*> (ensureMedials xs)
+
+  toHandleFinal xs el = over (_Success . _1) reverse $ case reverse xs of
     [] -> Success $ [] :^ el
     ((q, a) : xs') -> pure (:^ el) <*> (pure (:) <*> pureFst a (checkFinal q) <*> ensureMedials xs')
-  to (xs, el@IsElided) = pure (:^ el) <*> (ensureMedials xs)
 
   pureFst a mq = pure (\x -> (x, a)) <*> mq
 
@@ -32,6 +35,7 @@ final = makeRoundFwd to from
     check (l, IsFinal) = Failure [FinalInMedialPosition l]
 
   from (xs, el@NotElided) = setWordFinal xs :^ el
+  from (xs, el@Aphaeresis) = setWordFinal xs :^ el
   from (xs, el@IsElided) = fmap (\(l, a) -> ((l :^ NotFinal), a)) xs :^ el
 
   setWordFinal xs = reverse $ case reverse xs of

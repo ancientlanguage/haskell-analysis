@@ -110,6 +110,7 @@ queryElisionSyllables = result
   where
   result x = case el x of
     IsElided -> [(asp x, (syll x, fin x))]
+    Aphaeresis -> []
     NotElided -> []
   asp = view (_2 . _wordInitialAspiration)
   syll = view (_2 . _wordSyllables)
@@ -152,6 +153,7 @@ queryElisionNextSyllable (w, (_, nws)) = ens
   where
   ens = case view (_2 . _wordElision) w of
     IsElided -> pure (fmap uncurrySyllable . snd . getInitialSyllable $ snd w, (fc, mn))
+    Aphaeresis -> []
     NotElided -> []
   fc = view (_2 . _wordFinalConsonants) w
   mn = case nws of

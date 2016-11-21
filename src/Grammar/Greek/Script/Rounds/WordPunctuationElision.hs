@@ -14,14 +14,20 @@ data InvalidWordPunctuation
 wordPunctuationElision :: RoundFwd InvalidWordPunctuation [a :+ WordPunctuation] ([a] :* Elision)
 wordPunctuationElision = makeRoundFwd to from
   where
-  to xs = case reverse xs of
+  to xs = case xs of
     [] -> Failure EmptyWord
     (Right P_RightQuote : xs') -> case rights xs' of
-      [] -> Success (reverse . lefts $ xs', IsElided)
-      ps@(_ : _) -> Failure $ InvalidWordPunctuation (reverse ps)
-    xs'@(_ : _) -> case rights xs' of
-      [] -> Success (reverse . lefts $ xs', NotElided)
-      ps@(_ : _) -> Failure $ InvalidWordPunctuation (reverse ps)
+      [] -> Success (lefts xs', Aphaeresis)
+      ps@(_ : _) -> Failure $ InvalidWordPunctuation ps
+    (_ : _) -> case reverse xs of
+      [] -> Failure EmptyWord
+      (Right P_RightQuote : xs') -> case rights xs' of
+        [] -> Success (reverse . lefts $ xs', IsElided)
+        ps@(_ : _) -> Failure $ InvalidWordPunctuation (reverse ps)
+      xs'@(_ : _) -> case rights xs' of
+        [] -> Success (reverse . lefts $ xs', NotElided)
+        ps@(_ : _) -> Failure $ InvalidWordPunctuation (reverse ps)
 
   from (xs, IsElided) = fmap Left xs ++ [Right P_RightQuote]
+  from (xs, Aphaeresis) = Right P_RightQuote : fmap Left xs
   from (xs, NotElided) = fmap Left xs
