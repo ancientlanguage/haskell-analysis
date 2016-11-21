@@ -178,8 +178,9 @@ main = do
   -- dumpInvalidWords successful
   -- outputBinaryGroups successful
 
-  -- let perseusDir = "./data/xml-perseus-greek"
-  -- perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
+  let perseusDir = "./data/xml-perseus-greek"
+  perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
   -- let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
   -- papyriFiles <- find always (fileName ~~? "*.xml") papyriDir
-  showSingleLoadResult "./data/xml-perseus-greek/data/tlg0001/tlg001/tlg0001.tlg001.perseus-grc2.xml"
+  showParsingFiles perseusFiles
+  -- showSingleLoadResult "./data/xml-perseus-greek/data/tlg0001/tlg001/tlg0001.tlg001.perseus-grc2.xml"

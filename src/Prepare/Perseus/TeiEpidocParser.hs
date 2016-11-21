@@ -170,10 +170,10 @@ bookLines = build <$> Xml.elementAttrNS (teiNS "div") attributes children
 
 division :: NodeParser Division
 division
-  -- = MP.try (DivisionBooks <$> many book)
-  -- <|> MP.try (DivisionChapters <$> many chapter)
-  -- <|> MP.try (DivisionSections <$> many section)
-  = DivisionBookLines <$> many bookLines
+  = MP.try (DivisionBooks <$> many book)
+  <|> MP.try (DivisionChapters <$> many chapter)
+  <|> MP.try (DivisionSections <$> many section)
+  <|> (DivisionBookLines <$> many bookLines)
 
 edition :: NodeParser Edition
 edition = build <$> Xml.elementAttrNS (teiNS "div") attributes children
@@ -190,8 +190,8 @@ body :: NodeParser Body
 body = Xml.elementNS (teiNS "body") children
   where
   children
-    = BodyEdition <$> edition
---    <|> (BodyDivision <$> division)
+    = MP.try (BodyEdition <$> edition)
+    <|> (BodyDivision <$> division)
 
 teiText :: NodeParser TeiText
 teiText = build <$> Xml.elementAttrNS (teiNS "text") attributes children
