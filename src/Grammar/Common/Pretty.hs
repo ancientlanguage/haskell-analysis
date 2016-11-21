@@ -9,10 +9,10 @@ textShow = Text.pack . show
 
 prettyMilestone :: Maybe Division :* Maybe Paragraph -> Text
 prettyMilestone (Nothing, _) = ""
-prettyMilestone (Just (Division b c v s), _)
+prettyMilestone (Just (Division b c v s l), _)
   = Text.intercalate "."
   . filter (\x -> not . Text.null $ x)
-  $ [ms b, ms c, ms v, ms s]
+  $ [ms b, ms c, ms v, ms s, ms l]
   where
   ms Nothing = ""
   ms (Just x) = textShow x

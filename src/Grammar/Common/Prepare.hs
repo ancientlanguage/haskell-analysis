@@ -8,7 +8,7 @@ import qualified Primary
 import Grammar.Common.Types
 
 toLocalDivision :: Primary.Division -> Division
-toLocalDivision (Primary.Division b c v s) = Division b c v s
+toLocalDivision (Primary.Division b c v s l) = Division b c v s l
 
 emptyMilestone :: Milestone
 emptyMilestone = (Nothing, Nothing)
@@ -42,6 +42,7 @@ prepareContents = go emptyMilestone
   go _ [] = []
   go m (Primary.ContentMilestone (Primary.MilestoneDivision x) : xs) = go (over _1 (const (Just (toLocalDivision x))) m) xs
   go m (Primary.ContentMilestone Primary.MilestoneParagraph : xs) = go (over _2 nextParagraph m) xs
+  go m (Primary.ContentMilestone (Primary.MilestoneCard _) : xs) = go m xs
   go m (Primary.ContentWord w : xs) = (m , w) : go m xs
 
 prepareSource :: Text -> Primary.Source -> SourceId :* [Milestone :* Primary.Word]

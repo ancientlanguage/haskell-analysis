@@ -29,6 +29,7 @@ data Division = Division
   , divisionChapter :: Maybe Integer
   , divisionVerse :: Maybe Integer
   , divisionSection :: Maybe Integer
+  , divisionLine :: Maybe Integer
   }
   deriving (Eq, Show, Ord, Generic)
 instance Serialize Division
