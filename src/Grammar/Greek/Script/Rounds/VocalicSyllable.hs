@@ -62,12 +62,13 @@ vocalicSyllable capTop = RoundId to from
 
   -- ἀίδιον, ἐυξέστου, ὑικὸν
   -- εὐιπποτάτην, εὐιατότερα
+  -- ἄιε, ἤυσε, ἔικτο, ὄις, ἄυπνος, ἄιον, ὤιξε
   toFold
     _
-    (v1 :^ Nothing :^ Nothing :^ b1@(Just _))
+    (v1 :^ Nothing :^ a1 :^ b1@(Just _))
     ((VS_Vowel v2 :^ Nothing :^ a2 :^ Nothing :^ _) : xs)
     | Just _ <- tryDiphthong v1 v2
-    = (VS_Vowel v1 :^ Nothing :^ Nothing :^ b1 :^ basicDiaeresisConvention)
+    = (VS_Vowel v1 :^ Nothing :^ a1 :^ b1 :^ basicDiaeresisConvention)
     : (VS_Vowel v2 :^ Nothing :^ a2 :^ Nothing :^ DiaeresisConvention AccentBreaksDiphthong EssentialDiaeresis)
     : xs
 
