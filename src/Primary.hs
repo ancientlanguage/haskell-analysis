@@ -33,6 +33,7 @@ instance Serialize Division
 data Milestone
   = MilestoneParagraph
   | MilestoneDivision Division
+  | MilestoneCard Integer
   deriving (Show, Generic)
 instance Serialize Milestone
 
