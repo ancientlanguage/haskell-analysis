@@ -126,10 +126,9 @@ dumpInvalidWords gs = mapM_ dumpInvalids $ concatMap Primary.groupSources gs
       || (x >= '\x1f00' && x <= '\x1fff'))
   isCore x = isGreekChar x || x == '\x2019' -- apostrophe
 
-main :: IO ()
-main = do
+loadAllGroups :: IO [Primary.Group]
+loadAllGroups = do
   let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
---  _ <- putStrLn "Reading files…"
   _ <- printText ["Reading", Text.pack sblgntFile]
   sblgntResult <- (fmap . fmap) (Sblgnt.unify) $ loadParse sblgntFile sblgnt emptyLog
 
@@ -150,9 +149,14 @@ main = do
     tryAdd (Left _) xs = xs
     tryAdd (Right x) xs = x : xs
   let successful = tryAdd sblgntResult [perseusGroup]
---  dumpAffixes successful
---  dumpInvalidWords successful
-  outputBinaryGroups successful
+  return successful
+
+main :: IO ()
+main = do
+  all <- loadAllGroups
+--  dumpAffixes all
+--  dumpInvalidWords all
+  outputBinaryGroups all
 
   -- let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
   -- papyriFiles <- find always (fileName ~~? "*.xml") papyriDir
