@@ -60,7 +60,7 @@ buildPrimaryWord t
   core = Text.takeWhile isCore . Text.drop (Text.length pre) $ t
   suff = Text.drop (Text.length pre + Text.length core) $ t
   isCore x = isGreekChar x || isApostrophe x
-  isApostrophe x = x == '\x02BC' || x == '\x2019' || x == '\x0027'
+  isApostrophe x = x == '\x02BC' || x == '\x2019' || x == '\x0027' || x == '\x1FBD'
   unifyApostrophe x | isApostrophe x = '\x2019'
   unifyApostrophe x = x
   removePrefixApparatusMarks = Text.filter (not . isPrefixApparatusChar) . Text.replace "[;" ""
