@@ -35,7 +35,9 @@ milestoneCard = build <$> Xml.elementAttrNS (teiNS "milestone") attributes Xml.e
     return $ MilestoneCard num
 
 milestone :: NodeParser Milestone
-milestone = milestoneParagraph <|> milestoneCard
+milestone
+  = MP.try milestoneParagraph
+  <|> milestoneCard
 
 apparatusAdd :: NodeParser ApparatusAdd
 apparatusAdd = ApparatusAdd <$> Xml.elementContentNS (teiNS "add")
@@ -138,7 +140,8 @@ book = build <$> Xml.elementAttrNS (teiNS "div") attributes children
 
 lineContent :: NodeParser LineContent
 lineContent
-  = MP.try (LineContentText <$> plainText)
+  = MP.try (LineContentMilestone <$> milestone)
+  <|> MP.try (LineContentText <$> plainText)
   <|> (LineContentDel <$> apparatusDel)
 
 line :: NodeParser Line
@@ -155,7 +158,7 @@ line = build <$> Xml.elementAttrNS (teiNS "l") attributes children
 
 bookLineContent :: NodeParser BookLineContent
 bookLineContent
-  = (BookLineContentMilestone <$> milestone)
+  = MP.try (BookLineContentMilestone <$> milestone)
   <|> (BookLineContentLine <$> line)
 
 bookLines :: NodeParser BookLines
@@ -167,10 +170,10 @@ bookLines = build <$> Xml.elementAttrNS (teiNS "div") attributes children
 
 division :: NodeParser Division
 division
-  = MP.try (DivisionBooks <$> many book)
-  <|> MP.try (DivisionChapters <$> many chapter)
-  <|> MP.try (DivisionSections <$> many section)
-  <|> MP.try (DivisionBookLines <$> many bookLines)
+  -- = MP.try (DivisionBooks <$> many book)
+  -- <|> MP.try (DivisionChapters <$> many chapter)
+  -- <|> MP.try (DivisionSections <$> many section)
+  = DivisionBookLines <$> many bookLines
 
 edition :: NodeParser Edition
 edition = build <$> Xml.elementAttrNS (teiNS "div") attributes children
@@ -179,7 +182,7 @@ edition = build <$> Xml.elementAttrNS (teiNS "div") attributes children
   attributes = do
     n <- Xml.attribute "n"
     _ <- Xml.attributeValue "type" "edition"
-    l <- Xml.attributeXml "lang"
+    l <- optional (Xml.attributeXml "lang")
     return (n, l)
   children = division
 
@@ -187,8 +190,8 @@ body :: NodeParser Body
 body = Xml.elementNS (teiNS "body") children
   where
   children
-    = MP.try (BodyEdition <$> edition)
-    <|> (BodyDivision <$> division)
+    = BodyEdition <$> edition
+--    <|> (BodyDivision <$> division)
 
 teiText :: NodeParser TeiText
 teiText = build <$> Xml.elementAttrNS (teiNS "text") attributes children

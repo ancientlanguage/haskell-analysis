@@ -66,7 +66,8 @@ data LineRender = LineRender_DisplayNumAndIndent
   deriving (Show)
 
 data LineContent
-  = LineContentText Text
+  = LineContentMilestone Milestone
+  | LineContentText Text
   | LineContentDel ApparatusDel
   deriving (Show)
 
@@ -116,7 +117,7 @@ data Division
 
 data Edition = Edition
   { editionN :: Text
-  , editionLang :: Text
+  , editionLang :: Maybe Text
   , editionDivision :: Division
   }
   deriving (Show)

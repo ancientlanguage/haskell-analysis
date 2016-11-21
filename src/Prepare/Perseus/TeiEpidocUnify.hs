@@ -125,12 +125,9 @@ splitWordInSuffix (Primary.ContentWord (Primary.Word p t s)) | Text.any isGreekC
   in fmap Primary.ContentWord [Primary.Word p t p', Primary.Word "" t' s']
 splitWordInSuffix c = [c]
 
-getSectionContents :: Primary.Division -> Section -> [Primary.Content]
-getSectionContents d (Section sn cs)
-  = Primary.ContentMilestone (Primary.MilestoneDivision (d { Primary.divisionSection = Just sn }))
-  : results
+processContents :: [Either Primary.Milestone Text] -> [Primary.Content]
+processContents = process . groupRight
   where
-  results = process . groupRight . concatMap unifyContent $ cs
   process (x, ys) = textContent x ++ concatMap (\(m, xs) -> Primary.ContentMilestone m : textContent xs) ys
   textContent = concatMap splitWordInSuffix . mergeSuffixes . extractWords . Text.concat
   groupRight :: [Either a b] -> ([b], [(a, [b])])
@@ -138,18 +135,26 @@ getSectionContents d (Section sn cs)
   go (Left x) (ms, ys) = ([], (x, ms) : ys)
   go (Right m) (ms, ys) = (m : ms, ys)
 
+getSectionContents :: Primary.Division -> Section -> [Primary.Content]
+getSectionContents d (Section sn cs)
+  = Primary.ContentMilestone (Primary.MilestoneDivision (d { Primary.divisionSection = Just sn }))
+  : processContents (concatMap unifyContent cs)
+
 getChapterContents :: Primary.Division -> Chapter -> [Primary.Content]
 getChapterContents d (Chapter cn ss) = concatMap (getSectionContents $ d { Primary.divisionChapter = Just cn}) ss
 
 getBookContents :: Primary.Division -> Book -> [Primary.Content]
 getBookContents d (Book bn _ cs) = concatMap (getChapterContents $ d { Primary.divisionBook = Just bn }) cs
 
+getLineContentContents :: LineContent -> [Either Primary.Milestone Text]
+getLineContentContents (LineContentMilestone m) = fmap Left $ getMilestoneContents m
+getLineContentContents (LineContentText t) = [Right t]
+getLineContentContents (LineContentDel x) = fmap Right $ getApparatusDelContents x
+
 getLineContents :: Primary.Division -> Line -> [Primary.Content]
-getLineContents d (Line n r cs)
+getLineContents d (Line n _ cs)
   = Primary.ContentMilestone (Primary.MilestoneDivision (d { Primary.divisionLine = n }))
-  : results
-  where
-  results = []
+  : processContents (concatMap getLineContentContents cs)
 
 getBookLineContentContents :: Primary.Division -> BookLineContent -> [Primary.Content]
 getBookLineContentContents _ (BookLineContentMilestone m) = fmap Primary.ContentMilestone $ getMilestoneContents m
