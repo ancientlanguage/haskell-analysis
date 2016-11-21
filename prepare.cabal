@@ -35,7 +35,8 @@ library
   ghc-options: -Wall -fwarn-tabs -O2
   default-extensions:
     LambdaCase,
-    OverloadedStrings
+    OverloadedStrings,
+    ScopedTypeVariables
   build-depends:
     base >=4.9,
     containers >=0.5,
@@ -64,7 +65,8 @@ executable prep
   ghc-options: -Wall -fwarn-tabs -O2
   default-extensions:
     LambdaCase,
-    OverloadedStrings
+    OverloadedStrings,
+    ScopedTypeVariables
   build-depends:
     base,
     containers,
@@ -83,7 +85,8 @@ test-suite prepare-test
   ghc-options: -Wall -fwarn-tabs -O2 -threaded -rtsopts -with-rtsopts=-N
   default-extensions:
     LambdaCase,
-    OverloadedStrings
+    OverloadedStrings,
+    ScopedTypeVariables
   build-depends:
     base,
     prepare,

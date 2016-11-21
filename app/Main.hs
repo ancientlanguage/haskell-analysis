@@ -6,6 +6,7 @@ import qualified Data.Map.Strict as Map
 import System.Environment
 
 import qualified Greek
+import qualified Hebrew
 
 dumpCommands :: [String] -> IO ()
 dumpCommands keys = do
@@ -14,7 +15,10 @@ dumpCommands keys = do
 
 main :: IO ()
 main = do
-  let allCommands = Greek.commands
+  let
+    allCommands = Map.union
+      (Map.mapKeys ("greek-"++) Greek.commands)
+      (Map.mapKeys ("hebrew-"++) Hebrew.commands)
   let help = dumpCommands $ Map.keys allCommands
   args <- getArgs
   case args of

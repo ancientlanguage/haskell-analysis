@@ -17,9 +17,11 @@ import qualified Data.Text.IO as Text
 import System.FilePath.Find
 
 import Prepare
+import Prepare.Sblgnt.Parser (sblgnt)
 import Prepare.Sblgnt.Model (Sblgnt)
 import qualified Prepare.Sblgnt.Unify as Sblgnt
 import Prepare.Perseus.Paths (perseusShortList)
+import Prepare.Perseus.TeiEpidocParser (tei)
 import Prepare.Perseus.TeiEpidocModel (Tei)
 import qualified Prepare.Perseus.TeiEpidocUnify as Tei
 import qualified Primary as Primary
