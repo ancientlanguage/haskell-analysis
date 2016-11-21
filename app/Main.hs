@@ -7,12 +7,15 @@ import qualified Data.ByteString as BS
 import qualified Data.Either as Either
 import qualified Data.List as List
 import qualified Data.Maybe as Maybe
+import Data.Map (Map)
+import qualified Data.Map.Strict as Map
 import qualified Data.Serialize as Serialize
 import qualified Data.Set as Set
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import System.FilePath.Find
+import System.Environment
 
 import Prepare
 import Prepare.Sblgnt.Model (Sblgnt)
@@ -171,20 +174,38 @@ showSingleLoadResult file =
     Left e -> putStrLn $ e
     Right _ -> putStrLn "Success!"
 
-main :: IO ()
-main = do
-  successful <- loadAllGroups
-  -- dumpAffixes successful
-  -- dumpInvalidWords successful
-  outputBinaryGroups successful
-
+findPerseusFiles :: IO [FilePath]
+findPerseusFiles = do
   let perseusDir = "./data/xml-perseus-greek"
   perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
   _ <- putStrLn $ (show . length $ perseusFiles) ++ " perseus files"
-  -- let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
-  -- papyriFiles <- find always (fileName ~~? "*.xml") papyriDir
-  -- showParsingFiles perseusFiles
-  -- showAllLoadResults perseusFiles
-  -- showSingleLoadResult "./data/xml-perseus-greek/data/tlg0003/tlg001/tlg0003.tlg001.perseus-grc2.xml"
+  return perseusFiles
 
-  return ()
+findPapyriFiles :: IO [FilePath]
+findPapyriFiles = do
+  let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
+  find always (fileName ~~? "*.xml") papyriDir
+
+commands :: Map String (IO ())
+commands = Map.fromList
+  [ ("greek-save", loadAllGroups >>= outputBinaryGroups)
+  , ("greek-dump-affixes", loadAllGroups >>= dumpAffixes)
+  , ("greek-dump-invalid", loadAllGroups >>= dumpInvalidWords)
+  , ("greek-show-parsing", findPerseusFiles >>= showParsingFiles)
+  , ("greek-show-all", findPerseusFiles >>= showAllLoadResults)
+  , ("greek-show-single", showSingleLoadResult "./data/xml-perseus-greek/data/tlg0003/tlg001/tlg0003.tlg001.perseus-grc2.xml")
+  ]
+
+dumpCommands :: IO ()
+dumpCommands = do
+  _ <- putStrLn "Commands:"
+  mapM_ putStrLn $ Map.keys commands
+
+main :: IO ()
+main = do
+  args <- getArgs
+  case args of
+    [x] -> case Map.lookup x commands of
+      Just f -> f
+      Nothing -> dumpCommands
+    _ -> dumpCommands
