@@ -58,6 +58,8 @@ library
 executable prep
   hs-source-dirs: app
   main-is: Main.hs
+  other-modules:
+    Greek
   default-language: Haskell2010
   ghc-options: -Wall -fwarn-tabs -O2
   default-extensions:
