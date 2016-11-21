@@ -153,8 +153,10 @@ getLineContentContents (LineContentDel x) = fmap Right $ getApparatusDelContents
 
 getLineContents :: Primary.Division -> Line -> [Primary.Content]
 getLineContents d (Line n _ cs)
-  = Primary.ContentMilestone (Primary.MilestoneDivision (d { Primary.divisionLine = n }))
-  : processContents (concatMap getLineContentContents cs)
+  = tryAdd n $ processContents (concatMap getLineContentContents cs)
+  where
+  tryAdd Nothing xs = xs
+  tryAdd v@(Just _) xs = Primary.ContentMilestone (Primary.MilestoneDivision (d { Primary.divisionLine = v })) : xs
 
 getBookLineContentContents :: Primary.Division -> BookLineContent -> [Primary.Content]
 getBookLineContentContents _ (BookLineContentMilestone m) = fmap Primary.ContentMilestone $ getMilestoneContents m
