@@ -37,33 +37,49 @@ data Cit = Cit
   }
   deriving (Show)
 
+data ApparatusDel = ApparatusDel Text
+  deriving (Show)
+
+data ApparatusCorr = ApparatusCorr Text
+  deriving (Show)
+
+data ApparatusAdd = ApparatusAdd Text
+  deriving (Show)
+
+data Term = Term Text
+  deriving (Show)
+
 data Content
   = ContentMilestone Milestone
   | ContentText Text
-  | ContentAdd Text
-  | ContentCorr Text
-  | ContentDel Text
-  | ContentTerm Text
+  | ContentAdd ApparatusAdd
+  | ContentCorr ApparatusCorr
+  | ContentDel ApparatusDel
+  | ContentTerm Term
   | ContentGap Gap
   | ContentQuote Quote
   | ContentBibl Bibl
   | ContentCit Cit
   deriving (Show)
 
-data LineContent
-  = LineContentMilestone Milestone
-  | LineContentText Text
-  | LineContentDel Text
+data LineRender = LineRender_DisplayNumAndIndent
   deriving (Show)
 
-data LineRender = LineRender_DisplayNumAndIndent
+data LineContent
+  = LineContentText Text
+  | LineContentDel ApparatusDel
   deriving (Show)
 
 data Line = Line
   { lineNumber :: Maybe Integer
   , lineRend :: Maybe LineRender
-  , lineLineContent :: [LineContent]
+  , lineContents :: [LineContent]
   }
+  deriving (Show)
+
+data BookLineContent
+  = BookLineContentMilestone Milestone
+  | BookLineContentLine Line
   deriving (Show)
 
 data Section = Section
@@ -87,7 +103,7 @@ data Book = Book
 
 data BookLines = BookLines
   { bookLinesNumber :: Integer
-  , bookLinesLines :: [Line]
+  , bookLinesLineContents :: [BookLineContent]
   }
   deriving (Show)
 

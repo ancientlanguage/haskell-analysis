@@ -39,9 +39,9 @@ getSourceMetadata h = Primary.Source sid t (Just a) lic []
   a = Header.titleStmtAuthor titleStmt
   lic = []
 
-getMilestoneContents :: Milestone -> [Either Primary.Milestone Text]
-getMilestoneContents (MilestoneParagraph _) = [Left Primary.MilestoneParagraph]
-getMilestoneContents _ = []
+getMilestoneContents :: Milestone -> [Primary.Milestone]
+getMilestoneContents (MilestoneParagraph _) = [Primary.MilestoneParagraph]
+getMilestoneContents (MilestoneCard n) = [Primary.MilestoneCard n]
 
 isGreekChar :: Char -> Bool
 isGreekChar x 
@@ -88,13 +88,25 @@ getQuoteContents (Quote _ ls) = Right " " : concatMap getQuoteLineContents ls ++
 getCitContents :: Cit -> [Either Primary.Milestone Text]
 getCitContents (Cit q _) = getQuoteContents q
 
+getApparatusAddContents :: ApparatusAdd -> [Text]
+getApparatusAddContents (ApparatusAdd t) = [t]
+
+getApparatusDelContents :: ApparatusDel -> [Text]
+getApparatusDelContents (ApparatusDel t) = [t]
+
+getApparatusCorrContents :: ApparatusCorr -> [Text]
+getApparatusCorrContents (ApparatusCorr t) = [t]
+
+getTermContents :: Term -> [Text]
+getTermContents (Term t) = [t]
+
 unifyContent :: Content -> [Either Primary.Milestone Text]
-unifyContent (ContentMilestone m) = getMilestoneContents m
+unifyContent (ContentMilestone m) = fmap Left (getMilestoneContents m)
 unifyContent (ContentText t) = [Right t]
-unifyContent (ContentAdd t) = [Right t]
-unifyContent (ContentCorr t) = [Right t]
-unifyContent (ContentDel t) = [Right t]
-unifyContent (ContentTerm t) = [Right t]
+unifyContent (ContentAdd t) = fmap Right (getApparatusAddContents t)
+unifyContent (ContentCorr t) = fmap Right (getApparatusCorrContents t)
+unifyContent (ContentDel t) = fmap Right (getApparatusDelContents t)
+unifyContent (ContentTerm t) = fmap Right (getTermContents t)
 unifyContent (ContentGap _) = []
 unifyContent (ContentQuote q) = getQuoteContents q
 unifyContent (ContentBibl _) = []
@@ -132,13 +144,28 @@ getChapterContents d (Chapter cn ss) = concatMap (getSectionContents $ d { Prima
 getBookContents :: Primary.Division -> Book -> [Primary.Content]
 getBookContents d (Book bn _ cs) = concatMap (getChapterContents $ d { Primary.divisionBook = Just bn }) cs
 
+getLineContents :: Primary.Division -> Line -> [Primary.Content]
+getLineContents d (Line n r cs)
+  = Primary.ContentMilestone (Primary.MilestoneDivision (d { Primary.divisionLine = n }))
+  : results
+  where
+  results = []
+
+getBookLineContentContents :: Primary.Division -> BookLineContent -> [Primary.Content]
+getBookLineContentContents _ (BookLineContentMilestone m) = fmap Primary.ContentMilestone $ getMilestoneContents m
+getBookLineContentContents d (BookLineContentLine ln) = getLineContents d ln
+
+getBookLinesContents :: Primary.Division -> BookLines -> [Primary.Content]
+getBookLinesContents d (BookLines bn cs) = concatMap (getBookLineContentContents $ d { Primary.divisionBook = Just bn }) cs
+
 emptyDivision :: Primary.Division
-emptyDivision = Primary.Division Nothing Nothing Nothing Nothing
+emptyDivision = Primary.Division Nothing Nothing Nothing Nothing Nothing
 
 getDivisionContents :: Division -> [Primary.Content]
 getDivisionContents (DivisionBooks xs) = concatMap (getBookContents emptyDivision) xs
 getDivisionContents (DivisionChapters xs) = concatMap (getChapterContents emptyDivision) xs
 getDivisionContents (DivisionSections xs) = concatMap (getSectionContents emptyDivision) xs
+getDivisionContents (DivisionBookLines xs) = concatMap (getBookLinesContents emptyDivision) xs
 
 getEditionContents :: Edition -> [Primary.Content]
 getEditionContents (Edition _ _ d) = getDivisionContents d

@@ -51,7 +51,7 @@ content (Sblgnt.ContentVerse v) = Primary.ContentMilestone (verse v)
 content (Sblgnt.ContentWord w) = Primary.ContentWord (word w)
 
 verse :: Sblgnt.Verse -> Primary.Milestone
-verse (Sblgnt.Verse _ cn vn _) = Primary.MilestoneDivision (Primary.Division Nothing (Just cn) (Just vn) Nothing)
+verse (Sblgnt.Verse _ cn vn _) = Primary.MilestoneDivision (Primary.Division Nothing (Just cn) (Just vn) Nothing Nothing)
 
 word :: Sblgnt.Word -> Primary.Word
 word (Sblgnt.Word p t s) = Primary.Word p' t s'

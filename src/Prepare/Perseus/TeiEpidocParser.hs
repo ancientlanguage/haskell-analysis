@@ -1,6 +1,7 @@
 module Prepare.Perseus.TeiEpidocParser where
 
 import Prelude hiding (Word)
+import Control.Lens (over, _Just)
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Prepare.Perseus.TeiEpidocModel
@@ -19,28 +20,42 @@ milestoneParagraph = build <$> Xml.elementAttrNS (teiNS "milestone") attributes 
   attributes = do
     ed <- Xml.attribute "ed"
     u <- Xml.attribute "unit"
-    _ <- Xml.parseNested ("Paragraph unit") (MP.string "para") u
+    _ <- Xml.parseNested ("milestone unit para") (MP.string "para") u
     return $ MilestoneParagraph ed
 
-contentAdd :: NodeParser Content
-contentAdd = ContentAdd <$> Xml.elementContentNS (teiNS "add")
+milestoneCard :: NodeParser Milestone
+milestoneCard = build <$> Xml.elementAttrNS (teiNS "milestone") attributes Xml.end
+  where
+  build (x, _) = x
+  attributes = do
+    n <- Xml.attribute "n"
+    num <- Xml.parseNested "milestone card n" MP.integer n
+    u <- Xml.attribute "unit"
+    _ <- Xml.parseNested "milestone unit card" (MP.string "card") u
+    return $ MilestoneCard num
 
-contentDel :: NodeParser Content
-contentDel = ContentDel <$> Xml.elementContentNS (teiNS "del")
+milestone :: NodeParser Milestone
+milestone = milestoneParagraph <|> milestoneCard
 
-contentCorr :: NodeParser Content
-contentCorr = ContentCorr <$> Xml.elementContentNS (teiNS "corr")
+apparatusAdd :: NodeParser ApparatusAdd
+apparatusAdd = ApparatusAdd <$> Xml.elementContentNS (teiNS "add")
 
-contentTerm :: NodeParser Content
-contentTerm = ContentTerm <$> Xml.elementContentNS (teiNS "term")
+apparatusDel :: NodeParser ApparatusDel
+apparatusDel = ApparatusDel <$> Xml.elementContentNS (teiNS "del")
+
+apparatusCorr :: NodeParser ApparatusCorr
+apparatusCorr = ApparatusCorr <$> Xml.elementContentNS (teiNS "corr")
+
+term :: NodeParser Term
+term = Term <$> Xml.elementContentNS (teiNS "term")
 
 gap :: NodeParser Gap
 gap = build <$> Xml.elementAttrNS (teiNS "gap") (optional $ Xml.attribute "reason") Xml.end
   where
   build (x, _) = Gap x
 
-contentText :: NodeParser Content
-contentText = ContentText <$> Xml.content
+plainText :: NodeParser Text
+plainText = Xml.content
 
 bibl :: NodeParser Bibl
 bibl = build <$> Xml.elementContentAttrNS (teiNS "bibl") attributes
@@ -66,12 +81,12 @@ cit = Xml.elementNS (teiNS "cit") (Cit <$> quote <*> bibl)
 
 content :: NodeParser Content
 content
-  = MP.try contentText
-  <|> contentAdd
-  <|> contentDel
-  <|> contentCorr
-  <|> contentTerm
-  <|> (ContentMilestone <$> milestoneParagraph)
+  = MP.try (ContentText <$> plainText)
+  <|> (ContentAdd <$> apparatusAdd)
+  <|> (ContentDel <$> apparatusDel)
+  <|> (ContentCorr <$> apparatusCorr)
+  <|> (ContentTerm <$> term)
+  <|> (ContentMilestone <$> milestone)
   <|> (ContentGap <$> gap)
   <|> (ContentQuote <$> quote)
   <|> (ContentBibl <$> bibl)
@@ -121,11 +136,41 @@ book = build <$> Xml.elementAttrNS (teiNS "div") attributes children
     cs <- many chapter
     return (h, cs)
 
+lineContent :: NodeParser LineContent
+lineContent
+  = MP.try (LineContentText <$> plainText)
+  <|> (LineContentDel <$> apparatusDel)
+
+line :: NodeParser Line
+line = build <$> Xml.elementAttrNS (teiNS "l") attributes children
+  where
+  build ((n, r), cs) = Line n r cs
+  attributes = do
+    n <- optional (Xml.attribute "n")
+    num <- _Just (Xml.parseNested "line number" MP.integer) n
+    rend <- optional (Xml.attribute "rend")
+    r <- _Just (Xml.parseNested "line rend" $ MP.string "displayNumAndIndent") rend
+    return (num, over _Just (const LineRender_DisplayNumAndIndent) r)
+  children = many lineContent
+
+bookLineContent :: NodeParser BookLineContent
+bookLineContent
+  = (BookLineContentMilestone <$> milestone)
+  <|> (BookLineContentLine <$> line)
+
+bookLines :: NodeParser BookLines
+bookLines = build <$> Xml.elementAttrNS (teiNS "div") attributes children
+  where
+  build (x, y) = BookLines x y
+  attributes = divTypeOrSubtype "book"
+  children = many bookLineContent
+
 division :: NodeParser Division
 division
   = MP.try (DivisionBooks <$> many book)
   <|> MP.try (DivisionChapters <$> many chapter)
-  <|> (DivisionSections <$> many section)
+  <|> MP.try (DivisionSections <$> many section)
+  <|> MP.try (DivisionBookLines <$> many bookLines)
 
 edition :: NodeParser Edition
 edition = build <$> Xml.elementAttrNS (teiNS "div") attributes children
