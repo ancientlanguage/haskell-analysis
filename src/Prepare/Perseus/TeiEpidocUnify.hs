@@ -50,11 +50,7 @@ isGreekChar x
     || (x >= '\x1f00' && x <= '\x1fff'))
 
 buildPrimaryWord :: Text -> Primary.Word
-buildPrimaryWord t
-  = Primary.Word
-    (removePrefixApparatusMarks pre)
-    (Text.map unifyApostrophe core)
-    (removeSuffixApparatusMarks suff)
+buildPrimaryWord t = Primary.Word pre (Text.map unifyApostrophe core) suff
   where
   pre = Text.takeWhile (not . isCore) $ t
   core = Text.takeWhile isCore . Text.drop (Text.length pre) $ t
@@ -63,18 +59,21 @@ buildPrimaryWord t
   isApostrophe x = x == '\x02BC' || x == '\x2019' || x == '\x0027' || x == '\x1FBD'
   unifyApostrophe x | isApostrophe x = '\x2019'
   unifyApostrophe x = x
-  removePrefixApparatusMarks = Text.filter (not . isPrefixApparatusChar) . Text.replace "[;" ""
-  isPrefixApparatusChar x
-    = x == '<'
-    || x == '['
-    || x == '†'
-  removeSuffixApparatusMarks = Text.filter (not . isSuffixApparatusChar) . Text.replace "];" ""
-  isSuffixApparatusChar x
+
+removeApparatusMarks :: Primary.Word -> Primary.Word
+removeApparatusMarks (Primary.Word pre core suff) = Primary.Word (remove pre) core (remove suff)
+  where
+  remove = Text.filter (not . isApparatusChar) . Text.replace "[;" "" . Text.replace "];" ""
+  isApparatusChar x
     = x == '['
     || x == ']'
     || x == '†'
-    || x == ']'
+    || x == '<'
     || x == '>'
+
+removeContentApparatusMarks :: Primary.Content -> Primary.Content
+removeContentApparatusMarks (Primary.ContentWord w) = Primary.ContentWord $ removeApparatusMarks w
+removeContentApparatusMarks x = x
 
 extractWords :: Text -> [Primary.Content]
 extractWords = fmap (Primary.ContentWord . buildPrimaryWord) . Text.words
@@ -133,7 +132,12 @@ processContents :: [Either Primary.Milestone Text] -> [Primary.Content]
 processContents = process . groupRight
   where
   process (x, ys) = textContent x ++ concatMap (\(m, xs) -> Primary.ContentMilestone m : textContent xs) ys
-  textContent = concatMap splitWordInSuffix . mergeSuffixes . extractWords . Text.concat
+  textContent
+    = fmap removeContentApparatusMarks
+    . concatMap splitWordInSuffix
+    . mergeSuffixes
+    . extractWords
+    . Text.concat
   groupRight :: [Either a b] -> ([b], [(a, [b])])
   groupRight = foldr go ([], [])
   go (Left x) (ms, ys) = ([], (x, ms) : ys)
