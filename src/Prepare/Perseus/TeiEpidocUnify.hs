@@ -56,7 +56,7 @@ buildPrimaryWord t
     (Text.map unifyApostrophe core)
     (removeSuffixApparatusMarks suff)
   where
-  pre = Text.takeWhile (not . isGreekChar) $ t
+  pre = Text.takeWhile (not . isCore) $ t
   core = Text.takeWhile isCore . Text.drop (Text.length pre) $ t
   suff = Text.drop (Text.length pre + Text.length core) $ t
   isCore x = isGreekChar x || isApostrophe x
