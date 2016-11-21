@@ -173,17 +173,18 @@ showSingleLoadResult file =
 
 main :: IO ()
 main = do
-  -- successful <- loadAllGroups
+  successful <- loadAllGroups
   -- dumpAffixes successful
   -- dumpInvalidWords successful
-  -- outputBinaryGroups successful
+  outputBinaryGroups successful
 
   let perseusDir = "./data/xml-perseus-greek"
   perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
   _ <- putStrLn $ (show . length $ perseusFiles) ++ " perseus files"
   -- let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
   -- papyriFiles <- find always (fileName ~~? "*.xml") papyriDir
+  -- showParsingFiles perseusFiles
   -- showAllLoadResults perseusFiles
-  showSingleLoadResult "./data/xml-perseus-greek/data/tlg0003/tlg001/tlg0003.tlg001.perseus-grc2.xml"
+  -- showSingleLoadResult "./data/xml-perseus-greek/data/tlg0003/tlg001/tlg0003.tlg001.perseus-grc2.xml"
 
   return ()
