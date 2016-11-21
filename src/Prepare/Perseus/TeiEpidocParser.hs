@@ -8,17 +8,19 @@ import Prepare.Perseus.TeiEpidocHeaderParser
 import Prepare.Perseus.TeiEpidocParserCommon
 import Prepare.Xml.Parser (NodeParser, (<|>), many, optional)
 import qualified Prepare.Xml.Parser as Xml
+import qualified Text.Megaparsec.Char as MP
 import qualified Text.Megaparsec.Lexer as MP
 import qualified Text.Megaparsec.Prim as MP
 
-milestone :: NodeParser Milestone
-milestone = build <$> Xml.elementAttrNS (teiNS "milestone") attributes Xml.end
+milestoneParagraph :: NodeParser Milestone
+milestoneParagraph = build <$> Xml.elementAttrNS (teiNS "milestone") attributes Xml.end
   where
   build (x, _) = x
   attributes = do
     ed <- Xml.attribute "ed"
     u <- Xml.attribute "unit"
-    return $ Milestone u ed
+    _ <- Xml.parseNested ("Paragraph unit") (MP.string "para") u
+    return $ MilestoneParagraph ed
 
 contentAdd :: NodeParser Content
 contentAdd = ContentAdd <$> Xml.elementContentNS (teiNS "add")
@@ -69,7 +71,7 @@ content
   <|> contentDel
   <|> contentCorr
   <|> contentTerm
-  <|> (ContentMilestone <$> milestone)
+  <|> (ContentMilestone <$> milestoneParagraph)
   <|> (ContentGap <$> gap)
   <|> (ContentQuote <$> quote)
   <|> (ContentBibl <$> bibl)

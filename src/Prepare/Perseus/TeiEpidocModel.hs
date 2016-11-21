@@ -3,10 +3,9 @@ module Prepare.Perseus.TeiEpidocModel where
 import Data.Text (Text)
 import Prepare.Perseus.TeiEpidocHeaderModel
 
-data Milestone = Milestone
-  { milestoneUnit :: Text
-  , milestoneEd :: Text
-  }
+data Milestone
+  = MilestoneParagraph { milestoneParagraphEd :: Text }
+  | MilestoneCard { milestoneCardN :: Integer }
   deriving (Show)
 
 data Gap = Gap
@@ -51,6 +50,22 @@ data Content
   | ContentCit Cit
   deriving (Show)
 
+data LineContent
+  = LineContentMilestone Milestone
+  | LineContentText Text
+  | LineContentDel Text
+  deriving (Show)
+
+data LineRender = LineRender_DisplayNumAndIndent
+  deriving (Show)
+
+data Line = Line
+  { lineNumber :: Maybe Integer
+  , lineRend :: Maybe LineRender
+  , lineLineContent :: [LineContent]
+  }
+  deriving (Show)
+
 data Section = Section
   { sectionNum :: Integer
   , sectionContent :: [Content]
@@ -70,10 +85,17 @@ data Book = Book
   }
   deriving (Show)
 
+data BookLines = BookLines
+  { bookLinesNumber :: Integer
+  , bookLinesLines :: [Line]
+  }
+  deriving (Show)
+
 data Division
   = DivisionBooks [Book]
   | DivisionChapters [Chapter]
   | DivisionSections [Section]
+  | DivisionBookLines [BookLines]
   deriving (Show)
 
 data Edition = Edition

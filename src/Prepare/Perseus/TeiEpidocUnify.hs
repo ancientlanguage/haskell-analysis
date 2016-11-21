@@ -40,7 +40,7 @@ getSourceMetadata h = Primary.Source sid t (Just a) lic []
   lic = []
 
 getMilestoneContents :: Milestone -> [Either Primary.Milestone Text]
-getMilestoneContents (Milestone u _) | u == "para" = [Left Primary.MilestoneParagraph]
+getMilestoneContents (MilestoneParagraph _) = [Left Primary.MilestoneParagraph]
 getMilestoneContents _ = []
 
 isGreekChar :: Char -> Bool
