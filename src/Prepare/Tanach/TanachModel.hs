@@ -6,9 +6,16 @@ import Prepare.Tanach.TeiHeaderModel (TeiHeader)
 import Prepare.Tanach.HeaderModel (Note)
 import Prepare.Tanach.IndexModel (Name)
 
+data WordSize = WordSize
+  { wordSizeType :: Text
+  , wordSizeValue :: Text
+  }
+  deriving (Show)
+
 data WordContent
   = WordText Text
   | WordX Text
+  | WordS WordSize
   deriving (Show)
 
 data Word = Word [WordContent]
@@ -17,13 +24,15 @@ data Word = Word [WordContent]
 data Milestone
   = MilestonePe
   | MilestoneSamekh
+  | MilestoneReversedNun
   deriving (Show)
 
 data VerseContent
   = VerseMilestone Milestone
   | VerseWord Word
-  | VerseWordK Text
-  | VerseWordQ Text
+  | VerseWordK Word
+  | VerseWordQ Word
+  | VerseX Text
   deriving (Show)
 
 data Verse = Verse

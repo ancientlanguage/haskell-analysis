@@ -1,7 +1,8 @@
 module Prepare.Tanach.TanachParser where
 
 import Prelude hiding (Word)
-import Prepare.Xml.Parser (NodeParser, many, optional, (<|>))
+import Data.Text (Text)
+import Prepare.Xml.Parser (NodeParser, many, (<|>))
 import qualified Prepare.Xml.Parser as Xml
 import qualified Text.Megaparsec.Lexer as MP
 import qualified Text.Megaparsec.Prim as MP
@@ -12,25 +13,31 @@ import Prepare.Tanach.TeiHeaderParser (teiHeader)
 import Prepare.Tanach.HeaderParser (notes)
 import Prepare.Tanach.IndexParser (name, verseCount)
 
+wordSize :: NodeParser WordSize
+wordSize = uncurry WordSize <$> Xml.elementContentAttr "s" (Xml.attribute "t")
+
 wordContent :: NodeParser WordContent
 wordContent
   = MP.try (WordText <$> Xml.content)
   <|> (WordX <$> Xml.elementContent "x")
+  <|> (WordS <$> wordSize)
 
-word :: NodeParser Word
-word = Word <$> Xml.element "w" (many wordContent)
+word :: Text -> NodeParser Word
+word n = Word <$> Xml.element n (many wordContent)
 
 milestone :: NodeParser Milestone
 milestone
-  = MP.try (const MilestonePe <$>  Xml.elementEmpty "pe" <* Xml.whitespace)
-  <|> (const MilestoneSamekh <$>  Xml.elementEmpty "samekh" <* Xml.whitespace)
+  = MP.try (const MilestonePe <$> Xml.elementEmpty "pe" <* Xml.whitespace)
+  <|> (const MilestoneSamekh <$> Xml.elementEmpty "samekh" <* Xml.whitespace)
+  <|> (const MilestoneReversedNun <$> Xml.elementEmpty "reversednun" <* Xml.whitespace)
 
 verseContent :: NodeParser VerseContent
 verseContent
-  = MP.try (VerseWord <$> word)
+  = MP.try (VerseWord <$> word "w")
   <|> (VerseMilestone <$> milestone)
-  <|> (VerseWordK <$> Xml.elementContent "k")
-  <|> (VerseWordQ <$> Xml.elementContent "q")
+  <|> (VerseWordK <$> word "k")
+  <|> (VerseWordQ <$> word "q")
+  <|> (VerseX <$> Xml.elementContent "x")
 
 verse :: NodeParser Verse
 verse = uncurry Verse <$> Xml.elementAttr "v" attributes (many verseContent)
