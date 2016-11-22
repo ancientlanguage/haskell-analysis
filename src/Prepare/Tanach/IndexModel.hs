@@ -12,7 +12,9 @@ data Chapter = Chapter
 data Name = Name
   { nameName :: Text
   , nameAbbrev :: Text
+  , nameNumber :: Maybe Text
   , nameFilename :: Text
+  , nameHebrewname :: Maybe Text
   }
   deriving (Show)
 

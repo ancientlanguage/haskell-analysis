@@ -41,10 +41,13 @@ charInfo = Xml.element "char" charInfoChildren
 coding :: NodeParser Coding
 coding = Xml.element "coding" (Coding <$> many charInfo <*> many specialChar)
 
+notes :: NodeParser [Note]
+notes = Xml.element "notes" (many note)
+
 header :: NodeParser Header
 header = Xml.element "Tanach" children
   where
   children = do
     h <- teiHeader
-    (c, n) <- Xml.element "tanach" ((,) <$> coding <*> Xml.element "notes" (many note))
+    (c, n) <- Xml.element "tanach" ((,) <$> coding <*> notes)
     return $ Header h c n 

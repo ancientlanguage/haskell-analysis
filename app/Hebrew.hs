@@ -5,6 +5,7 @@ import qualified Data.Map as Map
 import Prepare
 import Prepare.Tanach.IndexParser (index)
 import Prepare.Tanach.HeaderParser (header)
+import Prepare.Tanach.TanachParser (tanach)
 
 loadIndex :: IO ()
 loadIndex = do
@@ -22,8 +23,17 @@ loadHeader = do
     Left e -> putStrLn $ "Error loading header:\n" ++ e
     Right _ -> putStrLn "Success!"
 
+loadSingle :: IO ()
+loadSingle = do
+  let singleFilePath = "./data/xml-tanach/books/Amos.xml"
+  result <- loadParse singleFilePath tanach emptyLog
+  case result of
+    Left e -> putStrLn $ "Error loading tanach:\n" ++ e
+    Right _ -> putStrLn "Success!"
+
 commands :: Map String (IO ())
 commands = Map.fromList
   [ ("load-index", loadIndex)
   , ("load-header", loadHeader)
+  , ("load-single", loadSingle)
   ]

@@ -33,6 +33,8 @@ library
     Prepare.Tanach.HeaderParser,
     Prepare.Tanach.IndexModel,
     Prepare.Tanach.IndexParser,
+    Prepare.Tanach.TanachModel,
+    Prepare.Tanach.TanachParser,
     Prepare.Tanach.TeiHeaderModel,
     Prepare.Tanach.TeiHeaderParser,
     Prepare.Xml.Events,
