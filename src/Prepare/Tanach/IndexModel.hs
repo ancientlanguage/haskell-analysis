@@ -1,7 +1,7 @@
 module Prepare.Tanach.IndexModel where
 
 import Data.Text (Text)
-import Prepare.Tanach.TeiHeaderModel
+import Prepare.Tanach.TeiHeaderModel (TeiHeader)
 
 data Chapter = Chapter
   { chapterNumber :: Integer
