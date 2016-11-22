@@ -5,6 +5,13 @@ import Prepare
 import Prepare.Perseus.Paths
 import Prepare.Perseus.TeiEpidocParser (tei)
 import Prepare.Sblgnt.Parser (sblgnt)
+import Prepare.Tanach.IndexParser (index)
+import qualified Prepare.Tanach.IndexModel as Index
+import Prepare.Tanach.HeaderParser (header)
+import Prepare.Tanach.TanachParser (tanach)
+
+parseTanachHeader :: Test
+parseTanachHeader = undefined
 
 parseSblgnt :: Test
 parseSblgnt = testCase "parse sblgnt" $ do
@@ -23,4 +30,5 @@ main :: IO ()
 main = defaultMain
   [ testGroup "Perseus" (fmap parsePerseusTeiEpidoc perseusShortList)
   , testGroup "SBLGNT" [ parseSblgnt ]
+  , testGroup "Tanach Header" [ parseTanachHeader ]
   ]
