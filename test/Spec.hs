@@ -6,25 +6,25 @@ import Prepare.Perseus.Paths
 import Prepare.Perseus.TeiEpidocParser (tei)
 import Prepare.Sblgnt.Parser (sblgnt)
 import Prepare.Tanach.IndexParser (index)
-import qualified Prepare.Tanach.IndexModel as Index
+import qualified Prepare.Tanach.Paths as Paths
 import Prepare.Tanach.HeaderParser (header)
 import Prepare.Tanach.TanachParser (tanach)
 
+testParse n f = testCase n $ do
+  f >>= \case
+    Left e -> assertFailure $ "loadParse failure:\n" ++ e
+    Right _ -> return ()
+
 parseTanachHeader :: Test
-parseTanachHeader = undefined
+parseTanachHeader = testParse "tanach header" $ loadParse Paths.headerFilePath header emptyLog
 
 parseSblgnt :: Test
-parseSblgnt = testCase "parse sblgnt" $ do
-  let xmlPath = "./data/xml-sblgnt/sblgnt.xml"
-  loadParse xmlPath sblgnt logBook >>= \case  
-    Left e -> assertFailure $ "loadParse failure:\n" ++ e
-    Right _ -> return ()
+parseSblgnt = testParse "parse sblgnt" $ loadParse xmlPath sblgnt logBook
+  where
+  xmlPath = "./data/xml-sblgnt/sblgnt.xml"
 
 parsePerseusTeiEpidoc :: String -> Test
-parsePerseusTeiEpidoc p = testCase ("parse perseus tei epidoc: " ++ p) $ do
-  loadParse p tei logBook >>= \case
-    Left e -> assertFailure $ "loadParse failure:\n" ++ e
-    Right _ -> return ()
+parsePerseusTeiEpidoc p = testParse ("parse perseus tei epidoc: " ++ p) $ loadParse p tei logBook
 
 main :: IO ()
 main = defaultMain
