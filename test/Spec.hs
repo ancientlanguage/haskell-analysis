@@ -3,6 +3,8 @@ import Test.Framework.Providers.HUnit
 import Test.HUnit hiding (Test)
 import Prepare
 import Prepare.Perseus.Paths
+import Prepare.Perseus.TeiEpidocParser (tei)
+import Prepare.Sblgnt.Parser (sblgnt)
 
 parseSblgnt :: Test
 parseSblgnt = testCase "parse sblgnt" $ do
