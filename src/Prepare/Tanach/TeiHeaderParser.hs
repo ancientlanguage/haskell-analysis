@@ -43,6 +43,3 @@ fileDesc = Xml.element "fileDesc" $
 
 teiHeader :: NodeParser TeiHeader
 teiHeader = TeiHeader <$> Xml.element "teiHeader" fileDesc
-
-tanach :: NodeParser Tanach
-tanach = Tanach <$> Xml.element "Tanach" teiHeader

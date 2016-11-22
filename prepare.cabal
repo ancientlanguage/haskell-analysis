@@ -29,6 +29,8 @@ library
     Prepare.Sblgnt.Unify,
     Prepare.Source.DecomposeWords,
     Prepare.Source.Output,
+    Prepare.Tanach.IndexModel,
+    Prepare.Tanach.IndexParser,
     Prepare.Tanach.TeiHeaderModel,
     Prepare.Tanach.TeiHeaderParser,
     Prepare.Xml.Events,
