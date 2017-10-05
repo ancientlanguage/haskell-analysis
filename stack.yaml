@@ -1,10 +1,17 @@
-resolver: lts-9.6
+resolver: nightly-2017-10-05
 packages:
 - 'grammar'
 - 'greek-morph'
 - 'greek-script'
 - 'prepare'
 - 'primary-type'
-extra-deps: []
+extra-deps:
+- flexible-defaults-0.0.1.2
+- log-domain-0.11.2
+- megaparsec-5.3.1
+- MonadPrompt-1.0.0.5
+- random-fu-0.2.7.0
+- random-source-0.3.0.6
+- rvar-0.2.0.3
 flags: {}
 extra-package-dbs: []
