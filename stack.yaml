@@ -1,6 +1,10 @@
 resolver: lts-7.9
 packages:
-- '.'
+- 'grammar'
+- 'greek-morph'
+- 'greek-script'
+- 'prepare'
+- 'primary-type'
 extra-deps: []
 flags: {}
 extra-package-dbs: []
