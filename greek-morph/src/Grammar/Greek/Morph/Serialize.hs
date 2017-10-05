@@ -6,7 +6,7 @@ import Grammar.IO.Serialize
 import Grammar.Greek.Script.Word
 
 scriptPath :: FilePath
-scriptPath = "./modules/binary-greek-script/data"
+scriptPath = "../modules/binary-greek-script/data"
 
 readScript :: IO [SourceId :* [Milestone :* Word]]
 readScript = loadStage scriptPath
