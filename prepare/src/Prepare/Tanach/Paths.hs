@@ -5,15 +5,15 @@ import System.FilePath ((</>), (<.>))
 import Prepare.Tanach.IndexModel (Index)
 import qualified Prepare.Tanach.IndexModel as Index
 
-tanachBasePath :: FilePath
-tanachBasePath = "../data/xml-tanach/books/"
+tanachBasePath :: FilePath -> FilePath
+tanachBasePath dataPath = dataPath </> "xml-tanach/books/"
 
-indexFilePath :: FilePath
-indexFilePath = tanachBasePath </> "TanachIndex.xml"
+indexFilePath :: FilePath -> FilePath
+indexFilePath dataPath = tanachBasePath dataPath </> "TanachIndex.xml"
 
-headerFilePath :: FilePath
-headerFilePath = tanachBasePath </> "TanachHeader.xml"
+headerFilePath :: FilePath -> FilePath
+headerFilePath dataPath = tanachBasePath dataPath </> "TanachHeader.xml"
 
-getAllFilePaths :: Index -> [FilePath]
-getAllFilePaths idx = fmap ((\x -> tanachBasePath </> (Text.unpack x) <.> ".xml") . Index.nameFilename . Index.bookName)
+getAllFilePaths :: FilePath -> Index -> [FilePath]
+getAllFilePaths dataPath idx = fmap ((\x -> tanachBasePath dataPath </> (Text.unpack x) <.> ".xml") . Index.nameFilename . Index.bookName)
   $ Index.indexBooks idx

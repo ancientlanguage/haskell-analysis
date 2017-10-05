@@ -14,6 +14,7 @@ import qualified Data.Set as Set
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
+import System.FilePath ((</>))
 import System.FilePath.Find
 
 import Prepare
@@ -129,9 +130,9 @@ dumpInvalidWords gs = mapM_ dumpInvalids $ concatMap Primary.groupSources gs
       || (x >= '\x1f00' && x <= '\x1fff'))
   isCore x = isGreekChar x || x == '\x2019' -- apostrophe
 
-loadAllGroups :: IO [Primary.Group]
-loadAllGroups = do
-  let sblgntFile = "./data/xml-sblgnt/sblgnt.xml"
+loadAllGroups :: FilePath -> IO [Primary.Group]
+loadAllGroups dataPath = do
+  let sblgntFile = dataPath </> "xml-sblgnt/sblgnt.xml"
   _ <- printText ["Reading", Text.pack sblgntFile]
   sblgntResult <- (fmap . fmap) (Sblgnt.unify) $ loadParse sblgntFile sblgnt emptyLog
 
@@ -148,7 +149,7 @@ loadAllGroups = do
           , Text.intercalate " " . Text.words . Primary.sourceTitle $ r
           ]
       return t
-  perseusSources <- mapM parseUnify perseusShortList
+  perseusSources <- mapM parseUnify (perseusShortList dataPath)
   let perseusGroup = Tei.perseusGroup { Primary.groupSources = Either.rights perseusSources }
 
   let
@@ -187,11 +188,11 @@ findPapyriFiles = do
   let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
   find always (fileName ~~? "*.xml") papyriDir
 
-commands :: Map String (IO ())
-commands = Map.fromList
-  [ ("save", loadAllGroups >>= outputBinaryGroups)
-  , ("dump-affixes", loadAllGroups >>= dumpAffixes)
-  , ("dump-invalid-words", loadAllGroups >>= dumpInvalidWords)
+commands :: FilePath -> Map String (IO ())
+commands dataPath = Map.fromList
+  [ ("save", loadAllGroups dataPath >>= outputBinaryGroups)
+  , ("dump-affixes", loadAllGroups dataPath >>= dumpAffixes)
+  , ("dump-invalid-words", loadAllGroups dataPath >>= dumpInvalidWords)
   , ("show-parsing", findPerseusFiles >>= showParsingFiles)
   , ("show-all", findPerseusFiles >>= showAllLoadResults)
   , ("show-single", showSingleLoadResult "./data/xml-perseus-greek/data/tlg0003/tlg001/tlg0003.tlg001.perseus-grc2.xml")

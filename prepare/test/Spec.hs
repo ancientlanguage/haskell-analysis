@@ -16,16 +16,16 @@ testParse n f = testCase n $ do
     Left e -> assertFailure $ "loadParse failure:\n" ++ e
     Right _ -> return ()
 
-parseTanachHeader :: Test
-parseTanachHeader = testParse "tanach header" $ loadParse Paths.headerFilePath header emptyLog
+parseTanachHeader :: FilePath -> Test
+parseTanachHeader dataPath = testParse "tanach header" $ loadParse (Paths.headerFilePath dataPath) header emptyLog
 
-parseAllTanach :: Test
-parseAllTanach = buildTestBracketed $ do
-  result <- loadParse Paths.indexFilePath index emptyLog
+parseAllTanach :: FilePath -> Test
+parseAllTanach dataPath = buildTestBracketed $ do
+  result <- loadParse (Paths.indexFilePath dataPath) index emptyLog
   let
     tests = case result of
       Left x -> [testCase "parseAllTanach failure" $ assertFailure $ "index parse failure:\n" ++ x]
-      Right idx -> fmap (\x -> testParse x (loadParse x tanach emptyLog)) $ Paths.getAllFilePaths idx
+      Right idx -> fmap (\x -> testParse x (loadParse x tanach emptyLog)) $ Paths.getAllFilePaths dataPath idx
   return (testGroup "parseAllTanach" tests, return ())
 
 parseSblgnt :: Test
@@ -37,8 +37,10 @@ parsePerseusTeiEpidoc :: String -> Test
 parsePerseusTeiEpidoc p = testParse ("parse perseus tei epidoc: " ++ p) $ loadParse p tei logBook
 
 main :: IO ()
-main = defaultMain
-  [ testGroup "Perseus" (fmap parsePerseusTeiEpidoc perseusShortList)
+main =
+  let dataPath = "../data"
+  in defaultMain
+  [ testGroup "Perseus" (fmap parsePerseusTeiEpidoc $ perseusShortList dataPath)
   , testGroup "SBLGNT" [ parseSblgnt ]
-  , testGroup "Tanach Header" [ parseTanachHeader, parseAllTanach ]
+  , testGroup "Tanach Header" [ parseTanachHeader dataPath, parseAllTanach dataPath ]
   ]

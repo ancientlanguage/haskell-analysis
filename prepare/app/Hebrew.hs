@@ -9,16 +9,16 @@ import Prepare.Tanach.TanachParser (tanach)
 import qualified Prepare.Tanach.Paths as Paths
 import System.FilePath ((</>))
 
-loadIndex :: IO ()
-loadIndex = do
-  result <- loadParse Paths.indexFilePath index emptyLog
+loadIndex :: FilePath -> IO ()
+loadIndex dataPath = do
+  result <- loadParse (Paths.indexFilePath dataPath) index emptyLog
   case result of
     Left e -> putStrLn $ "Error loading index:\n" ++ e
     Right _ -> putStrLn "Success!"
 
-loadHeader :: IO ()
-loadHeader = do
-  result <- loadParse Paths.headerFilePath header emptyLog
+loadHeader :: FilePath -> IO ()
+loadHeader dataPath = do
+  result <- loadParse (Paths.headerFilePath dataPath) header emptyLog
   case result of
     Left e -> putStrLn $ "Error loading header:\n" ++ e
     Right _ -> putStrLn "Success!"
@@ -30,21 +30,21 @@ showLoadSingle p = do
     Left e -> putStrLn $ "✗ " ++ p ++ "\n" ++ e
     Right _ -> putStrLn $ "✓ " ++ p
 
-loadSingle :: IO ()
-loadSingle = showLoadSingle $ Paths.tanachBasePath </> "Amos.xml"
+loadSingle :: FilePath -> IO ()
+loadSingle dataPath = showLoadSingle $ Paths.tanachBasePath dataPath </> "Amos.xml"
 
-loadAll :: IO ()
-loadAll = do
-  result <- loadParse Paths.indexFilePath index emptyLog
+loadAll :: FilePath -> IO ()
+loadAll dataPath = do
+  result <- loadParse (Paths.indexFilePath dataPath) index emptyLog
   case result of
     Left e -> putStrLn $ "Error loading index:\n" ++ e
     Right idx ->
-      mapM_ showLoadSingle $ Paths.getAllFilePaths idx
+      mapM_ showLoadSingle $ (Paths.getAllFilePaths dataPath) idx
 
-commands :: Map String (IO ())
-commands = Map.fromList
-  [ ("load-index", loadIndex)
-  , ("load-header", loadHeader)
-  , ("load-single", loadSingle)
-  , ("load-all", loadAll)
+commands :: FilePath -> Map String (IO ())
+commands dataPath = Map.fromList
+  [ ("load-index", loadIndex dataPath)
+  , ("load-header", loadHeader dataPath)
+  , ("load-single", loadSingle dataPath)
+  , ("load-all", loadAll dataPath)
   ]

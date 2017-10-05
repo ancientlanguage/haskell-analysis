@@ -16,9 +16,10 @@ dumpCommands keys = do
 main :: IO ()
 main = do
   let
+    dataPath = "./data"
     allCommands = Map.union
-      (Map.mapKeys ("greek-"++) Greek.commands)
-      (Map.mapKeys ("hebrew-"++) Hebrew.commands)
+      (Map.mapKeys ("greek-"++) $ Greek.commands dataPath)
+      (Map.mapKeys ("hebrew-"++) $ Hebrew.commands dataPath)
   let help = dumpCommands $ Map.keys allCommands
   args <- getArgs
   case args of
