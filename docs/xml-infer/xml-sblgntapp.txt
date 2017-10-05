@@ -1,0 +1,56 @@
+Loading 1 files…
+<sblgntapp>
+  locations: 1
+  ancestors:
+    (root): 1
+  child instances:
+    <book>: 27
+    Whitespace: 28
+  child sets:
+    <book>, Whitespace: 1
+<book>
+  locations: 27
+  ancestors:
+    <sblgntapp>: 27
+  child instances:
+    <p>: 4466
+    <title>: 27
+    Whitespace: 4520
+  child sets:
+    <p>, <title>, Whitespace: 27
+<p>
+  locations: 4466
+  ancestors:
+    <sblgntapp> <book>: 4466
+  child instances:
+    <b>: 7026
+    <verse-number>: 4466
+    Content: 7024
+    Whitespace: 4468
+  child sets:
+    <b>, <verse-number>, Content, Whitespace: 4466
+<title>
+  locations: 27
+  ancestors:
+    <sblgntapp> <book>: 27
+  child instances:
+    Content: 27
+  child sets:
+    Content: 27
+<b>
+  locations: 7026
+  ancestors:
+    <sblgntapp> <book> <p>: 7026
+  child instances:
+    Content: 7026
+  child sets:
+    Content: 7026
+<verse-number>
+  locations: 4466
+  ancestors:
+    <sblgntapp> <book> <p>: 4466
+  child instances:
+    id="…": 4466
+    Content: 4466
+  child sets:
+    id="…", Content: 4466

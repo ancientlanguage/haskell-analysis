@@ -1,0 +1,121 @@
+Loading 1 files…
+<sblgnt>
+  locations: 1
+  ancestors:
+    (root): 1
+  child instances:
+    <book>: 27
+    <license>: 1
+    <title>: 1
+    Whitespace: 30
+  child sets:
+    <book>, <license>, <title>, Whitespace: 1
+<book>
+  locations: 27
+  ancestors:
+    <sblgnt>: 27
+  child instances:
+    id="…": 27
+    <mark-end>: 3
+    <p>: 1554
+    <title>: 27
+    Whitespace: 1611
+  child sets:
+    id="…", <mark-end>, <p>, <title>, Whitespace: 1
+    id="…", <p>, <title>, Whitespace: 26
+<license>
+  locations: 1
+  ancestors:
+    <sblgnt>: 1
+  child instances:
+    <p>: 1
+    Whitespace: 2
+  child sets:
+    <p>, Whitespace: 1
+<mark-end>
+  locations: 3
+  ancestors:
+    <sblgnt> <book>: 3
+  child instances:
+    xml:lang="…": 3
+    Content: 3
+  child sets:
+    xml:lang="…", Content: 3
+<prefix>
+  locations: 6954
+  ancestors:
+    <sblgnt> <book> <p>: 6954
+  child instances:
+    Content: 6954
+  child sets:
+    Content: 6954
+<suffix>
+  locations: 137554
+  ancestors:
+    <sblgnt> <book> <p>: 137554
+  child instances:
+    Content: 20772
+    Whitespace: 116782
+  child sets:
+    Content: 20772
+    Whitespace: 116782
+<verse-number>
+  locations: 7927
+  ancestors:
+    <sblgnt> <book> <p>: 7927
+  child instances:
+    id="…": 7927
+    Content: 7927
+  child sets:
+    id="…", Content: 7927
+<w>
+  locations: 137554
+  ancestors:
+    <sblgnt> <book> <p>: 137554
+  child instances:
+    Content: 137554
+  child sets:
+    Content: 137554
+<a>
+  locations: 1
+  ancestors:
+    <sblgnt> <license> <p>: 1
+  child instances:
+    href="…": 1
+    Content: 1
+  child sets:
+    href="…", Content: 1
+<title>
+  locations: 28
+  ancestors:
+    <sblgnt>: 1
+    <sblgnt> <book>: 27
+  child instances:
+    <p>: 3
+    Content: 27
+    Whitespace: 4
+  child sets:
+    <p>, Whitespace: 1
+    Content: 27
+<p>
+  locations: 1558
+  ancestors:
+    <sblgnt> <book>: 1554
+    <sblgnt> <license>: 1
+    <sblgnt> <title>: 3
+  child instances:
+    <a>: 1
+    <prefix>: 6954
+    <suffix>: 137554
+    <verse-number>: 7927
+    <w>: 137554
+    Content: 5
+    Whitespace: 291515
+  child sets:
+    (empty): 28
+    <a>, Content: 1
+    <prefix>, <suffix>, <verse-number>, <w>, Whitespace: 1397
+    <prefix>, <suffix>, <w>, Whitespace: 3
+    <suffix>, <verse-number>, <w>, Whitespace: 118
+    <suffix>, <w>, Whitespace: 8
+    Content: 3
