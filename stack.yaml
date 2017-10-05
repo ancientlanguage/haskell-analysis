@@ -1,4 +1,4 @@
-resolver: lts-7.9
+resolver: lts-9.6
 packages:
 - 'grammar'
 - 'greek-morph'

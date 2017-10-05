@@ -3,6 +3,7 @@
 module Main where
 
 import Prelude hiding (Word)
+import Data.Semigroup ((<>))
 import qualified Data.Text.Format as Lazy
 import qualified Data.Text.Lazy as Lazy
 import qualified Data.Text.Lazy.IO as Lazy

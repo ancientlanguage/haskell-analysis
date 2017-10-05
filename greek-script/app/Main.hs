@@ -7,6 +7,7 @@ import Control.Lens (over, _2)
 import Data.Either.Validation
 import Data.Map (Map)
 import qualified Data.Map as Map
+import Data.Semigroup ((<>))
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import Options.Applicative hiding (Failure, Success)
