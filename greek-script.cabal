@@ -1,0 +1,107 @@
+name: greek-script
+version: 3.0.0
+synopsis: Models of ancient Greek script verified against primary sources
+description: Please see README.md
+homepage: https://github.com/ancientlanguage/haskell-greek-script#readme
+author: Scott Fleischman
+maintainer: scott-fleischman@users.noreply.github.com
+copyright: 2016 Scott Fleischman
+build-type: Simple
+cabal-version: >=1.10
+source-repository head
+  type: git
+  location: https://github.com/ancientlanguage/haskell-greek-script
+
+library
+  hs-source-dirs: src
+  exposed-modules:
+    Grammar.Greek.Script.Rounds
+    Grammar.Greek.Script.Rounds.Accent
+    Grammar.Greek.Script.Rounds.Breathing
+    Grammar.Greek.Script.Rounds.Capitalization
+    Grammar.Greek.Script.Rounds.ConsonantMarks
+    Grammar.Greek.Script.Rounds.Final
+    Grammar.Greek.Script.Rounds.LetterVowelConsonant
+    Grammar.Greek.Script.Rounds.MarkGroups
+    Grammar.Greek.Script.Rounds.MarkSplit
+    Grammar.Greek.Script.Rounds.SymbolLetter
+    Grammar.Greek.Script.Rounds.UnicodeSymbol
+    Grammar.Greek.Script.Rounds.VocalicSyllable
+    Grammar.Greek.Script.Rounds.WordPunctuationElision
+    Grammar.Greek.Script.Serialize
+    Grammar.Greek.Script.Stage
+    Grammar.Greek.Script.Types
+    Grammar.Greek.Script.Word
+  ghc-options: -Wall -fwarn-tabs -O2
+  default-extensions:
+    OverloadedStrings,
+    PatternSynonyms,
+    ScopedTypeVariables,
+    TypeOperators
+  build-depends:
+    base >= 4.9,
+    containers,
+    bytestring,
+    text,
+    cereal,
+    lens,
+    either,
+    random-fu,
+    random-source,
+    array,
+    directory,
+    filepath,
+    extra,
+    test-framework,
+    test-framework-hunit,
+    HUnit,
+    primary-type,
+    grammar
+  default-language: Haskell2010
+
+executable greek-script-query
+  hs-source-dirs: app
+  main-is: Main.hs
+  other-modules:
+    ScriptQueries
+  ghc-options: -Wall -fwarn-tabs -O2 -threaded -rtsopts -with-rtsopts=-N
+  default-extensions:
+    OverloadedStrings
+    ScopedTypeVariables,
+    TypeOperators
+  build-depends:
+    base,
+    containers,
+    bytestring,
+    text,
+    either,
+    lens,
+    cereal,
+    optparse-applicative,
+    primary-type,
+    grammar,
+    greek-script
+  default-language: Haskell2010
+
+test-suite greek-script-test
+  type: exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is: Spec.hs
+  default-extensions:
+    OverloadedStrings,
+    ScopedTypeVariables,
+    TypeOperators
+  build-depends:
+    base,
+    either,
+    lens,
+    test-framework,
+    test-framework-hunit,
+    HUnit,
+    hspec,
+    text,
+    primary-type,
+    grammar,
+    greek-script
+  ghc-options: -fwarn-tabs -O2 -threaded -rtsopts -with-rtsopts=-N
+  default-language: Haskell2010
