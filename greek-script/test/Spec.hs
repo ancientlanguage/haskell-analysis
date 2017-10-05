@@ -98,12 +98,14 @@ finalTestGroup = testGroup "final forms" $
     let x = (roundFwdTo Rounds.final) input
     assertEqual "expect fail on non-final sigma in final position" True (isJust $ x ^? _Failure)
 
-greekGroups =
+greekGroups modulesPath =
   [ unicodeSymbolTestGroup
   -- , vocalicSyllableTestGroup
   , finalTestGroup
-  , testGroupStages "script stage" id Stage.script Stage.forgetHasWordPunctuation (fmap (over _Right Stage.start) $ Serialize.readGroups)
+  , testGroupStages "script stage" id Stage.script Stage.forgetHasWordPunctuation (fmap (over _Right Stage.start) $ Serialize.readGroups modulesPath)
   ]
 
 main :: IO ()
-main = defaultMain greekGroups
+main =
+  let modulesPath = "../modules"
+  in defaultMain $ greekGroups modulesPath

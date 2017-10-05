@@ -113,9 +113,9 @@ showWordCounts x = mapM_ showGroup x
   filterWords (Primary.ContentWord _) = True
   filterWords _ = False
 
-handleGroups :: ([Primary.Group] -> IO ()) -> IO ()
-handleGroups f = do
-  result <- Serialize.readGroups
+handleGroups :: FilePath -> ([Primary.Group] -> IO ()) -> IO ()
+handleGroups modulesPath f = do
+  result <- Serialize.readGroups modulesPath
   case result of
     Left x -> putStrLn x
     Right x -> f x
@@ -140,17 +140,19 @@ saveScript gs = case (traverse . _2) (roundTo Stage.script . over (traverse . _2
     _ <- Serialize.saveStage dataPath ss'
     Serialize.verifyLoadStage dataPath ss'
 
-runCommand :: Command -> IO ()
-runCommand (CommandSources) = handleGroups showWordCounts
-runCommand (CommandScriptQuery (Query n opt)) = case Map.lookup n ScriptQueries.queries of
-  Just f -> handleGroups (f opt)
+runCommand :: FilePath -> Command -> IO ()
+runCommand modulesPath (CommandSources) = handleGroups modulesPath showWordCounts
+runCommand modulesPath (CommandScriptQuery (Query n opt)) = case Map.lookup n ScriptQueries.queries of
+  Just f -> handleGroups modulesPath (f opt)
   Nothing -> putStrLn $ "Invalid query name: " ++ n
-runCommand (CommandList "") = mapM_ showCategory $ Map.keys queryCategories
-runCommand (CommandList c) = showCategory c
-runCommand (CommandSave) = handleGroups saveScript
+runCommand _ (CommandList "") = mapM_ showCategory $ Map.keys queryCategories
+runCommand _ (CommandList c) = showCategory c
+runCommand modulesPath (CommandSave) = handleGroups modulesPath saveScript
 
 main :: IO ()
-main = execParser opts >>= runCommand
+main = do
+  let modulesPath = "./modules"
+  execParser opts >>= runCommand modulesPath
   where
   opts = info (helper <*> options)
     ( fullDesc

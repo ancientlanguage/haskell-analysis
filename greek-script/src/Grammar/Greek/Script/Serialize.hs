@@ -2,13 +2,14 @@ module Grammar.Greek.Script.Serialize where
 
 import qualified Data.ByteString as BS
 import qualified Data.Serialize as Serialize
+import System.FilePath ((</>))
 import Primary
 
 decodeGroups :: BS.ByteString -> Either String [Group]
 decodeGroups = Serialize.decode
 
-groupsPath :: FilePath
-groupsPath = "../modules/binary-primary/data/groups.data"
+groupsPath :: FilePath -> FilePath
+groupsPath modulesPath = modulesPath </> "binary-primary/data/groups.data"
 
-readGroups :: IO (Either String [Group])
-readGroups = decodeGroups <$> BS.readFile groupsPath
+readGroups :: FilePath -> IO (Either String [Group])
+readGroups modulesPath  = decodeGroups <$> BS.readFile (groupsPath modulesPath)
