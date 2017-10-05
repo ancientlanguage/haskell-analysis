@@ -1,0 +1,18 @@
+[submodule "data/xml-sblgnt"]
+	path = data/xml-sblgnt
+	url = https://github.com/ancientlanguage/xml-sblgnt.git
+[submodule "data/xml-perseus-greek"]
+	path = data/xml-perseus-greek
+	url = https://github.com/ancientlanguage/xml-perseus-greek.git
+[submodule "data/xml-papyri"]
+	path = data/xml-papyri
+	url = https://github.com/ancientlanguage/xml-papyri.git
+[submodule "data/xml-tanach"]
+	path = data/xml-tanach
+	url = https://github.com/ancientlanguage/xml-tanach.git
+[submodule "modules/binary-primary"]
+	path = modules/binary-primary
+	url = https://github.com/ancientlanguage/binary-primary.git
+[submodule "modules/binary-greek-script"]
+	path = modules/binary-greek-script
+	url = https://github.com/ancientlanguage/binary-greek-script.git
