@@ -31,7 +31,7 @@ parseAllTanach = buildTestBracketed $ do
 parseSblgnt :: Test
 parseSblgnt = testParse "parse sblgnt" $ loadParse xmlPath sblgnt logBook
   where
-  xmlPath = "./data/xml-sblgnt/sblgnt.xml"
+  xmlPath = "../data/xml-sblgnt/sblgnt.xml"
 
 parsePerseusTeiEpidoc :: String -> Test
 parsePerseusTeiEpidoc p = testParse ("parse perseus tei epidoc: " ++ p) $ loadParse p tei logBook

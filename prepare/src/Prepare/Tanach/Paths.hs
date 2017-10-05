@@ -6,7 +6,7 @@ import Prepare.Tanach.IndexModel (Index)
 import qualified Prepare.Tanach.IndexModel as Index
 
 tanachBasePath :: FilePath
-tanachBasePath = "./data/xml-tanach/books/"
+tanachBasePath = "../data/xml-tanach/books/"
 
 indexFilePath :: FilePath
 indexFilePath = tanachBasePath </> "TanachIndex.xml"
