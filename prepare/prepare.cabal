@@ -101,6 +101,7 @@ test-suite prepare-test
   build-depends:
     base,
     prepare,
+    filepath,
     test-framework,
     test-framework-hunit,
     HUnit,

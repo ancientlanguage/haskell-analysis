@@ -66,11 +66,13 @@ shouldElideGroup = testGroup "shouldElide" $
   testDest n vs ds = testRoundDest n Round.shouldElide vs ds
 
 main :: IO ()
-main = defaultMain
+main =
+  let modulesPath = "../modules"
+  in defaultMain
   [ coreWordPhonemeRound
   , longestPrefixGroup
   , allSplitsListGroup
   , uniqueFormsGroup
   , shouldElideGroup
-  , testGroupStages "morph stage" show Stage.morph id (pure <$> Serialize.readScript)
+  , testGroupStages "morph stage" show Stage.morph id (pure <$> Serialize.readScript modulesPath)
   ]

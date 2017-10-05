@@ -1,3 +1,4 @@
+import System.FilePath ((</>))
 import Test.Framework
 import Test.Framework.Providers.HUnit
 import Test.HUnit hiding (Test)
@@ -28,10 +29,10 @@ parseAllTanach dataPath = buildTestBracketed $ do
       Right idx -> fmap (\x -> testParse x (loadParse x tanach emptyLog)) $ Paths.getAllFilePaths dataPath idx
   return (testGroup "parseAllTanach" tests, return ())
 
-parseSblgnt :: Test
-parseSblgnt = testParse "parse sblgnt" $ loadParse xmlPath sblgnt logBook
+parseSblgnt :: FilePath -> Test
+parseSblgnt dataPath = testParse "parse sblgnt" $ loadParse xmlPath sblgnt logBook
   where
-  xmlPath = "../data/xml-sblgnt/sblgnt.xml"
+  xmlPath = dataPath </> "xml-sblgnt/sblgnt.xml"
 
 parsePerseusTeiEpidoc :: String -> Test
 parsePerseusTeiEpidoc p = testParse ("parse perseus tei epidoc: " ++ p) $ loadParse p tei logBook
@@ -41,6 +42,6 @@ main =
   let dataPath = "../data"
   in defaultMain
   [ testGroup "Perseus" (fmap parsePerseusTeiEpidoc $ perseusShortList dataPath)
-  , testGroup "SBLGNT" [ parseSblgnt ]
+  , testGroup "SBLGNT" [ parseSblgnt dataPath ]
   , testGroup "Tanach Header" [ parseTanachHeader dataPath, parseAllTanach dataPath ]
   ]

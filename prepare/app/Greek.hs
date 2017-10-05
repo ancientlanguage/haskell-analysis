@@ -176,16 +176,16 @@ showSingleLoadResult file =
     Left e -> putStrLn $ e
     Right _ -> putStrLn "Success!"
 
-findPerseusFiles :: IO [FilePath]
-findPerseusFiles = do
-  let perseusDir = "./data/xml-perseus-greek"
+findPerseusFiles :: FilePath -> IO [FilePath]
+findPerseusFiles dataPath = do
+  let perseusDir = dataPath </> "xml-perseus-greek"
   perseusFiles <- find always (fileName ~~? "*-grc*.xml") perseusDir
   _ <- putStrLn $ (show . length $ perseusFiles) ++ " perseus files"
   return perseusFiles
 
-findPapyriFiles :: IO [FilePath]
-findPapyriFiles = do
-  let papyriDir = "./data/xml-papyri/DDB_EpiDoc_XML/"
+findPapyriFiles :: FilePath -> IO [FilePath]
+findPapyriFiles dataPath = do
+  let papyriDir = dataPath </> "xml-papyri/DDB_EpiDoc_XML/"
   find always (fileName ~~? "*.xml") papyriDir
 
 commands :: FilePath -> Map String (IO ())
@@ -193,7 +193,7 @@ commands dataPath = Map.fromList
   [ ("save", loadAllGroups dataPath >>= outputBinaryGroups)
   , ("dump-affixes", loadAllGroups dataPath >>= dumpAffixes)
   , ("dump-invalid-words", loadAllGroups dataPath >>= dumpInvalidWords)
-  , ("show-parsing", findPerseusFiles >>= showParsingFiles)
-  , ("show-all", findPerseusFiles >>= showAllLoadResults)
-  , ("show-single", showSingleLoadResult "./data/xml-perseus-greek/data/tlg0003/tlg001/tlg0003.tlg001.perseus-grc2.xml")
+  , ("show-parsing", findPerseusFiles dataPath >>= showParsingFiles)
+  , ("show-all", findPerseusFiles dataPath >>= showAllLoadResults)
+  , ("show-single", showSingleLoadResult (dataPath </> "xml-perseus-greek/data/tlg0003/tlg001/tlg0003.tlg001.perseus-grc2.xml"))
   ]

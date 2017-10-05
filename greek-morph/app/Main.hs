@@ -100,9 +100,9 @@ options = subparser
 showSourceId :: SourceId -> Lazy.Text
 showSourceId (SourceId g s) = Lazy.format "{} {}" (Lazy.fromStrict g, Lazy.fromStrict s)
 
-showWordCounts :: IO ()
-showWordCounts = do
-  ss <- Serialize.readScript
+showWordCounts :: FilePath -> IO ()
+showWordCounts modulesPath = do
+  ss <- Serialize.readScript modulesPath
   let pairs = fmap toLengthPair ss
   let maxIdLength = fromIntegral . maximum $ fmap (Lazy.length . fst) pairs
   let maxDig = maxDigits . fmap snd $ pairs
@@ -111,15 +111,17 @@ showWordCounts = do
   toLengthPair (sid, ms) = (showSourceId sid, length ms)
   printColumns llen rlen (x, y) = Lazy.putStrLn $ Lazy.format "{} {} words" (Lazy.right llen ' ' x, Lazy.left rlen ' ' y)
 
-runCommand :: Command -> IO ()
-runCommand (CommandSources) = showWordCounts
-runCommand (CommandRun (Query _ _)) = putStrLn "Hang tight—no queries yet!"
-runCommand (CommandList) = putStrLn "Hang tight—no queries yet!"
-runCommand (CommandMorph opt) = showMorphForms opt
-runCommand (CommandSave) = putStrLn "Hang tight—nothing to save yet!"
+runCommand :: FilePath -> Command -> IO ()
+runCommand modulesPath (CommandSources) = showWordCounts modulesPath
+runCommand _ (CommandRun (Query _ _)) = putStrLn "Hang tight—no queries yet!"
+runCommand _ (CommandList) = putStrLn "Hang tight—no queries yet!"
+runCommand _ (CommandMorph opt) = showMorphForms opt
+runCommand _ (CommandSave) = putStrLn "Hang tight—nothing to save yet!"
 
 main :: IO ()
-main = execParser opts >>= runCommand
+main = do
+  let modulesPath = "./modules"
+  execParser opts >>= runCommand modulesPath
   where
   opts = info (helper <*> options)
     ( fullDesc
