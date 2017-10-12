@@ -151,7 +151,9 @@ runCommand modulesPath (CommandSave) = handleGroups modulesPath saveScript
 
 main :: IO ()
 main = do
-  let modulesPath = "./modules"
+  let
+    -- modulesPath = "./modules"
+    modulesPath = ".."
   execParser opts >>= runCommand modulesPath
   where
   opts = info (helper <*> options)

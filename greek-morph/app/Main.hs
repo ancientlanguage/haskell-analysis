@@ -120,7 +120,9 @@ runCommand _ (CommandSave) = putStrLn "Hang tight—nothing to save yet!"
 
 main :: IO ()
 main = do
-  let modulesPath = "./modules"
+  let
+    -- modulesPath = "./modules"
+    modulesPath = ".."
   execParser opts >>= runCommand modulesPath
   where
   opts = info (helper <*> options)
