@@ -125,7 +125,7 @@ data ProfileDesc = ProfileDesc
 data Change = Change
   { changeWhen :: Text
   , changeWho :: Text
-  , changeWhat :: Text
+  , changeWhat :: Maybe Text
   }
   deriving (Show)
 
@@ -135,8 +135,7 @@ data RevisionDesc = RevisionDesc
   deriving (Show)
 
 data TeiHeader = TeiHeader
-  { teiHeaderType :: Text
-  , teiHeaderFileDesc :: FileDesc
+  { teiHeaderFileDesc :: FileDesc
   , teiHeaderEncodingDesc :: EncodingDesc
   , teiHeaderProfileDesc :: ProfileDesc
   , teiHeaderRevisionDesc :: RevisionDesc

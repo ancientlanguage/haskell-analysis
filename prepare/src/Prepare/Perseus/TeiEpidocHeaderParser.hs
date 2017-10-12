@@ -37,7 +37,7 @@ imprint :: NodeParser Imprint
 imprint = Xml.elementNS (teiNS "imprint") children
   where
   children = do
-    pp <- optional $ xmlContent "pubPlace" 
+    pp <- optional $ xmlContent "pubPlace"
     p <- xmlContent "publisher"
     d <- xmlContent "date"
     return $ Imprint p d pp
@@ -155,7 +155,7 @@ correction = build <$> Xml.elementAttrNS (teiNS "correction") attributes childre
   children = Xml.elementContentNS (teiNS "p")
 
 editorialDecl :: NodeParser EditorialDecl
-editorialDecl = EditorialDecl <$> Xml.elementNS (teiNS "editorialDecl") correction 
+editorialDecl = EditorialDecl <$> Xml.elementNS (teiNS "editorialDecl") correction
 
 encodingDesc :: NodeParser EncodingDesc
 encodingDesc = Xml.elementNS (teiNS "encodingDesc") children
@@ -184,23 +184,23 @@ profileDesc :: NodeParser ProfileDesc
 profileDesc = ProfileDesc <$> Xml.elementNS (teiNS "profileDesc") langUsage
 
 change :: NodeParser Change
-change = build <$> Xml.elementContentAttrNS (teiNS "change") attributes
+change = build <$> Xml.elementAttrNS (teiNS "change") attributes children
   where
   build ((x, y), z) = Change x y z
   attributes = pure (,)
     <*> Xml.attribute "when"
     <*> Xml.attribute "who"
+  children
+    =   fmap Just Xml.onlyContent
+    <|> fmap (const Nothing) Xml.end
 
 revisionDesc :: NodeParser RevisionDesc
 revisionDesc = RevisionDesc <$> Xml.elementNS (teiNS "revisionDesc") (many change)
 
 teiHeader :: NodeParser TeiHeader
-teiHeader = build <$> Xml.elementAttrNS (teiNS "teiHeader") attributes children
+teiHeader = build <$> Xml.elementNS (teiNS "teiHeader") children
   where
-  build (t, (fd, ed, pd, rd)) = TeiHeader t fd ed pd rd
-  attributes = do
-    t <- Xml.attribute "type"
-    return t
+  build (fd, ed, pd, rd) = TeiHeader fd ed pd rd
   children = pure (,,,)
     <*> fileDesc
     <*> encodingDesc

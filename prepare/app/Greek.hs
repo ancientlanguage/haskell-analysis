@@ -41,7 +41,7 @@ outputBinaryGroups :: [Primary.Group] -> IO ()
 outputBinaryGroups gs = do
   let encoded = Serialize.encode . Decompose.decomposeGroups $ gs
   let path = "../binary-primary/data/groups.data"
-  _ <- printText ["Writing", Text.pack path] 
+  _ <- printText ["Writing", Text.pack path]
   BS.writeFile path encoded
 
 getWords :: Primary.Content -> [Primary.Word]
@@ -55,7 +55,7 @@ printAffixes g = do
   let words = concatMap getWords contents
   let prefixes = Set.fromList . fmap Primary.wordPrefix $ words
   let suffixes = Set.fromList . fmap Primary.wordSuffix $ words
-  let printTexts = mapM_ (Text.putStrLn . (\x -> Text.concat ["\"", x, "\""])) 
+  let printTexts = mapM_ (Text.putStrLn . (\x -> Text.concat ["\"", x, "\""]))
   _ <- putStrLn "Prefixes"
   _ <- printTexts prefixes
   _ <- putStrLn "Suffixes"
@@ -64,7 +64,7 @@ printAffixes g = do
 
 showResult :: (Sblgnt -> IO ()) -> Either String Sblgnt -> IO ()
 showResult _ (Left x) = putStrLn x
-showResult f (Right x) = f x 
+showResult f (Right x) = f x
 
 printText :: [Text] -> IO ()
 printText = Text.putStrLn . Text.intercalate " "
@@ -124,7 +124,7 @@ dumpInvalidWords gs = mapM_ dumpInvalids $ concatMap Primary.groupSources gs
     || not (Text.all isCore t)
     || Text.any isGreekChar p
     || Text.any isGreekChar s
-  isGreekChar x 
+  isGreekChar x
     = x /= '\x037e' -- Greek question mark
     && ((x >= '\x0370' && x <= '\x03ff')
       || (x >= '\x1f00' && x <= '\x1fff'))
@@ -142,7 +142,7 @@ loadAllGroups dataPath = do
       t <- (fmap . fmap) Tei.unify . tryParseTei $ x
       _ <- case t of
         Left e -> putStrLn $ "  " ++ e
-        Right r -> Text.putStrLn $ Text.concat 
+        Right r -> Text.putStrLn $ Text.concat
           [ "  "
           , Maybe.maybe "-" id . Primary.sourceAuthor $ r
           , " -- "
@@ -195,5 +195,5 @@ commands dataPath = Map.fromList
   , ("dump-invalid-words", loadAllGroups dataPath >>= dumpInvalidWords)
   , ("show-parsing", findPerseusFiles dataPath >>= showParsingFiles)
   , ("show-all", findPerseusFiles dataPath >>= showAllLoadResults)
-  , ("show-single", showSingleLoadResult (dataPath </> "xml-perseus-greek/data/tlg0003/tlg001/tlg0003.tlg001.perseus-grc2.xml"))
+  , ("show-single", showSingleLoadResult (dataPath </> "xml-perseus-greek/data/tlg0001/tlg001/tlg0001.tlg001.perseus-grc2.xml"))
   ]
