@@ -3,6 +3,7 @@ module Prepare.Perseus.TeiEpidocUnify where
 import Prelude hiding (getContents)
 import qualified Data.Char as Char
 import qualified Data.List as List
+import qualified Data.Maybe as Maybe
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Prepare.Perseus.TeiEpidocHeaderModel as Header
@@ -44,7 +45,7 @@ getMilestoneContents (MilestoneParagraph _) = [Primary.MilestoneParagraph]
 getMilestoneContents (MilestoneCard n) = [Primary.MilestoneCard n]
 
 isGreekChar :: Char -> Bool
-isGreekChar x 
+isGreekChar x
   = x /= '\x037e' -- Greek question mark
   && ((x >= '\x0370' && x <= '\x03ff')
     || (x >= '\x1f00' && x <= '\x1fff'))
@@ -87,6 +88,9 @@ getQuoteContents (Quote _ ls) = Right " " : concatMap getQuoteLineContents ls ++
 getCitContents :: Cit -> [Either Primary.Milestone Text]
 getCitContents (Cit q _) = getQuoteContents q
 
+getSicContents :: Sic -> [Text]
+getSicContents = Maybe.maybeToList . sicContent
+
 getApparatusAddContents :: ApparatusAdd -> [Text]
 getApparatusAddContents (ApparatusAdd t) = [t]
 
@@ -114,6 +118,7 @@ unifyContent (ContentQuote q) = getQuoteContents q
 unifyContent (ContentBibl _) = []
 unifyContent (ContentCit c) = getCitContents c
 unifyContent (ContentSpeaker s) = fmap Right $ getSpeakerContents s
+unifyContent (ContentSic s) = fmap Right $ getSicContents s
 
 mergeSuffixes :: [Primary.Content] -> [Primary.Content]
 mergeSuffixes = foldr go []

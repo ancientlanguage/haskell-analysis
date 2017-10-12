@@ -87,6 +87,15 @@ quote = build <$> Xml.elementAttrNS (teiNS "quote") attributes children
 cit :: NodeParser Cit
 cit = Xml.elementNS (teiNS "cit") (Cit <$> quote <*> bibl)
 
+sic :: NodeParser Sic
+sic =
+  let
+    name = teiNS "sic"
+    parse
+      = MP.try (fmap Just (Xml.elementContentNS name))
+      <|> fmap (const Nothing) (Xml.elementEmptyNS name)
+  in Sic <$> parse
+
 speaker :: NodeParser Speaker
 speaker = Xml.elementNS (teiNS "sp") children
   where
@@ -110,6 +119,7 @@ content
   <|> (ContentQuote <$> quote)
   <|> (ContentBibl <$> bibl)
   <|> (ContentCit <$> cit)
+  <|> (ContentSic <$> sic)
 
 textPartSubtype :: Text -> Xml.AttributeParser Integer
 textPartSubtype v = do

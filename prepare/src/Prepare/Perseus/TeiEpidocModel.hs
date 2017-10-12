@@ -57,6 +57,11 @@ data Speaker = Speaker
   }
   deriving (Show)
 
+data Sic = Sic
+  { sicContent :: Maybe Text
+  }
+  deriving (Show)
+
 data Content
   = ContentMilestone Milestone
   | ContentText Text
@@ -69,6 +74,7 @@ data Content
   | ContentBibl Bibl
   | ContentCit Cit
   | ContentSpeaker Speaker
+  | ContentSic Sic
   deriving (Show)
 
 data LineRender = LineRender_DisplayNumAndIndent
