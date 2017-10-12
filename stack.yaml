@@ -1,10 +1,10 @@
 resolver: nightly-2017-10-05
 packages:
-- 'grammar'
-- 'greek-morph'
-- 'greek-script'
-- 'prepare'
-- 'primary-type'
+- grammar
+- greek-morph
+- greek-script
+- prepare
+- primary-type
 extra-deps:
 - flexible-defaults-0.0.1.2
 - log-domain-0.11.2
