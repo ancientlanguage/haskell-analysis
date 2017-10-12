@@ -6,7 +6,7 @@ module Prepare.Xml.Events where
 
 import Prelude hiding (log)
 import Conduit
-import Control.Exception (Exception (..), try)
+import Control.Exception (Exception (..), try, SomeException)
 import Control.Monad (when)
 import qualified Data.Char as Char
 import qualified Data.Conduit.List as CL
@@ -33,7 +33,7 @@ instance Exception InvalidXml
 readEvents :: FilePath -> IO [P.EventPos]
 readEvents path = runResourceT $ sourceFile path =$= P.parseBytesPos def $$ sinkList
 
-readRootElement :: (Element -> IO ()) -> FilePath -> IO (Either InvalidXml Element)
+readRootElement :: (Element -> IO ()) -> FilePath -> IO (Either SomeException Element)
 readRootElement log path = try $ runResourceT $ sourceFile path =$= P.parseBytesPos def $$ rootElement log
 
 many :: Monad m => m (Maybe a) -> m [a]
@@ -107,7 +107,7 @@ convertEntity t p = Content <$> tryConvert t <*> pure [p]
     "lt" -> pure "\x003c"
     "gt" -> pure "\x003e"
 
-    -- ISO 8879 entities 
+    -- ISO 8879 entities
     "lpar" -> pure "\x0028"
     "rpar" -> pure "\x0029"
     "ast" -> pure "\x002a"
@@ -129,7 +129,7 @@ node log = CL.peek >>= \case
     ContentEntity e -> do
       e' <- convertEntity e p
       dropReturn . Just . NodeContent $ e'
-    ContentText t -> dropReturn . Just . NodeContent $ Content t [p] 
+    ContentText t -> dropReturn . Just . NodeContent $ Content t [p]
   Just (_, EventInstruction _) -> CL.drop 1 >> node log
   Just (_, EventComment _) -> CL.drop 1 >> node log
   Just ((Just p), EventCDATA t) -> dropReturn . Just $ NodeContent (Content t [p])
@@ -150,8 +150,8 @@ finishElement log p n as = do
     Just (Just p', EventEndElement n') | n == n' -> do
       let e = Element n as' (compressNodes ns) (p, p')
       liftIO $ log e
-      return e 
-    x -> throwM $ MissingEndElement n x 
+      return e
+    x -> throwM $ MissingEndElement n x
 
 element :: (MonadThrow m, MonadIO m) => (Element -> IO ()) -> Consumer P.EventPos m (Maybe Element)
 element log = CL.peek >>= \case
