@@ -195,5 +195,6 @@ commands dataPath = Map.fromList
   , ("dump-invalid-words", loadAllGroups dataPath >>= dumpInvalidWords)
   , ("show-parsing", findPerseusFiles dataPath >>= showParsingFiles)
   , ("show-all", findPerseusFiles dataPath >>= showAllLoadResults)
-  , ("show-single", showSingleLoadResult (dataPath </> "xml-perseus-greek/data/tlg0032/tlg001/tlg0032.tlg001.perseus-grc2.xml"))
+  , ("show-short-list", showParsingFiles (perseusShortList dataPath))
+  , ("show-single", showSingleLoadResult (dataPath </> "xml-perseus-greek/data/tlg0032/tlg002/tlg0032.tlg002.perseus-grc2.xml"))
   ]
