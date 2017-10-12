@@ -18,7 +18,7 @@ milestoneParagraph = build <$> Xml.elementAttrNS (teiNS "milestone") attributes 
   where
   build (x, _) = x
   attributes = do
-    ed <- Xml.attribute "ed"
+    ed <- optional (Xml.attribute "ed")
     u <- Xml.attribute "unit"
     _ <- Xml.parseNested ("milestone unit para") (MP.string "para") u
     return $ MilestoneParagraph ed

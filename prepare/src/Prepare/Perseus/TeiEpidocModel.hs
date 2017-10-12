@@ -4,7 +4,7 @@ import Data.Text (Text)
 import Prepare.Perseus.TeiEpidocHeaderModel
 
 data Milestone
-  = MilestoneParagraph { milestoneParagraphEd :: Text }
+  = MilestoneParagraph { milestoneParagraphEd :: Maybe Text }
   | MilestoneCard { milestoneCardN :: Integer }
   deriving (Show)
 
