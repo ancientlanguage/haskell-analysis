@@ -1,0 +1,12 @@
+name: primary-type
+version: 3.0.0
+dependencies:
+- base
+- text
+- cereal
+ghc-options:
+- -Wall
+- -fwarn-tabs
+- -O2
+library:
+  source-dirs: src

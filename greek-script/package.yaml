@@ -1,0 +1,48 @@
+name: greek-script
+version: 3.0.0
+ghc-options:
+- -Wall
+- -fwarn-tabs
+- -O2
+default-extensions:
+- OverloadedStrings
+- PatternSynonyms
+- ScopedTypeVariables
+- TypeOperators
+dependencies:
+- array
+- base
+- bytestring
+- cereal
+- containers
+- directory
+- either
+- extra
+- filepath
+- grammar
+- HUnit
+- lens
+- primary-type
+- random-fu
+- random-source
+- test-framework
+- test-framework-hunit
+- text
+library:
+  source-dirs: src
+
+executables:
+  greek-script-query:
+    source-dirs: app
+    main: Main.hs
+    dependencies:
+    - optparse-applicative
+    - greek-script
+
+tests:
+  greek-script-test:
+    source-dirs: test
+    main: Spec.hs
+    dependencies:
+    - hspec
+    - greek-script

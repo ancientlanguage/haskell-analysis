@@ -1,109 +1,124 @@
-name: prepare
-version: 4.0.0
-synopsis: Prepare ancient language data
-description: Please see README.md
-homepage: https://github.com/ancientlanguage/haskell-prepare
-license: MIT
-license-file: LICENSE
-author: Scott Fleischman
-maintainer: scott-fleischman@users.noreply.github.com
-copyright: 2016 Scott Fleischman
-build-type: Simple
-cabal-version: >=1.10
+-- This file has been generated from package.yaml by hpack version 0.17.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           prepare
+version:        4.0.0
+build-type:     Simple
+cabal-version:  >= 1.10
 
 library
-  hs-source-dirs: src
+  hs-source-dirs:
+    src
   exposed-modules:
-    Prepare,
-    Prepare.Decompose,
-    Prepare.Log,
-    Prepare.Perseus.Paths,
-    Prepare.Perseus.TeiEpidocHeaderModel,
-    Prepare.Perseus.TeiEpidocHeaderParser,
-    Prepare.Perseus.TeiEpidocModel,
-    Prepare.Perseus.TeiEpidocParser,
-    Prepare.Perseus.TeiEpidocParserCommon,
-    Prepare.Perseus.TeiEpidocUnify,
-    Prepare.Sblgnt.Model,
-    Prepare.Sblgnt.Parser,
-    Prepare.Sblgnt.Unify,
-    Prepare.Source.DecomposeWords,
-    Prepare.Source.Output,
-    Prepare.Tanach.HeaderModel,
-    Prepare.Tanach.HeaderParser,
-    Prepare.Tanach.IndexModel,
-    Prepare.Tanach.IndexParser,
-    Prepare.Tanach.Paths,
-    Prepare.Tanach.TanachModel,
-    Prepare.Tanach.TanachParser,
-    Prepare.Tanach.TeiHeaderModel,
-    Prepare.Tanach.TeiHeaderParser,
-    Prepare.Xml.Events,
-    Prepare.Xml.Parser,
+    Prepare
+    Prepare.Decompose
+    Prepare.Log
+    Prepare.Perseus.Paths
+    Prepare.Perseus.TeiEpidocHeaderModel
+    Prepare.Perseus.TeiEpidocHeaderParser
+    Prepare.Perseus.TeiEpidocModel
+    Prepare.Perseus.TeiEpidocParser
+    Prepare.Perseus.TeiEpidocParserCommon
+    Prepare.Perseus.TeiEpidocUnify
+    Prepare.Sblgnt.Model
+    Prepare.Sblgnt.Parser
+    Prepare.Sblgnt.Unify
+    Prepare.Source.DecomposeWords
+    Prepare.Source.Output
+    Prepare.Tanach.HeaderModel
+    Prepare.Tanach.HeaderParser
+    Prepare.Tanach.IndexModel
+    Prepare.Tanach.IndexParser
+    Prepare.Tanach.Paths
+    Prepare.Tanach.TanachModel
+    Prepare.Tanach.TanachParser
+    Prepare.Tanach.TeiHeaderModel
+    Prepare.Tanach.TeiHeaderParser
+    Prepare.Xml.Events
+    Prepare.Xml.Parser
     Prepare.Xml.PositionTypes
   ghc-options: -Wall -fwarn-tabs -O2
-  default-extensions:
-    LambdaCase,
-    OverloadedStrings,
-    ScopedTypeVariables
+  default-extensions: LambdaCase OverloadedStrings ScopedTypeVariables
   build-depends:
-    base >=4.9,
-    containers >=0.5,
-    text >=1.2,
-    resourcet >=1.1,
-    conduit >=1.2,
-    conduit-combinators >=1.0,
-    conduit-extra >=1.1,
-    xml-types >=0.3,
-    xml-conduit >=1.3,
-    megaparsec >=5.0,
-    split >=0.2,
-    filepath >=1.4,
-    directory >=1.2,
-    lens >=4.1,
-    cereal >=0.5,
-    primary-type
+    base,
+    bytestring,
+    cereal,
+    conduit,
+    conduit-combinators,
+    conduit-extra,
+    containers,
+    directory,
+    filepath,
+    lens,
+    megaparsec,
+    primary-type,
+    resourcet,
+    split,
+    text,
+    xml-conduit,
+    xml-types
   default-language: Haskell2010
 
 executable prep
-  hs-source-dirs: app
+  hs-source-dirs:
+    app
   main-is: Main.hs
   other-modules:
-    Greek,
+    Greek
     Hebrew
   default-language: Haskell2010
   ghc-options: -Wall -fwarn-tabs -O2
-  default-extensions:
-    LambdaCase,
-    OverloadedStrings,
-    ScopedTypeVariables
+  default-extensions: LambdaCase OverloadedStrings ScopedTypeVariables
   build-depends:
     base,
+    bytestring,
+    cereal,
+    conduit,
+    conduit-combinators,
+    conduit-extra,
     containers,
+    directory,
+    filepath,
+    lens,
+    megaparsec,
+    primary-type,
+    resourcet,
+    split,
     text,
     xml-conduit,
-    filepath,
-    prepare,
-    cereal,
-    filemanip >=0.3,
-    bytestring >=0.10,
-    primary-type
+    xml-types,
+    filemanip,
+    prepare
 
 test-suite prepare-test
   type: exitcode-stdio-1.0
-  hs-source-dirs: test
   main-is: Spec.hs
-  ghc-options: -Wall -fwarn-tabs -O2 -threaded -rtsopts -with-rtsopts=-N
-  default-extensions:
-    LambdaCase,
-    OverloadedStrings,
-    ScopedTypeVariables
+  hs-source-dirs:
+    test
+  default-extensions: LambdaCase OverloadedStrings ScopedTypeVariables
+  ghc-options: -Wall -fwarn-tabs -O2
   build-depends:
     base,
-    prepare,
+    bytestring,
+    cereal,
+    conduit,
+    conduit-combinators,
+    conduit-extra,
+    containers,
+    directory,
     filepath,
-    test-framework,
-    test-framework-hunit,
+    lens,
+    megaparsec,
+    primary-type,
+    resourcet,
+    split,
+    text,
+    xml-conduit,
+    xml-types,
+    hspec,
     HUnit,
-    hspec
+    prepare,
+    test-framework,
+    test-framework-hunit
   default-language: Haskell2010

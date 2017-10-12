@@ -1,7 +1,7 @@
 module Prepare.Tanach.HeaderParser where
 
 import Data.Text (Text)
-import Prepare.Xml.Parser (NodeParser, many, optional, (<|>))
+import Prepare.Xml.Parser (NodeParser, many, (<|>))
 import qualified Prepare.Xml.Parser as Xml
 import qualified Text.Megaparsec.Prim as MP
 import Prepare.Tanach.HeaderModel
@@ -18,7 +18,7 @@ note = Xml.element "note" children
     <*> Xml.elementContent "note"
 
 maybeEmptyElement :: Text -> NodeParser Text
-maybeEmptyElement n = (MP.try (Xml.elementContent n) <|> (const "" <$> Xml.elementEmpty n <* Xml.whitespace)) 
+maybeEmptyElement n = (MP.try (Xml.elementContent n) <|> (const "" <$> Xml.elementEmpty n <* Xml.whitespace))
 
 charInfoChildren :: NodeParser CharInfo
 charInfoChildren
@@ -50,4 +50,4 @@ header = Xml.element "Tanach" children
   children = do
     h <- teiHeader
     (c, n) <- Xml.element "tanach" ((,) <$> coding <*> notes)
-    return $ Header h c n 
+    return $ Header h c n

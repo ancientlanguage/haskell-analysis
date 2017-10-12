@@ -2,9 +2,8 @@ module Prepare.Tanach.TeiHeaderParser where
 
 import Prelude hiding (Word)
 import Data.Text (Text)
-import Prepare.Xml.Parser (NodeParser, (<|>), many, optional)
+import Prepare.Xml.Parser (NodeParser, many, optional)
 import qualified Prepare.Xml.Parser as Xml
-import qualified Text.Megaparsec.Prim as MP
 import Prepare.Tanach.TeiHeaderModel
 
 note :: NodeParser Note
@@ -20,7 +19,7 @@ respStmt :: NodeParser RespStmt
 respStmt = Xml.element "respStmt"
   ( pure RespStmt
     <*> resp
-    <*> many name    
+    <*> many name
   )
 
 edition :: NodeParser Edition
@@ -49,7 +48,7 @@ titleStmt = Xml.element "titleStmt"
     <*> many title
     <*> many editor
     <*> many respStmt
-  ) 
+  )
 
 extent :: NodeParser Extent
 extent = Extent <$> Xml.elementContent "extent"
@@ -80,7 +79,7 @@ publicationStmt = Xml.element "publicationStmt"
   ( pure PublicationStmt
     <*> authority
     <*> distributor
-    <*> availability    
+    <*> availability
   )
 
 editor :: NodeParser Editor

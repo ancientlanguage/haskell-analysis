@@ -1,0 +1,39 @@
+name: grammar
+version: 2.0.0
+ghc-options:
+- -Wall
+- -fwarn-tabs
+- -O2
+default-extensions:
+- OverloadedStrings
+- PatternSynonyms
+- ScopedTypeVariables
+- TypeOperators
+dependencies:
+- array
+- base
+- bytestring
+- cereal
+- containers
+- directory
+- either
+- extra
+- filepath
+- HUnit
+- lens
+- primary-type
+- random-fu
+- random-source
+- test-framework
+- test-framework-hunit
+- text
+library:
+  source-dirs: src
+tests:
+  grammar-common-test:
+    source-dirs: test
+    main: Spec.hs
+    dependencies:
+    - grammar
+    - hspec
+    - primary-type

@@ -1,0 +1,48 @@
+name: prepare
+version: 4.0.0
+ghc-options:
+- -Wall
+- -fwarn-tabs
+- -O2
+default-extensions:
+- LambdaCase
+- OverloadedStrings
+- ScopedTypeVariables
+dependencies:
+- base
+- bytestring
+- cereal
+- conduit
+- conduit-combinators
+- conduit-extra
+- containers
+- directory
+- filepath
+- lens
+- megaparsec
+- primary-type
+- resourcet
+- split
+- text
+- xml-conduit
+- xml-types
+library:
+  source-dirs: src
+executables:
+  prep:
+    source-dirs: app
+    main: Main.hs
+    dependencies:
+    - filemanip
+    - prepare
+
+tests:
+  prepare-test:
+    source-dirs: test
+    main: Spec.hs
+    dependencies:
+    - hspec
+    - HUnit
+    - prepare
+    - test-framework
+    - test-framework-hunit

@@ -1,19 +1,15 @@
-name: grammar
-version: 2.0.0
-synopsis: Ancient language grammars encoded in Haskell
-description: Please see README.md
-homepage: https://github.com/ancientlanguage/haskell-grammar#readme
-author: Scott Fleischman
-maintainer: scott-fleischman@users.noreply.github.com
-copyright: 2016 Scott Fleischman
-build-type: Simple
-cabal-version: >=1.10
-source-repository head
-  type: git
-  location: https://github.com/ancientlanguage/haskell-grammar
+-- This file has been generated from package.yaml by hpack version 0.17.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           grammar
+version:        2.0.0
+build-type:     Simple
+cabal-version:  >= 1.10
 
 library
-  hs-source-dirs: src
+  hs-source-dirs:
+    src
   exposed-modules:
     Grammar.Common
     Grammar.Common.Decompose
@@ -23,56 +19,59 @@ library
     Grammar.Common.Pretty
     Grammar.Common.Round
     Grammar.Common.Types
-    Grammar.IO.RandomSample
     Grammar.IO.QueryStage
+    Grammar.IO.RandomSample
     Grammar.IO.Serialize
     Grammar.Test.Round
     Grammar.Test.Stage
   ghc-options: -Wall -fwarn-tabs -O2
-  default-extensions:
-    OverloadedStrings,
-    PatternSynonyms,
-    ScopedTypeVariables,
-    TypeOperators
+  default-extensions: OverloadedStrings PatternSynonyms ScopedTypeVariables TypeOperators
   build-depends:
-    base >= 4.9,
-    containers,
+    array,
+    base,
     bytestring,
-    text,
+    cereal,
+    containers,
+    directory,
+    either,
     extra,
     filepath,
-    directory,
-    cereal,
+    HUnit,
     lens,
-    either,
+    primary-type,
     random-fu,
     random-source,
-    array,
     test-framework,
     test-framework-hunit,
-    HUnit,
-    primary-type
+    text
   default-language: Haskell2010
 
 test-suite grammar-common-test
   type: exitcode-stdio-1.0
-  hs-source-dirs: test
+  hs-source-dirs:
+    test
   main-is: Spec.hs
-  default-extensions:
-    OverloadedStrings,
-    PatternSynonyms,
-    ScopedTypeVariables,
-    TypeOperators
+  default-extensions: OverloadedStrings PatternSynonyms ScopedTypeVariables TypeOperators
   build-depends:
+    array,
     base,
+    bytestring,
+    cereal,
+    containers,
+    directory,
     either,
+    extra,
+    filepath,
+    HUnit,
     lens,
+    primary-type,
+    random-fu,
+    random-source,
     test-framework,
     test-framework-hunit,
-    HUnit,
-    hspec,
     text,
-    primary-type,
-    grammar
-  ghc-options: -fwarn-tabs -O2 -threaded -rtsopts -with-rtsopts=-N
+    grammar,
+    hspec,
+    primary-type
+  ghc-options: -Wall -fwarn-tabs -O2
   default-language: Haskell2010

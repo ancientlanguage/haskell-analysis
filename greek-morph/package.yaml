@@ -1,0 +1,50 @@
+name: greek-morph
+version: 3.0.0
+ghc-options:
+- -Wall
+- -fwarn-tabs
+- -O2
+default-extensions:
+- OverloadedStrings
+- PatternSynonyms
+- ScopedTypeVariables
+- TypeOperators
+dependencies:
+- array
+- base
+- bytestring
+- cereal
+- containers
+- directory
+- either
+- extra
+- filepath
+- grammar
+- greek-script
+- HUnit
+- lens
+- primary-type
+- random-fu
+- random-source
+- syb
+- template-haskell
+- test-framework
+- test-framework-hunit
+- text
+library:
+  source-dirs: src
+executables:
+  greek-morph-query:
+    source-dirs: app
+    main: Main.hs
+    dependencies:
+    - optparse-applicative
+    - greek-morph
+    - text-format
+tests:
+  greek-morph-test:
+    source-dirs: test
+    main: Spec.hs
+    dependencies:
+    - greek-morph
+    - hspec
