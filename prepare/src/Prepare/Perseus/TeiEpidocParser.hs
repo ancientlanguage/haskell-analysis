@@ -243,7 +243,7 @@ teiText = build <$> Xml.elementAttrNS (teiNS "text") attributes children
     return (i, b)
 
 tei :: NodeParser Tei
-tei = Xml.elementNS (teiNS "TEI") children 
+tei = Xml.elementNS (teiNS "TEI") children
   where
   children = pure Tei
     <*> Header.teiHeader
