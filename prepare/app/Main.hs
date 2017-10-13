@@ -17,8 +17,9 @@ main :: IO ()
 main = do
   let
     dataPath = "./data"
+    modulesPath = "./modules"
     allCommands = Map.union
-      (Map.mapKeys ("greek-"++) $ Greek.commands dataPath)
+      (Map.mapKeys ("greek-"++) $ Greek.commands dataPath modulesPath)
       (Map.mapKeys ("hebrew-"++) $ Hebrew.commands dataPath)
   let help = dumpCommands $ Map.keys allCommands
   args <- getArgs

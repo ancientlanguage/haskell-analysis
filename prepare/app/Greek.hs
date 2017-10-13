@@ -37,10 +37,10 @@ outputSblgntAgda s = do
   let baseDir = "../agda-primary/src"
   mapM_ (Output.writeModule baseDir) (Output.flatModules m)
 
-outputBinaryGroups :: [Primary.Group] -> IO ()
-outputBinaryGroups gs = do
+outputBinaryGroups :: FilePath -> [Primary.Group] -> IO ()
+outputBinaryGroups modulesPath gs = do
   let encoded = Serialize.encode . Decompose.decomposeGroups $ gs
-  let path = "../binary-primary/data/groups.data"
+  let path = modulesPath </> "binary-primary/data/groups.data"
   _ <- printText ["Writing", Text.pack path]
   BS.writeFile path encoded
 
@@ -188,9 +188,9 @@ findPapyriFiles dataPath = do
   let papyriDir = dataPath </> "xml-papyri/DDB_EpiDoc_XML/"
   find always (fileName ~~? "*.xml") papyriDir
 
-commands :: FilePath -> Map String (IO ())
-commands dataPath = Map.fromList
-  [ ("save", loadAllGroups dataPath >>= outputBinaryGroups)
+commands :: FilePath -> FilePath -> Map String (IO ())
+commands dataPath modulesPath = Map.fromList
+  [ ("save", loadAllGroups dataPath >>= outputBinaryGroups modulesPath)
   , ("dump-affixes", loadAllGroups dataPath >>= dumpAffixes)
   , ("dump-invalid-words", loadAllGroups dataPath >>= dumpInvalidWords)
   , ("show-parsing", findPerseusFiles dataPath >>= showParsingFiles)

@@ -108,6 +108,6 @@ greekGroups modulesPath =
 main :: IO ()
 main =
   let
---    modulesPath = "../modules"
-    modulesPath = "../.."
+    modulesPath = "../modules"
+    -- modulesPath = "../.."
   in defaultMain $ greekGroups modulesPath

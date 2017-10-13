@@ -67,7 +67,9 @@ shouldElideGroup = testGroup "shouldElide" $
 
 main :: IO ()
 main =
-  let modulesPath = "../modules"
+  let
+    modulesPath = "../modules"
+    -- modulesPath = "../.."
   in defaultMain
   [ coreWordPhonemeRound
   , longestPrefixGroup

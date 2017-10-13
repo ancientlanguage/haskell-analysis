@@ -11,6 +11,7 @@ import Data.Semigroup ((<>))
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
 import Options.Applicative hiding (Failure, Success)
+import System.FilePath ((</>))
 
 import qualified ScriptQueries
 import Grammar.IO.QueryStage
@@ -132,11 +133,11 @@ showCategory c = do
       mapM_ (\x -> putStrLn $ c ++ " " ++ x) $ Map.keys m
     Nothing -> putStrLn $ "Invalid query category: " ++ c
 
-saveScript :: [Primary.Group] -> IO ()
-saveScript gs = case (traverse . _2) (roundTo Stage.script . over (traverse . _2) Stage.basicWord) . prepareGroups $ gs of
+saveScript :: FilePath -> [Primary.Group] -> IO ()
+saveScript modulesPath gs = case (traverse . _2) (roundTo Stage.script . over (traverse . _2) Stage.basicWord) . prepareGroups $ gs of
   Failure es -> mapM_ (putStrLn . show) es
   Success (ss' :: [SourceId :* [Milestone :* Word]]) -> do
-    let dataPath = "../binary-greek-script/data"
+    let dataPath = modulesPath </> "binary-greek-script/data"
     _ <- Serialize.saveStage dataPath ss'
     Serialize.verifyLoadStage dataPath ss'
 
@@ -147,13 +148,13 @@ runCommand modulesPath (CommandScriptQuery (Query n opt)) = case Map.lookup n Sc
   Nothing -> putStrLn $ "Invalid query name: " ++ n
 runCommand _ (CommandList "") = mapM_ showCategory $ Map.keys queryCategories
 runCommand _ (CommandList c) = showCategory c
-runCommand modulesPath (CommandSave) = handleGroups modulesPath saveScript
+runCommand modulesPath (CommandSave) = handleGroups modulesPath (saveScript modulesPath)
 
 main :: IO ()
 main = do
   let
-    -- modulesPath = "./modules"
-    modulesPath = ".."
+    modulesPath = "./modules"
+    -- modulesPath = ".."
   execParser opts >>= runCommand modulesPath
   where
   opts = info (helper <*> options)
