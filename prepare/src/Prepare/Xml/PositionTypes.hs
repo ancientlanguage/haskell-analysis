@@ -10,13 +10,13 @@ data Node
   deriving (Eq, Ord, Show)
 
 emptyPositionRange :: PositionRange
-emptyPositionRange = PositionRange e e where e = Position 0 0
+emptyPositionRange = PositionRange e e where e = Position 0 0 0
 
 getNodePosition :: Node -> PositionRange
 getNodePosition (NodeElement e) = fst . elementPosition $ e
 getNodePosition (NodeContent c) = case contentPosition c of
   [] -> emptyPositionRange
-  (p : _) -> p 
+  (p : _) -> p
 
 data Element = Element
   { elementName :: Name
